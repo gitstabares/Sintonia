@@ -2,10 +2,6 @@
     position: sticky;
     top: 0;
     z-index: 10;
-    color: var(--color-texto);
-    background: var(--color-superficie);
-    border-bottom: 1px solid var(--color-borde);
-    font-family: var(--fuente-texto);
 }
 
 .navbar-interior {
@@ -55,7 +51,7 @@
     width: 32px;
     height: 32px;
     border-radius: 8px;
-    color: var(--color-sobre-primario);
+    color: var(--texto-principal);
     background: var(--color-primario);
     font-size: 1rem;
 }
@@ -114,20 +110,11 @@
     display: flex;
     flex-direction: column;
     gap: 4px;
-    margin: 0;
-    padding: 0;
     list-style: none;
 }
 
 .navbar-enlaces a {
-    display: flex;
-    align-items: center;
-    min-height: 44px;
-    padding-inline: 12px;
-    border-radius: 6px;
-    color: var(--color-texto-suave);
-    font-size: .875rem;
-    font-weight: 500;
+    color: var(--texto-secundario)
 }
 
 .navbar-enlaces a:hover,
@@ -203,10 +190,11 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    min-height: 44px;
-    padding-left: 12px;
-    border: 1px solid var(--color-borde);
+    min-height: 40px;
+    padding: 0 12px;
+    border: 1px solid var(--borde-fuerte);
     border-radius: 999px;
+    color: var(--texto-principal);
 }
 
 .navbar-idioma select {
@@ -221,10 +209,11 @@
 }
 
 .navbar-accesibilidad {
-    border-color: var(--color-borde);
+    border-color: var(--borde-fuerte);
+    color: var(--texto-principal);
 }
 
-.navbar-accion {
+.navbar-ingresar {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -266,7 +255,7 @@
     .navbar-interior {
         min-height: 72px;
         flex-wrap: nowrap;
-        gap: 28px;
+        gap: 40px;
     }
 
     .navbar-movil-acciones {
@@ -289,7 +278,7 @@
 
     .navbar-enlaces {
         flex-direction: row;
-        gap: 16px;
+        gap: 28px;
     }
 
     .navbar-enlaces a {

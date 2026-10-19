@@ -65,7 +65,7 @@ export const Navbar = ({ textos, cargando, error, idioma, cambiarIdioma, activo,
                     <span className="navbar-simbolo" aria-hidden="true">
                         H
                     </span>
-                    <span>{nav?.logo.texto ?? "Héroes"}</span>
+                    <span className="titular-h3">{nav?.logo.texto ?? "Sintonía"}</span>
                 </a>
 
                 {/* Acciones del navbar movil */}
@@ -106,7 +106,7 @@ export const Navbar = ({ textos, cargando, error, idioma, cambiarIdioma, activo,
                     {cargando && <p className="navbar-estado" role="status">{ingles ? "Loading navigation…" : "Cargando navegación…"}</p>}
                     {error && <div className="navbar-estado" role="alert"><p>{ingles ? "Navigation could not be loaded." : "No pudimos cargar el menú."}</p><button type="button" onClick={recargar}>{ingles ? "Try again" : "Reintentar"}</button></div>}
                     {nav && <>
-                        <ul className="navbar-enlaces">
+                        <ul className="cuerpo-p-fuerte navbar-enlaces">
                             {enlaces.map(([clave, etiqueta]) => <li key={clave}><a href={DESTINOS[clave]} aria-current={activo === clave ? "page" : undefined} onClick={() => setAbierto(false)}>{etiqueta}</a></li>)}
                         </ul>
                         <form className="navbar-buscador" role="search" aria-label={nav.buscador.aria} onSubmit={buscar}>
@@ -115,11 +115,11 @@ export const Navbar = ({ textos, cargando, error, idioma, cambiarIdioma, activo,
                         </form>
                     </>}
                     <div className="navbar-utilidades">
-                        <label className="navbar-idioma"><Icono nombre="idioma" /><select value={idioma} onChange={(evento) => cambiarIdioma(evento.target.value)} aria-label={nav?.aria.idioma ?? "Cambiar idioma"}><option value="es">ES</option><option value="en">EN</option></select></label>
+                        <label className="cuerpo-p-fuerte navbar-idioma"><Icono nombre="idioma" /><select value={idioma} onChange={(evento) => cambiarIdioma(evento.target.value)} aria-label={nav?.aria.idioma ?? "Cambiar idioma"}><option value="es">ES</option><option value="en">EN</option></select></label>
                         <button className="navbar-icono navbar-accesibilidad" type="button" aria-label={ingles ? "Enlarge text" : "Aumentar texto"} aria-pressed={textoGrande} onClick={alternarTexto}><Icono nombre="accesibilidad" /></button>
-                        {nav && <a className="navbar-accion" href="#ingresar" onClick={() => setAbierto(false)}>{nav.botones.invitado.ingresar}</a>}
-                        {nav && <a className="navbar-accion" href="#crearCuenta" onClick={() => setAbierto(false)}>{nav.botones.invitado.crearCuenta}</a>}
                     </div>
+                    {nav && <a className="navbar-accion" href="#ingresar" onClick={() => setAbierto(false)}>{nav.botones.invitado.ingresar}</a>}
+                    {nav && <a className="boton-principal cuerpo-p-fuerte" href="#crearCuenta" onClick={() => setAbierto(false)}>{nav.botones.invitado.crearCuenta}</a>}
                 </div>
             </nav>
         </header>
