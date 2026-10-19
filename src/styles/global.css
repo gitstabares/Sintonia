@@ -143,3 +143,15 @@ body {
 .boton-principal::selection {
     background: var(--marca-primario-presionado);
 }
+
+.boton-fantasma {
+    color: var(--texto-principal);
+}
+
+.boton-fantasma.cuerpo-p-fuerte {
+    padding: 10px 20px;
+}
+
+.boton-fantasma.cuerpo-m-fuerte {
+    padding: 14px 28px;
+}

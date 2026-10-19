@@ -1,6 +1,7 @@
 import "./Navbar.css";
 import Icono from "./Icono"
 import { useEffect, useRef, useState } from "react";
+import Logo from "../assets/logos/logo.svg"
 
 const DESTINOS = {
     descubrir: "#descubrir",
@@ -62,10 +63,7 @@ export const Navbar = ({ textos, cargando, error, idioma, cambiarIdioma, activo,
                     aria-label={nav?.logo.aria ?? "Inicio"}
                     onClick={() => setAbierto(false)}
                 >
-                    <span className="navbar-simbolo" aria-hidden="true">
-                        H
-                    </span>
-                    <span className="titular-h3">{nav?.logo.texto ?? "Sintonía"}</span>
+                    <img src={Logo} alt="" />
                 </a>
 
                 {/* Acciones del navbar movil */}
@@ -109,16 +107,12 @@ export const Navbar = ({ textos, cargando, error, idioma, cambiarIdioma, activo,
                         <ul className="cuerpo-p-fuerte navbar-enlaces">
                             {enlaces.map(([clave, etiqueta]) => <li key={clave}><a href={DESTINOS[clave]} aria-current={activo === clave ? "page" : undefined} onClick={() => setAbierto(false)}>{etiqueta}</a></li>)}
                         </ul>
-                        <form className="navbar-buscador" role="search" aria-label={nav.buscador.aria} onSubmit={buscar}>
-                            <button type="submit" aria-label={nav.buscador.boton}><Icono nombre="buscar" /></button>
-                            <input ref={campoBusqueda} type="search" value={busqueda} onChange={(evento) => setBusqueda(evento.target.value)} placeholder={nav.buscador.placeholder} aria-label={nav.buscador.aria} required />
-                        </form>
                     </>}
                     <div className="navbar-utilidades">
                         <label className="cuerpo-p-fuerte navbar-idioma"><Icono nombre="idioma" /><select value={idioma} onChange={(evento) => cambiarIdioma(evento.target.value)} aria-label={nav?.aria.idioma ?? "Cambiar idioma"}><option value="es">ES</option><option value="en">EN</option></select></label>
                         <button className="navbar-icono navbar-accesibilidad" type="button" aria-label={ingles ? "Enlarge text" : "Aumentar texto"} aria-pressed={textoGrande} onClick={alternarTexto}><Icono nombre="accesibilidad" /></button>
                     </div>
-                    {nav && <a className="navbar-accion" href="#ingresar" onClick={() => setAbierto(false)}>{nav.botones.invitado.ingresar}</a>}
+                    {nav && <a className="boton-fantasma cuerpo-p-fuerte" href="#ingresar" onClick={() => setAbierto(false)}>{nav.botones.invitado.ingresar}</a>}
                     {nav && <a className="boton-principal cuerpo-p-fuerte" href="#crearCuenta" onClick={() => setAbierto(false)}>{nav.botones.invitado.crearCuenta}</a>}
                 </div>
             </nav>
