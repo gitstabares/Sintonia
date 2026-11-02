@@ -1,10 +1,10 @@
 import './Etiqueta.css'
 
-const Etiqueta = ({ tono, children }) => {
+const Etiqueta = ({ tono = 'neutral', children }) => {
     return (
-        <div className="etiqueta">
+        <span className={`detalle-nota-fuerte etiqueta ${tono}`}>
             {children}
-        </div>
+        </span>
     )
 }
 
