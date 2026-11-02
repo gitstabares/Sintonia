@@ -1,5 +1,6 @@
 /* Tokens de diseño de Sintonía, exportados del archivo de Figma. */
 /* Nombres iguales a las variables de Figma: "fondo/pagina" se usa como var(--fondo-pagina). */
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Syne:wght@400..800&display=swap');
 
 :root {
   /* Color (modo Oscuro) */
