@@ -1,6 +1,6 @@
 import './SelectorIdioma.css'
 
-function Toggle({ idioma, cambiarIdioma }) {
+function SelectorIdioma({ idioma, cambiarIdioma }) {
     return (
         <button className={`cuerpo-p-fuerte selector-idioma ${idioma === "en" ? "en" : ""}`} onClick={() => cambiarIdioma(idioma === "en" ? "es" : "en")}>
 
@@ -17,4 +17,4 @@ function Toggle({ idioma, cambiarIdioma }) {
     );
 }
 
-export default Toggle;
+export default SelectorIdioma;
