@@ -5,9 +5,9 @@ const Tarjeta = ({ titulo, artista }) => {
     return (
         <span className="tarjeta">
             <GeneradorPortada semilla={titulo + artista} />
-            <div className="texto">
-                <div className="cuerpo-p-fuerte titulo">{titulo}</div>
-                <div className="cuerpo-p artista">{artista}</div>
+            <div className="tarjeta-texto">
+                <div className="tarjeta-titulo cuerpo-p-fuerte">{titulo}</div>
+                <div className="tarjeta-artista cuerpo-p">{artista}</div>
             </div>
         </span>
     )

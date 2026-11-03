@@ -55,3 +55,13 @@
 .boton.fantasma:active {
     background: var(--fondo-elevada);
 }
+
+@media (max-width: 640px) {     
+    .boton {
+        width: 100%;
+    }
+
+    .boton-enlace {
+        width: 100%;
+    }
+}
