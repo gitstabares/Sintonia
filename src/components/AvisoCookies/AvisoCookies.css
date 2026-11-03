@@ -1,0 +1,8 @@
+.aviso-cookies {
+    display: flex;
+    width: 75rem;
+    border-radius: var(--radio-xl);
+    background: var(--fondo-elevada);
+    border: 1px solid var(--borde-fuerte);
+    padding: 1.5rem 2rem;
+}

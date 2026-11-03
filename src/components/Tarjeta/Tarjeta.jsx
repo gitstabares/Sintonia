@@ -3,13 +3,13 @@ import GeneradorPortada from "../GeneradorPortada/GeneradorPortada"
 
 const Tarjeta = ({ titulo, artista }) => {
     return (
-        <div className="tarjeta">
-            <GeneradorPortada semilla={titulo} />
+        <span className="tarjeta">
+            <GeneradorPortada semilla={titulo + artista} />
             <div className="texto">
                 <div className="cuerpo-p-fuerte titulo">{titulo}</div>
                 <div className="cuerpo-p artista">{artista}</div>
             </div>
-        </div>
+        </span>
     )
 }
 

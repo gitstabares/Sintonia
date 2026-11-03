@@ -5,11 +5,11 @@
 }
 
 .boton.cuerpo-p-fuerte {
-    padding: 10px 20px;
+    padding: 0.625rem 1.25rem;
 }
 
 .boton.cuerpo-m-fuerte {
-    padding: 14px 28px;
+    padding: 0.875rem 1.75rem;
 }
 
 .boton.primario {

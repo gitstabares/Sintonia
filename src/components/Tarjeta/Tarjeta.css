@@ -1,5 +1,5 @@
 .tarjeta {
-    width: 200px;
+    width: 12.5rem;
     display: flex;
     flex-direction: column;
     gap: var(--espacio-3);
@@ -8,16 +8,16 @@
     background: var(--fondo-superficie);
 }
 
-.texto {
+.tarjeta .texto {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 0.125rem;
 }
 
-.titulo {
+.tarjeta .texto .titulo {
     color: var(--texto-principal);
 }
 
-.artista {
+.tarjeta .texto .artista {
     color: var(--texto-secundario);
 }
