@@ -2,11 +2,11 @@ import './Campo.css'
 
 const Campo = ({ etiqueta, placeholder, ayuda }) => {
     return (
-        <div className="campo">
-            <div className="cuerpo-p-fuerte">{etiqueta}</div>
+        <span className="campo">
+            <div className="campo-etiqueta cuerpo-p-fuerte">{etiqueta}</div>
             <input className='cuerpo-m' type="text" placeholder={placeholder} />
-            <div className='ayuda detalle-nota'>{ayuda}</div>
-        </div>
+            <div className='campo-ayuda detalle-nota'>{ayuda}</div>
+        </span>
     )
 }
 
