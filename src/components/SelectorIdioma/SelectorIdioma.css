@@ -1,8 +1,8 @@
 .selector-idioma {
     position: relative;
     display: flex;
-    padding: 3px;
-    gap: 2px;
+    padding: 0.1875rem;
+    gap: 0.125rem;
     background: var(--fondo-elevada);
     border: 1px solid var(--borde-fuerte);
     border-radius: var(--radio-completo);
@@ -26,10 +26,10 @@
 
 .selector-idioma-indicador {
     position: absolute;
-    top: 3px;
-    bottom: 3px;
-    left: 3px;
-    width: calc(50% - 3px);
+    top: 0.1875rem;
+    bottom: 0.1875rem;
+    left: 0.1875rem;
+    width: calc(50% - 0.1875rem);
     border-radius: var(--radio-completo);
     background: var(--marca-primario);
     transition: 150ms ease-out all;

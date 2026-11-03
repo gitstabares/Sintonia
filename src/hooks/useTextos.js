@@ -1,15 +1,14 @@
 import { useEffect, useState } from "react";
 
 const API = "https://yanethm-sintonia-api.fly.dev/api/v1/textos";
-const CLAVES_MENU_INVITADO = ["descubrir", "planes", "paraArtistas", "ayuda"];
 
 function validarTextos(datos) {
   const textos = datos?.textos;
+
   const nav = textos?.navbar;
-  const etiquetas = [
+  const etiquetas_navbar = [
     nav?.logo?.texto,
     nav?.logo?.aria,
-    ...CLAVES_MENU_INVITADO.map((clave) => nav?.enlaces?.invitado?.[clave]),
     nav?.buscador?.placeholder,
     nav?.buscador?.borrar,
     nav?.botones?.invitado?.ingresar,
@@ -22,9 +21,21 @@ function validarTextos(datos) {
     textos?.menuMovil?.cerrar,
   ];
 
-  if (!etiquetas.every((valor) => typeof valor === "string" && valor.trim())) {
+  if (!etiquetas_navbar.every((valor) => typeof valor === "string" && valor.trim())) {
     throw new Error("La respuesta no contiene los textos del navbar.");
   }
+
+  const banner = textos?.cookies?.banner;
+  const etiquetas_aviso_cookies = [
+    banner?.titulo,
+    banner?.texto,
+    banner?.botones?.rechazar,
+    banner?.botones?.aceptar,
+  ]
+
+  if (!etiquetas_aviso_cookies.every((valor) => typeof valor === "string" && valor.trim())) {
+    throw new Error("La respuesta no contiene los textos del aviso de cookies.");
+  }  
   return textos;
 }
 

@@ -7,7 +7,7 @@
 }
 
 .campo input {
-    border-radius: var(--radio-sm);
+    border-radius: var(--radio-ml);
     border: solid 1px var(--borde-fuerte);
     background: var(--fondo-superficie);
     color: var(--texo-principal);
@@ -23,6 +23,10 @@
     border: 2px solid var(--marca-primario);
 }
 
-.campo .ayuda {
+.campo-etiqueta {
+    color: var(--texto-principal);
+}
+
+.campo-ayuda {
     color: var(--texto-secundario);
 }

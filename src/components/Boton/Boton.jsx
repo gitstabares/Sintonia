@@ -1,9 +1,9 @@
 import './Boton.css'
 
-const Boton = ({ tipo, tamano, enlace, children }) => {
+const Boton = ({ className, tipo, href, onClick, children }) => {
     return (
-        <a href={enlace}>
-            <button className={`boton-${tipo} cuerpo-${tamano}-fuerte`}>
+        <a className='boton-enlace' href={href}>
+            <button className={`boton ${className} ${tipo}`} onClick={onClick}>
                 {children}
             </button>
         </a>
