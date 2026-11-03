@@ -23,10 +23,10 @@
     border: 2px solid var(--marca-primario);
 }
 
-.campo .etiqueta {
+.campo-etiqueta {
     color: var(--texto-principal);
 }
 
-.campos .ayuda {
+.campo-ayuda {
     color: var(--texto-secundario);
 }

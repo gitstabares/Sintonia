@@ -8,16 +8,16 @@
     background: var(--fondo-superficie);
 }
 
-.tarjeta .texto {
+.tarjeta-texto {
     display: flex;
     flex-direction: column;
     gap: 0.125rem;
 }
 
-.tarjeta .texto .titulo {
+.tarjeta-titulo {
     color: var(--texto-principal);
 }
 
-.tarjeta .texto .artista {
+.tarjeta-artista {
     color: var(--texto-secundario);
 }

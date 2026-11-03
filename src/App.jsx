@@ -1,7 +1,8 @@
 import { useTextos } from "./hooks/useTextos.js";
 import "./App.css"
 import { useEffect, useState } from "react";
-import AvisoCookies from "./components/AvisoCookies/AvisoCookies.jsx";
+import BannerCookies from "./components/BannerCookies/BannerCookies.jsx";
+import Boton from "./components/Boton/Boton.jsx";
 
 function leerSeccion() {
     return window.location.hash.slice(1) || "inicio";
@@ -45,7 +46,7 @@ function App() {
 
     return (
         <div className="sitio">
-            <AvisoCookies {...datos} />
+            <BannerCookies {...datos} />
         </div>
     );
 }
