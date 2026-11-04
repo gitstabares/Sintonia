@@ -16,9 +16,6 @@ function App() {
     const datos = useTextos(idioma);
 
     const en = idioma === "en";
-    const titulo = activo === "favoritos"
-        ? datos.textos?.navbar.botones.favoritos
-        : datos.textos?.navbar.enlaces[activo];
 
     // Sincroniza el estado del componente con el hash de la url
     useEffect(() => {
@@ -50,8 +47,6 @@ function App() {
                 {...datos}
                 en={en}
                 cambiarIdioma={setIdioma}
-                activo={activo}
-                onBuscar={buscar}
                 textoGrande={textoGrande}
                 alternarTexto={() => setTextoGrande(!textoGrande)}
             />

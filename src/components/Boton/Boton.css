@@ -65,16 +65,4 @@
     .boton-enlace {
         width: 100%;
     }
-
-    .boton-enlace.icono {
-        width: fit-content;
-    }
-
-    .boton-enlace.icono button {
-        width: fit-content;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        aspect-ratio: 1;
-    }
 }
