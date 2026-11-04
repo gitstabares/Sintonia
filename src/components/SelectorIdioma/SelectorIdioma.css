@@ -7,7 +7,7 @@
     border: 1px solid var(--borde-fuerte);
     border-radius: var(--radio-completo);
     cursor: pointer;
-    margin-left: auto;
+    white-space: nowrap;
 }
 
 .selector-idioma div {
