@@ -2,7 +2,7 @@ import { useTextos } from "./hooks/useTextos.js";
 import "./App.css"
 import { useEffect, useState } from "react";
 import BannerCookies from "./components/BannerCookies/BannerCookies.jsx";
-import Boton from "./components/Boton/Boton.jsx";
+import Navbar from "./components/Navbar/Navbar.jsx";
 
 function leerSeccion() {
     return window.location.hash.slice(1) || "inicio";
@@ -15,7 +15,7 @@ function App() {
     const [textoGrande, setTextoGrande] = useState(false);
     const datos = useTextos(idioma);
 
-    const ingles = idioma === "en";
+    const en = idioma === "en";
     const titulo = activo === "favoritos"
         ? datos.textos?.navbar.botones.favoritos
         : datos.textos?.navbar.enlaces[activo];
@@ -46,7 +46,15 @@ function App() {
 
     return (
         <div className="sitio">
-            <BannerCookies {...datos} />
+            <Navbar
+                {...datos}
+                en={en}
+                cambiarIdioma={setIdioma}
+                activo={activo}
+                onBuscar={buscar}
+                textoGrande={textoGrande}
+                alternarTexto={() => setTextoGrande(!textoGrande)}
+            />
         </div>
     );
 }

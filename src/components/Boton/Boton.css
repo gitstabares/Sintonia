@@ -2,6 +2,7 @@
     transition: all 150ms ease-out;
     border-radius: var(--radio-completo);
     cursor: pointer;
+    white-space: nowrap;
 }
 
 .boton.cuerpo-p-fuerte {
@@ -56,12 +57,24 @@
     background: var(--fondo-elevada);
 }
 
-@media (max-width: 640px) {     
+@media (max-width: 1024px) {     
     .boton {
         width: 100%;
     }
 
     .boton-enlace {
         width: 100%;
+    }
+
+    .boton-enlace.icono {
+        width: fit-content;
+    }
+
+    .boton-enlace.icono button {
+        width: fit-content;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        aspect-ratio: 1;
     }
 }

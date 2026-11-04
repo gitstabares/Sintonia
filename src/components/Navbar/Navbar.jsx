@@ -1,89 +1,60 @@
-import { useId, useRef, useState } from "react";
-import Marca from "../Marca/Marca.jsx";
-import MenuMovil from "../MenuMovil/MenuMovil.jsx";
-import SelectorIdioma from "../SelectorIdioma/SelectorIdioma.jsx";
-import { interfaz } from "../../data/interfaz.js";
-import "./Navbar.css";
-export default function Navbar({
-  nombre,
-  tipo,
-  idioma,
-  onCambiarIdioma,
-  destino,
-  etiqueta,
-  onCuenta,
-}) {
-  const [abierto, setAbierto] = useState(false);
-  const boton = useRef(null);
-  const id = useId();
-  const t = interfaz[idioma];
+import { useState } from 'react';
+import './Navbar.css';
+import Marca from '../../assets/logos/logo.svg?react'
+import Boton from '../Boton/Boton';
+import Icono from '../Icono'
+import SelectorIdioma from '../SelectorIdioma/SelectorIdioma'
+
+const Navbar = ({
+  textos,
+  cargando,
+  error,
+  recargar,
+  en,
+  cambiarIdioma,
+  activo,
+  onBuscar,
+  textoGrande,
+  alternarTexto,
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const nav = textos?.navbar;
+  const menuMovil = textos?.menuMovil;
+
   return (
-    <header
-      className="cabecera-home"
-      onKeyDown={(evento) => {
-        if (evento.key === "Escape" && abierto) {
-          setAbierto(false);
-          boton.current?.focus();
-        }
-      }}
-    >
-      <div className="ancho-home fila-cabecera">
-        <Marca nombre={nombre} tipo={tipo} />
-        <button className="ingreso-movil" onClick={() => onCuenta("ingresar")}>
-          {t.ingresar}
-        </button>
-        <MenuMovil
-          abierto={abierto}
-          onAlternar={() => setAbierto(!abierto)}
-          menuId={id}
-          botonRef={boton}
-          textos={t}
-        />
-        <nav
-          id={id}
-          className={`menu-home ${abierto ? "abierto" : ""}`}
-          aria-label={t.navegacion}
-        >
-          <a
-            href="#contenido"
-            aria-current="page"
-            onClick={() => setAbierto(false)}
-          >
-            {t.inicio}
-          </a>
-          <a href={destino} onClick={() => setAbierto(false)}>
-            {etiqueta}
-          </a>
-          <div className="acciones-home">
-            {tipo === "taquilla" && (
-              <a
-                className="buscar-cabecera"
-                href="#buscador-eventos"
-                onClick={() => setAbierto(false)}
-              >
-                {t.buscar}
-              </a>
-            )}
-            <SelectorIdioma
-              idioma={idioma}
-              onCambiar={onCambiarIdioma}
-              etiqueta={t.idioma}
-            />
-            <button
-              className="ingresar-home"
-              onClick={() => onCuenta("ingresar")}
-            >
-              {t.ingresar}
-            </button>
-            <button
-              className="boton-home primario"
-              onClick={() => onCuenta("registro")}
-            >
-              {t.registro}
-            </button>
-          </div>
-        </nav>
+    <header className='header'>
+      <div className='header-left'>
+        <Marca />
+        <div className="menu-movil">
+          <Boton className={`cuerpo-p-fuerte ingresar ${isOpen ? 'open' : ''}`} tipo='fantasma'>
+            {menuMovil?.botones?.invitado?.ingresar}
+          </Boton>
+          <Boton className='boton-menu' tipo='fantasma' onClick={() => setIsOpen(!isOpen)}>
+            <Icono nombre={isOpen ? 'x' : 'menu'}></Icono>
+          </Boton>
+        </div>
       </div>
+      <nav className={`navbar ${isOpen ? 'open' : ''}`}>
+        <div className="navbar-enlaces">
+          <a className='cuerpo-p-fuerte' href="/">{nav?.enlaces?.inicio}</a>
+          <a className='cuerpo-p-fuerte' href="#catalogo">{nav?.enlaces?.catalogo}</a>
+        </div>
+        <div style={{ flexGrow: 1 }}></div>
+        <div className="navbar-utilidades">
+          <p>Accesibilidad</p>
+          <Boton className='boton-accesibilidad' icono={true} tipo='secundario'><Icono nombre='person'></Icono></Boton>
+        </div>
+        <div className="navbar-utilidades">
+          <p>Idioma</p>
+          <SelectorIdioma en={en} cambiarIdioma={cambiarIdioma} />
+        </div>
+        <div className="navbar-sesion">
+          <Boton className='cuerpo-p-fuerte' tipo='fantasma' href='#ingresar'>{nav?.botones?.invitado?.ingresar}</Boton>
+          <Boton className='cuerpo-p-fuerte' tipo='primario' href='#crearCuenta'>{nav?.botones?.invitado?.crearCuenta}</Boton>
+        </div>
+      </nav>
     </header>
-  );
-}
+  )
+};
+
+export default Navbar;
