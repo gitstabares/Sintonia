@@ -22,7 +22,7 @@ const Navbar = ({
   const menuMovil = textos?.menuMovil;
 
   return (
-    <div className='header'>
+    <div className={`header ${isOpen ? 'open' : ''}`}>
       {/* Navbar para escritorio */}
       <header className='cuerpo-p-fuerte header-escritorio'>
         <Marca />
@@ -44,7 +44,7 @@ const Navbar = ({
           <Boton className={`cuerpo-p-fuerte boton-ingresar ${isOpen ? 'open' : ''}`} tipo='fantasma' href='#ingresar'>{nav?.botones?.invitado?.ingresar}</Boton>
           <BotonIcono ancho={44} tipo='fantasma' icono={isOpen ? 'x' : 'menu'} onClick={() => setIsOpen(!isOpen)} />
         </div>
-        <nav className={`menu-movil ${isOpen ? 'open' : ''}`}>
+        <nav className='menu-movil'>
           <div className="navbar">
             <a href="/">{nav?.enlaces?.inicio}</a>
             <a href="#catalogo">{nav?.enlaces?.catalogo}</a>

@@ -1,119 +1,80 @@
-.pie-home {
-  background: var(--superficie);
-  padding: 48px 0 24px;
-}
-.columnas-pie {
-  display: grid;
-  grid-template-columns: 2.6fr 1fr 1fr 1fr;
-  gap: 48px;
-}
-.columnas-pie p {
-  max-width: 300px;
-  color: var(--suave);
-  margin-top: 12px;
-  font-size: 14px;
-}
-.columnas-pie h3 {
-  color: var(--suave);
-  font:
-    400 13px "DM Sans",
-    sans-serif;
-  margin-bottom: 12px;
-}
-.columnas-pie > div > a:not(.marca-home),
-.columnas-pie button {
-  display: block;
-  margin-block: 8px;
-  font-size: 13px;
-}
-.columnas-pie button {
-  color: var(--tinta);
-  border: 0;
-  background: transparent;
-  padding: 0;
-  text-align: left;
-}
-.columnas-pie button:hover,
-.columnas-pie > div > a:not(.marca-home):hover {
-  text-decoration: underline;
-}
-.pie-creditos {
-  border-top: 1px solid var(--borde);
-  margin-top: 32px;
-  padding-top: 20px;
+.footer {
+  width: 100%;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  position: fixed;
+  bottom: 0;
+  z-index: 5;
+  background: var(--fondo-superficie);
+  padding: 3.5rem 5rem 2rem;
+  gap: 2.5rem;
+}
+
+.footer .footer-top {
+  gap: 5rem;
+  display: flex;
+  flex-direction: row;
   justify-content: space-between;
-  gap: 16px;
-  color: var(--suave);
-  font-size: 12px;
-}
-.pie-creditos .cookies > .cookies-boton {
-  background: transparent;
-  color: var(--suave);
-  border: 0;
-  font-size: 12px;
-  padding: 8px 0;
 }
 
-@media (max-width: 900px) {
-  .columnas-pie {
-    gap: 24px;
-    grid-template-columns: 2fr 1fr 1fr;
-  }
+.footer .brand {
+  width: 21.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  color: var(--texto-secundario);
 }
 
-@media (max-width: 900px) {
-  .columnas-pie > div:last-child {
-    grid-column: 2 / 4;
-  }
+.footer .enlaces-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: inherit;
 }
-@media (max-width: 640px) {
-  .columnas-pie {
-    grid-template-columns: 1fr 1fr;
-  }
+
+.footer .seccion-enlaces {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
-@media (max-width: 640px) {
-  .columnas-pie > div:first-child {
-    grid-column: 1 / -1;
-  }
+
+.footer .seccion-enlaces h6 {
+  margin: 0;
+  color: var(--texto-terciario);
 }
-@media (max-width: 640px) {
-  .columnas-pie > div:last-child {
-    grid-column: auto;
-  }
+
+.footer .seccion-enlaces p {
+  margin: 0;
+  color: var(--texto-principal);
 }
-@media (max-width: 640px) {
-  .pie-creditos {
+
+.footer-bottom {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  border-top: 1px solid var(--borde-sutil);
+  padding-top: 1.5rem;
+  gap: 0.5rem;
+  justify-content: space-between;
+  color: var(--texto-terciario);
+}
+
+@media (max-width: 1023px) {
+  .footer {
+    padding: 2.5rem 1.5rem 2rem;
+    gap: 2rem;
+  }
+
+  .footer .footer-top {
+    display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    gap: 1.75rem;
   }
-}
 
-.columnas-pie {
-  grid-template-columns: 2fr 1fr 1fr;
-}
-@media (max-width: 640px) {
-  .columnas-pie {
-    grid-template-columns: 1fr 1fr;
+  .footer .brand {
+    width: fit-content;
   }
-  .columnas-pie > div:first-child {
-    grid-column: 1 / -1;
-  }
-  .columnas-pie > div:last-child {
-    grid-column: auto;
-  }
-}
 
-.landing .columnas-pie {
-  grid-template-columns: 2fr 1fr 1fr;
-}
-@media (max-width: 640px) {
-  .landing .columnas-pie {
-    grid-template-columns: 1fr 1fr;
+  .footer .enlaces-footer {
+    gap: 2rem;
   }
-}
-
-.pie-creditos .enlace-home {
-  color: var(--suave) !important;
 }

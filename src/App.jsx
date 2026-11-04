@@ -1,8 +1,8 @@
 import { useTextos } from "./hooks/useTextos.js";
 import "./App.css"
 import { useEffect, useState } from "react";
-import BannerCookies from "./components/BannerCookies/BannerCookies.jsx";
 import Navbar from "./components/Navbar/Navbar.jsx";
+import Footer from "./components/Footer/Footer.jsx";
 
 function leerSeccion() {
     return window.location.hash.slice(1) || "inicio";
@@ -49,6 +49,9 @@ function App() {
                 cambiarIdioma={setIdioma}
                 textoGrande={textoGrande}
                 alternarTexto={() => setTextoGrande(!textoGrande)}
+            />
+            <Footer
+                {...datos}
             />
         </div>
     );

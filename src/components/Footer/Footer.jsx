@@ -1,44 +1,31 @@
-import Marca from "../Marca/Marca.jsx";
-import { interfaz } from "../../data/interfaz.js";
+import Marca from '../../assets/logos/logo.svg?react'
 import "./Footer.css";
 export default function Footer({
-  nombre,
-  tipo,
-  descripcion,
-  destino,
-  etiqueta,
-  onCuenta,
-  idioma,
-  onAbrirCookies,
+  textos
 }) {
-  const t = interfaz[idioma];
+  const footer = textos?.footer;
+  const anio = new Date().getFullYear();
   return (
-    <footer className="pie-home">
-      <div className="ancho-home">
-        <div className="columnas-pie">
-          <div>
-            <Marca nombre={nombre} tipo={tipo} />
-            <p>{descripcion}</p>
-          </div>
-          <div>
-            <h3>{t.explora}</h3>
-            <a href="#contenido">{t.inicio}</a>
-            <a href={destino}>{etiqueta}</a>
-          </div>
-          <div>
-            <h3>{t.cuenta}</h3>
-            <button onClick={() => onCuenta("ingresar")}>{t.ingresar}</button>
-            <button onClick={() => onCuenta("registro")}>{t.registro}</button>
-          </div>
+    <footer className="footer">
+      <div className="footer-top">
+        <div className="cuerpo-p brand">
+          <Marca />
+          {footer?.lema}
         </div>
-        <div className="pie-creditos">
-          <span>
-            © 2026 {nombre} · {t.academico}
-          </span>
-          <button className="enlace-home" onClick={onAbrirCookies}>
-            {t.cookies}
-          </button>
+        <div className="enlaces-footer">
+          {Object.entries(footer?.columnas || {}).map(([claveCol, columna]) => (
+            <div key={claveCol} className="cuerpo-p seccion-enlaces">
+              <h6 className="detalle-etiqueta">{columna?.titulo}</h6>
+              {Object.entries(columna?.enlaces || {}).map(([claveEnlace, texto]) => (
+                <p key={claveEnlace}>{texto}</p>
+              ))}
+            </div>
+          ))}
         </div>
+      </div>
+      <div className="footer-bottom detalle-nota">
+        <div>{footer?.legal?.derechos?.replace("{anio}", anio)}</div>
+        <div>{footer?.legal?.nota}</div>
       </div>
     </footer>
   );

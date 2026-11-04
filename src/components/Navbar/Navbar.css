@@ -3,6 +3,7 @@
   position: fixed;
   top: 0;
   z-index: 10;
+  background: var(--fondo-base);
 }
 
 .header-escritorio {
@@ -34,9 +35,17 @@
     display: none;
   }
 
+  .header.open {
+    height: 100%;
+  }
+
   .header-mobile {
     display: flex;
     flex-direction: column;
+  }
+
+  .header.open .header-mobile {
+    height: 100%;
   }
 
   .header-mobile .top {
@@ -95,7 +104,8 @@
     display: none;
   }
 
-  .menu-movil.open {
+  .header.open .menu-movil {
+    height: 100%;
     display: flex;
     flex-direction: column;
   }
