@@ -1,4 +1,5 @@
 .etiqueta {
+    width: fit-content;
     border-radius: var(--radio-completo);
     padding: 0.25rem 0.625rem;
 }

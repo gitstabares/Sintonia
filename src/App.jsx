@@ -2,6 +2,7 @@ import { useTextos } from "./hooks/useTextos.js";
 import "./App.css"
 import { useEffect, useState } from "react";
 import Navbar from "./components/Navbar/Navbar.jsx";
+import Hero from "./components/Hero/Hero.jsx";
 import Footer from "./components/Footer/Footer.jsx";
 
 function leerSeccion() {
@@ -49,6 +50,10 @@ function App() {
                 cambiarIdioma={setIdioma}
                 textoGrande={textoGrande}
                 alternarTexto={() => setTextoGrande(!textoGrande)}
+            />
+            {console.log(datos)}
+            <Hero
+                {...datos}
             />
             <Footer
                 {...datos}
