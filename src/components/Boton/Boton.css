@@ -1,0 +1,67 @@
+.boton {
+    transition: all 150ms ease-out;
+    border-radius: var(--radio-completo);
+    cursor: pointer;
+}
+
+.boton.cuerpo-p-fuerte {
+    padding: 0.625rem 1.25rem;
+}
+
+.boton.cuerpo-m-fuerte {
+    padding: 0.875rem 1.75rem;
+}
+
+.boton.primario {
+    color: var(--texto-sobre-marca);
+    background: var(--marca-primario);
+    border: 0;
+}
+
+.boton.primario:hover {
+    background: var(--marca-primario-hover);
+}
+
+.boton.primario:active {
+    background: var(--marca-primario-presionado);
+}
+
+.boton.secundario {
+    color: var(--texto-principal);
+    border: 1px solid var(--borde-fuerte);
+    background: none;
+}
+
+.boton.secundario:hover {
+    background: var(--fondo-sutil);
+    border: 1px solid var(--texto-secundario);
+}
+
+.boton.secundario:active {
+    background: var(--fondo-elevada);
+    border: 1px solid var(--texto-secundario);
+}
+
+.boton.fantasma {
+    color: var(--texto-principal);
+    border: 0;
+    background: none;
+}
+
+.boton.fantasma:hover {
+    background: var(--fondo-sutil);
+}
+
+.boton.fantasma:active {
+    background: var(--fondo-elevada);
+}
+
+@media (max-width: 640px) {     
+    .boton {
+        width: 100%;
+    }
+
+    .boton-enlace {
+        width: 100%;
+    }
+}

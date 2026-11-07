@@ -1,0 +1,34 @@
+.etiqueta {
+    border-radius: var(--radio-completo);
+    padding: 0.25rem 0.625rem;
+}
+
+.etiqueta.neutral {
+    background: var(--fondo-sutil);
+    color: var(--detalle-nota-fuerte);
+}
+
+.etiqueta.marca {
+    background: var(--marca-suave);
+    color: var(--texto-marca);
+}
+
+.etiqueta.exito {
+    background: var(--estado-exito-suave);
+    color: var(--estado-exito);
+}
+
+.etiqueta.alerta {
+    background: var(--estado-alerta-suave);
+    color: var(--estado-alerta)
+}
+
+.etiqueta.error {
+    background: var(--estado-error-suave);
+    color: var(--estado-error);
+}
+
+.etiqueta.violeta {
+    background: var(--marca-secundario-suave);
+    color: var(--marca-secundario);
+}
