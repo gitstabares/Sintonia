@@ -1,7 +1,8 @@
+import './Home.css'
 import Hero from '../../components/Hero/Hero'
 import SuenaAhora from '../../components/SuenaAhora/SuenaAhora';
 import Generos from '../../components/Generos/Generos';
-import './Home.css'
+import BannerInvitado from '../../components/BannerInvitado/BannerInvitado';
 
 const Home = ({ datos }) => {
     return (
@@ -9,6 +10,7 @@ const Home = ({ datos }) => {
             <Hero {...datos} />
             <SuenaAhora {...datos} />
             <Generos {...datos} />
+            <BannerInvitado {...datos} />
         </div>
     )
 }

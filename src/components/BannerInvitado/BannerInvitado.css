@@ -1,0 +1,25 @@
+.banner-invitado {
+    display: flex;
+    gap: 2rem;
+    margin: 0 5rem 5.5rem;
+    padding: 3rem 3.5rem;
+    background: var(--marca-primario);
+    border-radius: var(--radio-lxl);
+    justify-content: space-between;
+    align-items: center;
+}
+
+.textos-banner-invitado {
+    color: var(--texto-sobre-marca);
+    display: flex;
+    flex-direction: column;
+}
+
+.boton-crear-cuenta {
+    height: fit-content;
+    background: var(--fijo-negro);
+    border-radius: var(--radio-completo);
+    padding: 1rem 2rem;
+    color: var(--fijo-blanco);
+    text-decoration: none;
+}
