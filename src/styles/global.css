@@ -26,6 +26,7 @@ body {
 }
 
 .titular-h1 {
+    margin: 0;
     font-family: var(--fuente-syne);
     font-weight: 700;
     font-size: 40px;
@@ -34,6 +35,7 @@ body {
 }
 
 .titular-h2 {
+    margin: 0;
     font-family: var(--fuente-syne);
     font-weight: 700;
     font-size: 28px;
@@ -42,6 +44,7 @@ body {
 }
 
 .titular-h3 {
+    margin: 0;
     font-family: var(--fuente-syne);
     font-weight: 700;
     font-size: 20px;
@@ -50,6 +53,7 @@ body {
 }
 
 .titular-h4 {
+    margin: 0;
     font-family: var(--fuente-syne);
     font-weight: 700;
     font-size: 16px;
@@ -120,38 +124,4 @@ body {
     font-size: 32px;
     line-height: 36px;
     letter-spacing: -0.010em;
-}
-
-.boton-principal {
-    border-radius: var(--radio-completo);
-    background: var(--marca-primario);
-    color: var(--texto-sobre-marca);
-}
-
-.boton-principal.cuerpo-p-fuerte {
-    padding: 10px 20px;
-}
-
-.boton-principal.cuerpo-m-fuerte {
-    padding: 14px 28px;
-}
-
-.boton-principal:hover {
-    background: var(--marca-primario-hover);
-}
-
-.boton-principal::selection {
-    background: var(--marca-primario-presionado);
-}
-
-.boton-fantasma {
-    color: var(--texto-principal);
-}
-
-.boton-fantasma.cuerpo-p-fuerte {
-    padding: 10px 20px;
-}
-
-.boton-fantasma.cuerpo-m-fuerte {
-    padding: 14px 28px;
 }

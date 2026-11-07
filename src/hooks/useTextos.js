@@ -39,7 +39,7 @@ function validarTextos(datos) {
   return textos;
 }
 
-export function useTextos(idioma) {
+function useTextos(idioma) {
   const [textos, setTextos] = useState(null);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(false);
@@ -89,3 +89,5 @@ export function useTextos(idioma) {
     recargar: () => setIntento((valor) => valor + 1),
   };
 }
+
+export default useTextos;

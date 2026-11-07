@@ -1,8 +1,9 @@
-import { useTextos } from "./hooks/useTextos.js";
+import useTextos from "./hooks/useTextos.js";
 import "./App.css"
 import { useEffect, useState } from "react";
-import BannerCookies from "./components/BannerCookies/BannerCookies.jsx";
-import Boton from "./components/Boton/Boton.jsx";
+import { Route, Routes } from "react-router-dom";
+import LayoutPublico from "./layouts/LayoutPublico.jsx";
+import Hero from "./components/Hero/Hero.jsx"
 
 function leerSeccion() {
     return window.location.hash.slice(1) || "inicio";
@@ -14,11 +15,7 @@ function App() {
     const [consulta, setConsulta] = useState("");
     const [textoGrande, setTextoGrande] = useState(false);
     const datos = useTextos(idioma);
-
-    const ingles = idioma === "en";
-    const titulo = activo === "favoritos"
-        ? datos.textos?.navbar.botones.favoritos
-        : datos.textos?.navbar.enlaces[activo];
+    const en = idioma === "en";
 
     // Sincroniza el estado del componente con el hash de la url
     useEffect(() => {
@@ -43,10 +40,17 @@ function App() {
         setActivo("heroes")
         window.history.replaceState(null, "", "#heroes");
     }
-
     return (
         <div className="sitio">
-            <BannerCookies {...datos} />
+            <Routes>
+                <Route path="/" element={<LayoutPublico
+                    datos={datos}
+                    en={en}
+                    alternarIdioma={() => setIdioma(en ? 'es' : 'en')}
+                    alternarTexto={() => setTextoGrande(!textoGrande)}
+                />}>
+                </Route>
+            </Routes>
         </div>
     );
 }

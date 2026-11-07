@@ -1,15 +1,15 @@
 import './SelectorIdioma.css'
 
-function Toggle({ idioma, cambiarIdioma }) {
+function SelectorIdioma({ en, alternarIdioma, "aria-label": ariaLabel }) {
     return (
-        <button className={`cuerpo-p-fuerte selector-idioma ${idioma === "en" ? "en" : ""}`} onClick={() => cambiarIdioma(idioma === "en" ? "es" : "en")}>
+        <button className={`cuerpo-p-fuerte selector-idioma ${en ? "en" : ""}`} onClick={alternarIdioma} aria-label={ariaLabel}>
 
             <span className='selector-idioma-indicador'></span>
 
-            <div className={`cuerpo-p-fuerte ${idioma === "es" ? "selected" : ""}`}>
+            <div className={`cuerpo-p-fuerte ${!en ? "selected" : ""}`}>
                 ES
             </div>
-            <div className={`cuerpo-p-fuerte ${idioma === "en" ? "selected" : ""}`}>
+            <div className={`cuerpo-p-fuerte ${en ? "selected" : ""}`}>
                 EN
             </div>
 
@@ -17,4 +17,4 @@ function Toggle({ idioma, cambiarIdioma }) {
     );
 }
 
-export default Toggle;
+export default SelectorIdioma;
