@@ -14,7 +14,8 @@ const Navbar = ({
   recargar,
   en,
   alternarIdioma,
-  alternarTexto
+  alternarTexto,
+  enlaces
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const nav = textos?.navbar;
@@ -27,14 +28,14 @@ const Navbar = ({
         <div className="header-top">
           <Marca />
           <div className="header-top-botones">
-            {!isOpen && <Boton className='cuerpo-p-fuerte' tipo='fantasma' href='#ingresar'>{menuMovil?.botones?.invitado?.ingresar}</Boton>}
+            {!isOpen && <Boton className='cuerpo-p-fuerte' tipo='fantasma' href={enlaces['ingresar']}>{menuMovil?.botones?.invitado?.ingresar}</Boton>}
             <BotonIcono ancho={44} tipo='fantasma' icono={isOpen ? 'x' : 'menu'} onClick={() => setIsOpen(!isOpen)} />
           </div>
         </div>
         <div className={`header-contenido ${isOpen ? 'open' : ''}`}>
           <div className="cuerpo-p-fuerte header-enlaces">
-            <Link className='header-enlace' to='/'>{nav?.enlaces?.inicio}</Link>
-            <Link className='header-enlace' to='#catalogo'>{nav?.enlaces?.catalogo}</Link>
+            <Link className='header-enlace' to={enlaces['inicio']}>{nav?.enlaces?.inicio}</Link>
+            <Link className='header-enlace' to={enlaces['catalogo']}>{nav?.enlaces?.catalogo}</Link>
           </div>
           <span style={{ flexGrow: 1 }} />
           <div className="header-utilidades cuerpo-m-fuerte">
@@ -48,8 +49,8 @@ const Navbar = ({
             </div>
           </div>
           <div className="header-botones">
-            <Boton className='cuerpo-p-fuerte' tipo={isMobile ? 'secundario' : 'fantasma'} href='#ingresar'>{nav?.botones?.invitado?.ingresar}</Boton>
-            <Boton className='cuerpo-p-fuerte' tipo='primario' href='#crearCuenta'>{nav?.botones?.invitado?.crearCuenta}</Boton>
+            <Boton className='cuerpo-p-fuerte' tipo={isMobile ? 'secundario' : 'fantasma'} href={enlaces['ingresar']}>{nav?.botones?.invitado?.ingresar}</Boton>
+            <Boton className='cuerpo-p-fuerte' tipo='primario' href={enlaces['crearCuenta']}>{nav?.botones?.invitado?.crearCuenta}</Boton>
           </div>
         </div>
       </nav>

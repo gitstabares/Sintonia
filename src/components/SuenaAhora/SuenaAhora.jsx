@@ -5,7 +5,7 @@ import './SuenaAhora.css'
 import useMediaQuery from '../../hooks/useMediaQuery';
 import useAlbumes from '../../hooks/useAlbumes';
 
-const SuenaAhora = ({ textos }) => {
+const SuenaAhora = ({ textos, enlaces }) => {
     const destacados = textos?.paginas?.inicioPublico?.destacados;
     const isMobile = useMediaQuery("(max-width: 1023px)");
     const populares = useAlbumes(6, 'populares').albumes;
@@ -16,7 +16,7 @@ const SuenaAhora = ({ textos }) => {
                 <div className={isMobile ? 'titular-h3' : "titular-h2"} style={{ color: "var(--texto-principal)" }}>
                     {destacados?.titulo}
                 </div>
-                <Link className='enlace cuerpo-p-fuerte' to=''>
+                <Link className='enlace cuerpo-p-fuerte' to={enlaces['catalogo']}>
                     {destacados?.enlaces?.descubrirMas}
                     {!isMobile && <Icono nombre='arrowr' />}
                 </Link>

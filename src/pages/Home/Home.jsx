@@ -4,13 +4,13 @@ import SuenaAhora from '../../components/SuenaAhora/SuenaAhora';
 import Generos from '../../components/Generos/Generos';
 import BannerInvitado from '../../components/BannerInvitado/BannerInvitado';
 
-const Home = ({ datos }) => {
+const Home = ({ datos, enlaces }) => {
     return (
         <div className='inicio-publico'>
-            <Hero {...datos} />
-            <SuenaAhora {...datos} />
-            <Generos {...datos} />
-            <BannerInvitado {...datos} />
+            <Hero {...datos} enlaces={enlaces} />
+            <SuenaAhora {...datos} enlaces={enlaces} />
+            <Generos {...datos} enlaces={enlaces} />
+            <BannerInvitado {...datos} enlaces={enlaces} />
         </div>
     )
 }

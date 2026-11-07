@@ -3,18 +3,11 @@ import Marca from '../../assets/logos/logo.svg?react'
 import "./Footer.css";
 
 export default function Footer({
-  textos
+  textos,
+  enlaces
 }) {
   const footer = textos?.footer;
   const anio = new Date().getFullYear();
-  const enlaces = {
-    inicio: '/',
-    catalogo: '#catalogo',
-    ingresar: '#iniciarSesion',
-    crearCuenta: '#crearCuenta',
-    terminos: '#terminos',
-    accesibilidad: '#accesibilidad'
-  }
 
   return (
     <footer className="footer">
