@@ -10,7 +10,7 @@ export default function Footer({
   const enlaces = {
     inicio: '/',
     catalogo: '#catalogo',
-    iniciarSesion: '#iniciarSesion',
+    ingresar: '#iniciarSesion',
     crearCuenta: '#crearCuenta',
     terminos: '#terminos',
     accesibilidad: '#accesibilidad'

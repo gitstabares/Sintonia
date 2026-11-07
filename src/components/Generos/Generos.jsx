@@ -13,7 +13,7 @@ const Generos = ({ textos }) => {
     return (
         <section className="generos">
             <div className="titulo">
-                <div className="titular-h2" style={{ color: "var(--texto-principal)" }}>
+                <div className={isMobile?'titular-h3':"titular-h2"} style={{ color: "var(--texto-principal)" }}>
                     {texGeneros?.titulo}
                 </div>
                 <Link className='enlace cuerpo-p-fuerte' to=''>
