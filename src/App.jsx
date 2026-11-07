@@ -49,6 +49,7 @@ function App() {
                     alternarIdioma={() => setIdioma(en ? 'es' : 'en')}
                     alternarTexto={() => setTextoGrande(!textoGrande)}
                 />}>
+                    <Route index element={<Hero {...datos} />} />
                 </Route>
             </Routes>
         </div>
