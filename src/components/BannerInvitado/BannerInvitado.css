@@ -13,6 +13,7 @@
     color: var(--texto-sobre-marca);
     display: flex;
     flex-direction: column;
+    gap: 0.5rem;
 }
 
 .boton-crear-cuenta {
@@ -22,4 +23,31 @@
     padding: 1rem 2rem;
     color: var(--fijo-blanco);
     text-decoration: none;
+    text-align: center;
+}
+
+@media (max-width: 1023px) {
+    .banner-invitado {
+        margin: 0;
+        background: var(--fondo-elevada);
+        padding: 1.5rem 1.25rem;
+        border-radius: var(--radio-lgxl);
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .boton-crear-cuenta {
+        width: 100%;
+        color: var(--texto-sobre-marca);
+        background: var(--marca-primario);
+    }
+
+    .textos-banner-invitado {
+        color: var(--texto-principal);
+        gap: inherit;
+    }
+
+    .textos-banner-invitado .cuerpo-p {
+        color: var(--texto-secundario);
+    }
 }

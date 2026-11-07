@@ -1,15 +1,17 @@
 import './BannerInvitado.css'
 import { Link } from 'react-router-dom';
+import useMediaQuery from '../../hooks/useMediaQuery.js'
 
 const BannerInvitado = ({ textos }) => {
     const cta = textos?.paginas?.inicioPublico?.cta;
+    const isMobile = useMediaQuery("(max-width: 1023px)");
     return (
         <div className="banner-invitado">
             <div className='textos-banner-invitado'>
-                <div className="titular-h1">
+                <div className={isMobile ? "titular-h3" : "titular-h1"}>
                     {cta?.titulo}
                 </div>
-                <div className="cuerpo-m">
+                <div className={isMobile ? "cuerpo-p" : "cuerpo-m"}>
                     {cta?.texto}
                 </div>
             </div>
