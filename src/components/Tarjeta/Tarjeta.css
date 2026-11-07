@@ -6,6 +6,7 @@
     border-radius: var(--radio-lg);
     padding: var(--espacio-3);
     background: var(--fondo-superficie);
+    flex-shrink: 0;
 }
 
 .tarjeta-texto {

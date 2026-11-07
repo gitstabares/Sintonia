@@ -3,7 +3,7 @@ import "./App.css"
 import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import LayoutPublico from "./layouts/LayoutPublico.jsx";
-import Hero from "./components/Hero/Hero.jsx"
+import Home from "./pages/Home/Home.jsx";
 
 function leerSeccion() {
     return window.location.hash.slice(1) || "inicio";
@@ -49,6 +49,8 @@ function App() {
                     alternarIdioma={() => setIdioma(en ? 'es' : 'en')}
                     alternarTexto={() => setTextoGrande(!textoGrande)}
                 />}>
+                    <Route index element={<Home datos={datos} />} />
+
                 </Route>
             </Routes>
         </div>
