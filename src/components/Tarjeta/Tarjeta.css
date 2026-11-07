@@ -1,4 +1,4 @@
-.tarjeta {
+.tarjeta-album {
     width: 12.5rem;
     display: flex;
     flex-direction: column;
@@ -9,12 +9,12 @@
     flex-shrink: 0;
 }
 
-.tarjeta:hover {
+.tarjeta-album:hover {
     background: var(--fondo-elevada);
     box-shadow: var(--sombra-tarjeta);
 }
 
-.tarjeta-texto {
+.texto-album {
     display: flex;
     flex-direction: column;
     gap: 0.125rem;
@@ -28,17 +28,18 @@
     color: var(--texto-secundario);
 }
 
-.portada-tarjeta {
+.portada-album {
     position: relative;
+    height: 176px;
 }
 
-.portada-tarjeta .boton-play {
+.portada-album .boton-play {
     display: none;
 }
 
-.tarjeta:hover .portada-tarjeta .boton-play{
+.tarjeta-album:hover .boton-play{
     display: block;
     position: absolute;
-    bottom: 0.5rem;
-    right: 0.5rem;
+    top: 7.25rem;
+    left: 7.25rem;
 }
