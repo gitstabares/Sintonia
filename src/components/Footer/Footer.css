@@ -28,19 +28,14 @@
   gap: inherit;
 }
 
-.footer .seccion-enlaces {
+.footer .columna-enlaces {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
 }
 
-.footer .seccion-enlaces h6 {
-  margin: 0;
-  color: var(--texto-terciario);
-}
-
-.footer .seccion-enlaces p {
-  margin: 0;
+.enlaces-footer .enlace {
+  text-decoration: none;
   color: var(--texto-principal);
 }
 

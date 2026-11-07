@@ -25,7 +25,7 @@ body {
     letter-spacing: -0.020em;
 }
 
-h1 {
+.titular-h1 {
     margin: 0;
     font-family: var(--fuente-syne);
     font-weight: 700;
@@ -34,7 +34,7 @@ h1 {
     letter-spacing: -0.015em;
 }
 
-h2 {
+.titular-h2 {
     margin: 0;
     font-family: var(--fuente-syne);
     font-weight: 700;
@@ -43,7 +43,7 @@ h2 {
     letter-spacing: -0.010em;
 }
 
-h3 {
+.titular-h3 {
     margin: 0;
     font-family: var(--fuente-syne);
     font-weight: 700;
@@ -52,7 +52,7 @@ h3 {
     letter-spacing: -0.005em;
 }
 
-h4 {
+.titular-h4 {
     margin: 0;
     font-family: var(--fuente-syne);
     font-weight: 700;

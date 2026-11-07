@@ -3,6 +3,8 @@
     border-radius: var(--radio-completo);
     cursor: pointer;
     white-space: nowrap;
+    text-decoration: none;
+    text-align: center;
 }
 
 .boton.cuerpo-p-fuerte {
@@ -59,10 +61,6 @@
 
 @media (max-width: 1024px) {     
     .boton {
-        width: 100%;
-    }
-
-    .boton-enlace {
         width: 100%;
     }
 }

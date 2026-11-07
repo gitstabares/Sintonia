@@ -33,3 +33,19 @@
   color: var(--texto-secundario);
   margin: 0;
 }
+
+@media (max-width: 1023px) { 
+  .hero {
+    gap: 2rem;
+    padding: 1.5rem 1rem 2.5rem;
+  }
+
+  .hero .grupo-botones {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .hero .cifras-hero {
+    display: none;
+  }
+}

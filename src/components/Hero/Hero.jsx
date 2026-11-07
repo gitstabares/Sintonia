@@ -1,24 +1,27 @@
 import Etiqueta from "../Etiqueta/Etiqueta"
 import Boton from "../Boton/Boton";
 import CollagePortadas from "../../assets/portadas/collage.svg?react";
+import useMediaQuery from "../../hooks/useMediaQuery.js"
 import "./Hero.css";
 
-export default function Hero({ textos, en, totalGeneros = 0 }) {
+export default function Hero({ textos, totalGeneros = 0 }) {
   const hero = textos?.paginas?.inicioPublico?.hero;
   const cifras = textos?.paginas?.inicioPublico?.cifras;
+  const isMobile = useMediaQuery("(max-width: 1023px)");
+
   return (
-    <section className="ancho-home hero">
+    <section className="hero">
       <div className="texto-hero">
-        <Etiqueta tono="marca">{hero?.etiquetas?.temporada}</Etiqueta>
-        <h1 className="titular-gigante">
+        {!isMobile && <Etiqueta tono="marca">{hero?.etiquetas?.temporada}</Etiqueta>}
+        <div className={isMobile ? "titular-h1" : "titular-gigante"}>
           {hero?.titulo}
-        </h1>
-        <div className="cuerpo-g" style={{ color: "var(--texto-secundario)" }}>
+        </div>
+        <div className={isMobile ? "cuerpo-m" : "cuerpo-g"} style={{ color: "var(--texto-secundario)" }}>
           {hero?.subtitulo}
         </div>
         <div className="grupo-botones">
           <Boton tipo="primario" href="#crearCuenta" className="cuerpo-m-fuerte">{hero?.botones?.crearCuentaGratis}</Boton>
-          <Boton tipo="secundario" href="#generos" className="cuerpo-m-fuerte">{hero?.botones?.explorarCatalogo}</Boton>
+          <Boton tipo="secundario" href="#catalogo" className="cuerpo-m-fuerte">{hero?.botones?.explorarCatalogo}</Boton>
         </div>
         <dl className="cifras-hero">
           {Object.entries(cifras || {}).map(([clave, item]) => (
@@ -29,7 +32,7 @@ export default function Hero({ textos, en, totalGeneros = 0 }) {
           ))}
         </dl>
       </div>
-      <CollagePortadas />
+      {!isMobile && <CollagePortadas style={{ width: "100%" }} />}
     </section>
   );
 }

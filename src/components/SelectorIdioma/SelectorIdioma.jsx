@@ -1,8 +1,8 @@
 import './SelectorIdioma.css'
 
-function SelectorIdioma({ en, cambiarIdioma, "aria-label": ariaLabel }) {
+function SelectorIdioma({ en, alternarIdioma, "aria-label": ariaLabel }) {
     return (
-        <button className={`cuerpo-p-fuerte selector-idioma ${en ? "en" : ""}`} onClick={() => cambiarIdioma(en ? "es" : "en")} aria-label={ariaLabel}>
+        <button className={`cuerpo-p-fuerte selector-idioma ${en ? "en" : ""}`} onClick={alternarIdioma} aria-label={ariaLabel}>
 
             <span className='selector-idioma-indicador'></span>
 

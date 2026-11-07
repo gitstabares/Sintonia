@@ -4,6 +4,8 @@ import Marca from '../../assets/logos/logo.svg?react'
 import Boton from '../Boton/Boton';
 import BotonIcono from '../BotonIcono/BotonIcono';
 import SelectorIdioma from '../SelectorIdioma/SelectorIdioma'
+import useMediaQuery from '../../hooks/useMediaQuery';
+import { Link } from 'react-router-dom';
 
 const Navbar = ({
   textos,
@@ -11,60 +13,47 @@ const Navbar = ({
   error,
   recargar,
   en,
-  cambiarIdioma,
-  activo,
-  onBuscar,
-  textoGrande,
-  alternarTexto,
+  alternarIdioma,
+  alternarTexto
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const nav = textos?.navbar;
   const menuMovil = textos?.menuMovil;
+  const isMobile = useMediaQuery("(max-width: 1023px)");
 
   return (
-    <div className={`header ${isOpen ? 'open' : ''}`}>
-      {/* Navbar para escritorio */}
-      <header className='cuerpo-p-fuerte header-escritorio'>
-        <Marca />
-        <nav className='navbar'>
-          <a href="/">{nav?.enlaces?.inicio}</a>
-          <a href="#catalogo">{nav?.enlaces?.catalogo}</a>
-        </nav>
-        <div style={{ flexGrow: 1 }}></div>
-        <BotonIcono ancho={40} tipo='secundario' icono='person' />
-        <SelectorIdioma en={en} cambiarIdioma={cambiarIdioma} />
-        <Boton className='cuerpo-p-fuerte' tipo='fantasma' href='#ingresar'>{nav?.botones?.invitado?.ingresar}</Boton>
-        <Boton className='cuerpo-p-fuerte' tipo='primario' href='#crearCuenta'>{nav?.botones?.invitado?.crearCuenta}</Boton>
-      </header>
-      {/* Navbar mobile */}
-      <header className="cuerpo-m-fuerte header-mobile">
-        <div className="top">
+    <header className={`header-container ${isOpen ? 'open' : ''}`}>
+      <nav className="header">
+        <div className="header-top">
           <Marca />
-          <div style={{ flexGrow: 1 }}></div>
-          <Boton className={`cuerpo-p-fuerte boton-ingresar ${isOpen ? 'open' : ''}`} tipo='fantasma' href='#ingresar'>{nav?.botones?.invitado?.ingresar}</Boton>
-          <BotonIcono ancho={44} tipo='fantasma' icono={isOpen ? 'x' : 'menu'} onClick={() => setIsOpen(!isOpen)} />
+          <div className="header-top-botones">
+            {!isOpen && <Boton className='cuerpo-p-fuerte' tipo='fantasma' href='#ingresar'>{menuMovil?.botones?.invitado?.ingresar}</Boton>}
+            <BotonIcono ancho={44} tipo='fantasma' icono={isOpen ? 'x' : 'menu'} onClick={() => setIsOpen(!isOpen)} />
+          </div>
         </div>
-        <nav className='menu-movil'>
-          <div className="navbar">
-            <a href="/">{nav?.enlaces?.inicio}</a>
-            <a href="#catalogo">{nav?.enlaces?.catalogo}</a>
+        <div className={`header-contenido ${isOpen ? 'open' : ''}`}>
+          <div className="cuerpo-p-fuerte header-enlaces">
+            <Link className='header-enlace' to='/'>{nav?.enlaces?.inicio}</Link>
+            <Link className='header-enlace' to='#catalogo'>{nav?.enlaces?.catalogo}</Link>
           </div>
-          <div style={{ flexGrow: 1 }}></div>
-          <div className="utilidades">
-            <p>{menuMovil?.secciones?.idioma}</p>
-            <SelectorIdioma en={en} cambiarIdioma={cambiarIdioma} />
+          <span style={{ flexGrow: 1 }} />
+          <div className="header-utilidades cuerpo-m-fuerte">
+            <div className='seccion-utilidades'>
+              {isMobile && menuMovil?.secciones?.accesibilidad}
+              <BotonIcono ancho={40} tipo='secundario' icono='person' />
+            </div>
+            <div className='seccion-utilidades'>
+              {isMobile && menuMovil?.secciones?.idioma}
+              <SelectorIdioma en={en} alternarIdioma={alternarIdioma} />
+            </div>
           </div>
-          <div className="utilidades">
-            <p>{menuMovil?.secciones?.accesibilidad}</p>
-            <BotonIcono ancho={40} tipo='secundario' icono='person' />
+          <div className="header-botones">
+            <Boton className='cuerpo-p-fuerte' tipo={isMobile ? 'secundario' : 'fantasma'} href='#ingresar'>{nav?.botones?.invitado?.ingresar}</Boton>
+            <Boton className='cuerpo-p-fuerte' tipo='primario' href='#crearCuenta'>{nav?.botones?.invitado?.crearCuenta}</Boton>
           </div>
-          <div className="botones">
-            <Boton className='cuerpo-m-fuerte' tipo='primario' href='#crearCuenta'>{nav?.botones?.invitado?.crearCuenta}</Boton>
-            <Boton className='cuerpo-m-fuerte' tipo='secundario' href='#ingresar'>{nav?.botones?.invitado?.ingresar}</Boton>
-          </div>
-        </nav>
-      </header>
-    </div>
+        </div>
+      </nav>
+    </header>
   )
 };
 

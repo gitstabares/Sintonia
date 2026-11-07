@@ -1,13 +1,20 @@
 import './Boton.css'
+import { Link } from 'react-router-dom'
 
 const Boton = ({ className, tipo, href, onClick, children }) => {
-    return (
-        <a className='boton-enlace' href={href}>
-            <button className={`boton ${className} ${tipo}`} onClick={onClick}>
+    if (href) {
+        return (
+            <Link to={href} className={`boton ${className} ${tipo}`} onClick={onClick}>
                 {children}
-            </button>
-        </a>
-    )
+            </Link>
+        );
+    }
+
+    return (
+        <button className={`boton ${className} ${tipo}`} onClick={onClick}>
+            {children}
+        </button>
+    );
 }
 
 export default Boton

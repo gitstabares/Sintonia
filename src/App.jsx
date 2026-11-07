@@ -1,9 +1,9 @@
-import { useTextos } from "./hooks/useTextos.js";
+import useTextos from "./hooks/useTextos.js";
 import "./App.css"
 import { useEffect, useState } from "react";
-import Navbar from "./components/Navbar/Navbar.jsx";
-import Hero from "./components/Hero/Hero.jsx";
-import Footer from "./components/Footer/Footer.jsx";
+import { Route, Routes } from "react-router-dom";
+import LayoutPublico from "./layouts/LayoutPublico.jsx";
+import Hero from "./components/Hero/Hero.jsx"
 
 function leerSeccion() {
     return window.location.hash.slice(1) || "inicio";
@@ -15,7 +15,6 @@ function App() {
     const [consulta, setConsulta] = useState("");
     const [textoGrande, setTextoGrande] = useState(false);
     const datos = useTextos(idioma);
-
     const en = idioma === "en";
 
     // Sincroniza el estado del componente con el hash de la url
@@ -41,23 +40,17 @@ function App() {
         setActivo("heroes")
         window.history.replaceState(null, "", "#heroes");
     }
-
     return (
         <div className="sitio">
-            <Navbar
-                {...datos}
-                en={en}
-                cambiarIdioma={setIdioma}
-                textoGrande={textoGrande}
-                alternarTexto={() => setTextoGrande(!textoGrande)}
-            />
-            {console.log(datos)}
-            <Hero
-                {...datos}
-            />
-            <Footer
-                {...datos}
-            />
+            <Routes>
+                <Route path="/" element={<LayoutPublico
+                    datos={datos}
+                    en={en}
+                    alternarIdioma={() => setIdioma(en ? 'es' : 'en')}
+                    alternarTexto={() => setTextoGrande(!textoGrande)}
+                />}>
+                </Route>
+            </Routes>
         </div>
     );
 }
