@@ -3,10 +3,12 @@ import Icono from '../Icono'
 import Tarjeta from '../Tarjeta/Tarjeta'
 import './SuenaAhora.css'
 import useMediaQuery from '../../hooks/useMediaQuery';
+import useAlbumes from '../../hooks/useAlbumes';
 
 const SuenaAhora = ({ textos }) => {
     const destacados = textos?.paginas?.inicioPublico?.destacados;
     const isMobile = useMediaQuery("(max-width: 1023px)");
+    const populares = useAlbumes(6, 'populares').albumes;
 
     return (
         <section className="suena-ahora">
@@ -20,12 +22,7 @@ const SuenaAhora = ({ textos }) => {
                 </Link>
             </div>
             <div className="top-canciones">
-                <Tarjeta artista='Luz de páramo' titulo='Marea Baja'></Tarjeta>
-                <Tarjeta artista='Todo el ruido' titulo='Niebla club'></Tarjeta>
-                <Tarjeta artista='Bajo el guadual' titulo='Los Guaduales'></Tarjeta>
-                <Tarjeta artista='Neón y neblina' titulo='Valle Eléctrico'></Tarjeta>
-                <Tarjeta artista='Cartas sin enviar' titulo='Lina Arroyave'></Tarjeta>
-                <Tarjeta artista='Kilómetro 41' titulo='Kiosko 23'></Tarjeta>
+                {populares?.map((album) => <Tarjeta key={album.id} album={album} />)}
             </div>
         </section>
     )

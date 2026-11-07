@@ -26,6 +26,20 @@
     justify-content: space-between;
 }
 
+.top-canciones::-webkit-scrollbar {
+    height: 14px;
+}
+
+.top-canciones::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.top-canciones::-webkit-scrollbar-thumb {
+    background-color: var(--fondo-superficie);
+    border-radius: var(--radio-completo);border: 3px solid transparent;
+    background-clip: padding-box;
+}
+
 @media (max-width: 1023px) {
     .suena-ahora {
         padding: 0;

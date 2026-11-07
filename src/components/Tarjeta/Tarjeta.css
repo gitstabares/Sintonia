@@ -9,6 +9,11 @@
     flex-shrink: 0;
 }
 
+.tarjeta:hover {
+    background: var(--fondo-elevada);
+    box-shadow: var(--sombra-tarjeta);
+}
+
 .tarjeta-texto {
     display: flex;
     flex-direction: column;
@@ -21,4 +26,19 @@
 
 .tarjeta-artista {
     color: var(--texto-secundario);
+}
+
+.portada-tarjeta {
+    position: relative;
+}
+
+.portada-tarjeta .boton-play {
+    display: none;
+}
+
+.tarjeta:hover .portada-tarjeta .boton-play{
+    display: block;
+    position: absolute;
+    bottom: 0.5rem;
+    right: 0.5rem;
 }
