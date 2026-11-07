@@ -1,0 +1,44 @@
+.generos {
+    display: flex;
+    flex-direction: column;
+    padding: 0 5rem 5.5rem;
+    gap: 1.25rem;
+}
+
+.generos .titulo {
+    display: flex;
+    justify-content: space-between;
+}
+
+.titulo .enlace {
+    color: var(--texto-marca);
+    display: flex;
+    gap: 6px;
+    text-decoration: none;
+}
+
+.grid-generos {
+    display: flex;
+    justify-content: flex-start;
+    gap: 1rem;
+    width: 100%;
+    flex-wrap: wrap;
+    overflow-y: hidden;
+    height: 17.5rem;
+}
+
+@media (max-width: 1023px) {
+    .generos {
+        padding: 0;
+        gap: 0.75rem;
+    }
+
+    .titulo .enlace {
+        text-decoration: underline;
+    }
+
+    .grid-generos {
+        gap: 0.75rem;
+        height: 12.75rem;
+    }
+}

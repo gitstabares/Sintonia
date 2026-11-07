@@ -1,0 +1,47 @@
+.tarjeta-genero {
+    width: 16.5rem;
+    height: 8.25rem;
+    border-radius: var(--radio-m);
+    overflow: hidden;
+    position: relative;
+}
+
+.titulo-genero {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    color: var(--fijo-negro);
+}
+
+.portada-genero {
+    width: 5.75rem;
+    height: 5.75rem;
+    aspect-ratio: 1;
+    rotate: 20deg;
+    box-shadow: var(--sombra-tarjeta);
+    border-radius: var(--radio-lg);
+    position: absolute;
+    top: 4.75rem;
+    left: 9.75rem;
+}
+
+@media (max-width: 1023px) {
+    .tarjeta-genero {
+        width: 10.25rem;
+        height: 6rem;
+        border-radius: var(--radio-ml);
+    }
+
+    .titulo-genero {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    }
+
+    .portada-genero {
+        width: 4rem;
+        height: 4rem;
+        top: 3rem;
+        left: 5.25rem;
+    }
+}

@@ -1,4 +1,4 @@
-.tarjeta {
+.tarjeta-album {
     width: 12.5rem;
     display: flex;
     flex-direction: column;
@@ -6,9 +6,15 @@
     border-radius: var(--radio-lg);
     padding: var(--espacio-3);
     background: var(--fondo-superficie);
+    flex-shrink: 0;
 }
 
-.tarjeta-texto {
+.tarjeta-album:hover {
+    background: var(--fondo-elevada);
+    box-shadow: var(--sombra-tarjeta);
+}
+
+.texto-album {
     display: flex;
     flex-direction: column;
     gap: 0.125rem;
@@ -20,4 +26,20 @@
 
 .tarjeta-artista {
     color: var(--texto-secundario);
+}
+
+.portada-album {
+    position: relative;
+    height: 176px;
+}
+
+.portada-album .boton-play {
+    display: none;
+}
+
+.tarjeta-album:hover .boton-play{
+    display: block;
+    position: absolute;
+    top: 7.25rem;
+    left: 7.25rem;
 }
