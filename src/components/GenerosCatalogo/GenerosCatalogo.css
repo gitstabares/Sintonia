@@ -1,0 +1,41 @@
+.generos-catalogo {
+    display: flex;
+    flex-direction: column;
+    gap: inherit;
+}
+
+.generos-catalogo .encabezado-catalogo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.explorar-por-genero {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+}
+
+.grid-generos-catalogo {
+    display: flex;
+    justify-content: flex-start;
+    gap: 1rem;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 1023px) {
+    .generos-catalogo .encabezado-catalogo {
+        gap: 0;
+    }
+
+    .explorar-por-genero {
+        gap: inherit;
+    }
+
+    .grid-generos-catalogo {
+        gap: 0.75rem;
+        height: 26.5rem;
+        overflow-y: hidden;
+    }
+}

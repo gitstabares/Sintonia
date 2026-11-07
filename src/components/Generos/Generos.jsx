@@ -22,7 +22,7 @@ const Generos = ({ textos, enlaces }) => {
                 </Link>
             </div>
             <div className="grid-generos">
-                {generos?.map((genero) => <TarjetaGenero key={genero.id} genero={genero} />)}
+                {generos?.map((genero) => <TarjetaGenero key={genero.id} genero={genero} enlaces={enlaces} />)}
             </div>
         </section>
     )
