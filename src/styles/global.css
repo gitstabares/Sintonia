@@ -125,3 +125,9 @@ body {
     line-height: 36px;
     letter-spacing: -0.010em;
 }
+
+.cargando {
+    width: 100%;
+    text-align: center;
+    padding: 5rem;
+}

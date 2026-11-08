@@ -2,11 +2,11 @@ import './BannerInvitado.css'
 import { Link } from 'react-router-dom';
 import useMediaQuery from '../../hooks/useMediaQuery.js'
 
-const BannerInvitado = ({ textos }) => {
+const BannerInvitado = ({ textos, enlaces }) => {
     const cta = textos?.paginas?.inicioPublico?.cta;
     const isMobile = useMediaQuery("(max-width: 1023px)");
     return (
-        <div className="banner-invitado">
+        <section className="banner-invitado">
             <div className='textos-banner-invitado'>
                 <div className={isMobile ? "titular-h3" : "titular-h1"}>
                     {cta?.titulo}
@@ -15,10 +15,10 @@ const BannerInvitado = ({ textos }) => {
                     {cta?.texto}
                 </div>
             </div>
-            <Link to='#crearCuenta' className='boton-crear-cuenta cuerpo-m-fuerte'>
+            <Link to={enlaces['crearCuenta']} className='boton-crear-cuenta cuerpo-m-fuerte'>
                 {cta?.botones?.crearCuentaGratis}
             </Link>
-        </div>
+        </section>
     )
 }
 

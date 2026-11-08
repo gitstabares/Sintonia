@@ -1,0 +1,48 @@
+.destacados-catalogo {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding-bottom: 5.5rem;
+}
+
+.destacados-catalogo .titulo {
+    display: flex;
+    justify-content: space-between;
+}
+
+.titulo .enlace {
+    color: var(--texto-marca);
+    display: flex;
+    gap: 6px;
+    text-decoration: none;
+}
+
+.albumes-destacados {
+    display: flex;
+    gap: 0.75rem;
+    width: 100%;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    justify-content: space-between;
+}
+
+.albumes-destacados::-webkit-scrollbar {
+    height: 14px;
+}
+
+.albumes-destacados::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.albumes-destacados::-webkit-scrollbar-thumb {
+    background-color: var(--fondo-superficie);
+    border-radius: var(--radio-completo);border: 3px solid transparent;
+    background-clip: padding-box;
+}
+
+@media (max-width: 1023px) {
+    .destacados-catalogo {
+        padding: 0;
+        gap: 0.75rem;
+    }
+}

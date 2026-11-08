@@ -10,9 +10,6 @@ function useAlbumes(limite = 6, orden = 'populares') {
 
   useEffect(() => {
     const controlador = new AbortController();
-    
-    // CORRECCIÓN 1: Renombramos esto. Antes se llamaba 'limite' y 
-    // sobrescribía tu parámetro 'limite=6' con el ID del temporizador.
     const temporizador = setTimeout(() => controlador.abort(), 12000); 
     
     let vigente = true;
@@ -28,7 +25,7 @@ function useAlbumes(limite = 6, orden = 'populares') {
         if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
         
         const datos = await respuesta.json();
-        if (vigente) setAlbumes(datos?.datos);
+        if (vigente) setAlbumes(datos?.datos ?? datos);
       } catch (error) {
         if (vigente) {
           console.error("Error al cargar los albumes:", error);

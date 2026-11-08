@@ -6,7 +6,8 @@ export default function LayoutPublico({
   datos,
   en,
   alternarIdioma,
-  alternarTexto
+  alternarTexto,
+  enlaces
 }) {
   return (
     <div className="sitio">
@@ -15,12 +16,15 @@ export default function LayoutPublico({
         en={en}
         alternarIdioma={alternarIdioma}
         alternarTexto={alternarTexto}
+        enlaces={enlaces}
       />
       <main>
         <Outlet />
       </main>
       <Footer
         {...datos}
+        en={en}
+        enlaces={enlaces}
       />
     </div>
   );

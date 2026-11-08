@@ -1,0 +1,18 @@
+.catalogo {
+    display: flex;
+    flex-direction: column;
+    background: var(--fondo-superficie);
+    margin: 0.75rem 0.75rem 0.5rem 0.5rem;
+    padding: 2.25rem 1.75rem;
+    border-radius: var(--radio-lg);
+    gap: 1.75rem;
+}
+
+@media (max-width: 1023px) {
+    .catalogo {
+        background: transparent;
+        margin: 0;
+        padding: 0.5rem 1rem 1rem;
+        gap: 1.25rem;
+    }
+}
