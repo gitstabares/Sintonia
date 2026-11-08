@@ -59,9 +59,19 @@ function App() {
                     alternarTexto={() => setTextoGrande(!textoGrande)}
                     enlaces={enlaces}
                 />}>
-                    <Route index element={<Home datos={datos} enlaces={enlaces} />} />
-                    <Route path={enlaces['catalogo']} element={<Catalogo datos={datos} enlaces={enlaces} />} />
-
+                    <Route index element={<Home
+                        datos={datos}
+                        en={en}
+                        enlaces={enlaces}
+                    />} />
+                    <Route
+                        path={`${enlaces['catalogo']}/:gen_id?`}
+                        element={<Catalogo
+                            datos={datos}
+                            en={en}
+                            enlaces={enlaces}
+                        />}
+                    />
                 </Route>
             </Routes>
         </div>

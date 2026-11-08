@@ -1,0 +1,49 @@
+.artistas-catalogo {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.lista-artistas {
+    display: flex;
+    gap: 2rem;
+    overflow-x: auto;
+}
+
+.lista-artistas::-webkit-scrollbar {
+    height: 14px;
+}
+
+.lista-artistas::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.lista-artistas::-webkit-scrollbar-thumb {
+    background-color: var(--fondo-superficie);
+    border-radius: var(--radio-completo);
+    border: 3px solid transparent;
+    background-clip: padding-box;
+}
+
+.lista-artistas .artista-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.lista-artistas .artista-item .cuerpo-m-fuerte {
+    color: var(--texto-principal);
+}
+
+.lista-artistas .artista-item .cuerpo-p {
+    color: var(--texto-secundario);
+}
+
+.lista-artistas .artista-portada {
+    aspect-ratio: 1;
+    width: 10rem;
+    height: 10rem;
+    border-radius: var(--radio-completo);
+    overflow: hidden;
+}

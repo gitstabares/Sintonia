@@ -23,6 +23,7 @@ export default function LayoutPublico({
       </main>
       <Footer
         {...datos}
+        en={en}
         enlaces={enlaces}
       />
     </div>

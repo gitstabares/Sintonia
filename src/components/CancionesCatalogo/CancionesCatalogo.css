@@ -1,0 +1,38 @@
+.canciones-catalogo {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.canciones-catalogo .titular-h2 {
+    color: var(--texto-principal);
+}
+
+.canciones-catalogo .lista-canciones {
+    display: flex;
+    flex-direction: column;
+}
+
+.canciones-catalogo .cancion-item {
+    display: flex;
+    border-bottom: solid 1px var(--borde-sutil);
+    padding: 0.75rem 1rem;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+}
+
+.canciones-catalogo .cancion-contenido {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-right: auto;
+}
+
+.canciones-catalogo .cuerpo-m-fuerte {
+    color: var(--texto-principal);
+}
+
+.canciones-catalogo .cuerpo-p {
+    color: var(--texto-secundario);
+}
