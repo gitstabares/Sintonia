@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 const Boton = ({ className, tipo, href, onClick, children }) => {
     if (href) {
         return (
-            <Link to={href} className={`boton ${className} ${tipo}`} onClick={onClick}>
+            <Link to={href} className={`boton ${className} ${tipo}`}>
                 {children}
             </Link>
         );

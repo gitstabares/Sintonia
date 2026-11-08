@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 const API = import.meta.env.VITE_API_URL + '/generos';
 
-function useGeneros() {
+function useGeneros(gen_id='') {
   const [generos, setGeneros] = useState(null);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(false);
@@ -10,9 +10,6 @@ function useGeneros() {
 
   useEffect(() => {
     const controlador = new AbortController();
-    
-    // CORRECCIÓN 1: Renombramos esto. Antes se llamaba 'limite' y 
-    // sobrescribía tu parámetro 'limite=6' con el ID del temporizador.
     const temporizador = setTimeout(() => controlador.abort(), 12000); 
     
     let vigente = true;
@@ -22,16 +19,16 @@ function useGeneros() {
 
     async function cargarGeneros() { 
       try {
-        const respuesta = await fetch(`${API}`, {
+        const respuesta = await fetch(`${API}/${gen_id}`, {
           signal: controlador.signal,
         });
         if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
         
         const datos = await respuesta.json();
-        if (vigente) setGeneros(datos?.datos);
+        if (vigente) setGeneros(datos?.datos ?? datos);
       } catch (error) {
         if (vigente) {
-          console.error("Error al cargar los generos:", error);
+          console.error("Error al cargar los genero(s):", error);
           setError(true);
         }
       } finally {
@@ -46,7 +43,7 @@ function useGeneros() {
       clearTimeout(temporizador);
       controlador.abort();
     };
-  }, [intento]); 
+  }, [intento, gen_id]); 
 
   return {
     generos,
