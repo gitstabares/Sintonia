@@ -12,6 +12,7 @@ node_modules/
 dist/
 coverage/
 .vite/
+package-lock.json
 
 # Variables locales; .env base contiene la URL pública del API
 .env.local
