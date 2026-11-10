@@ -13,7 +13,7 @@ export default function CancionesCatalogo({ textos, en, generoActual, estadoGene
     <section className="canciones-catalogo">
       <h2 className={isMobile ? 'titular-h3' : 'titular-h2'}>{cancionesTextos?.titulo}</h2>
       <div className="lista-canciones">
-        {generoActual?.pistas?.map((cancion, index) => (
+        {generoActual?.pistas?.length ? generoActual.pistas.map((cancion, index) => (
           <div key={cancion.id} className="cancion-item">
             <div className="cuerpo-m">{index + 1}</div>
             <div className="cancion-contenido">
@@ -22,7 +22,7 @@ export default function CancionesCatalogo({ textos, en, generoActual, estadoGene
             </div>
             <div className="cuerpo-p">{`${Math.floor((cancion.duracionSeg || 0) / 60)}:${String((cancion.duracionSeg || 0) % 60).padStart(2, '0')}`}</div>
           </div>
-        ))}
+        )) : <EstadoPeticion vacio en={en} nombre={en ? 'songs' : 'canciones'} />}
       </div>
     </section>
   );

@@ -1,0 +1,9 @@
+.pagina-no-disponible {
+  max-width: 42rem;
+  width: 100%;
+  margin: 3rem auto;
+  padding: var(--espacio-8);
+  text-align: center;
+}
+.pagina-no-disponible p { color: var(--texto-secundario); }
+.pagina-no-disponible a { color: var(--texto-marca); }

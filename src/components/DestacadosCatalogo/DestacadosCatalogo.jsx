@@ -26,7 +26,7 @@ export default function DestacadosCatalogo({ textos, enlaces, en, gen_id, genero
         </Link>}
       </div>
       <div className="albumes-destacados">
-        {destacados?.map(album => <Tarjeta key={album.id} album={album} />)}
+        {destacados?.length ? destacados.map(album => <Tarjeta key={album.id} album={album} />) : <EstadoPeticion vacio en={en} nombre={en ? 'albums' : 'álbumes'} />}
       </div>
     </section>
   );

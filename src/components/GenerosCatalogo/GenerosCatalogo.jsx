@@ -22,7 +22,7 @@ export default function GenerosCatalogo({ textos, enlaces, en, gen_id, listaGene
       <div className="explorar-por-genero">
         <h2 className={isMobile ? 'titular-h3' : 'titular-h2'}>{catalogo?.generos?.titulo}</h2>
         <div className="grid-generos-catalogo">
-          {listaGeneros?.map(genero => <TarjetaGenero key={genero.id} genero={genero} enlaces={enlaces} />)}
+          {listaGeneros?.length ? listaGeneros.map(genero => <TarjetaGenero key={genero.id} genero={genero} enlaces={enlaces} />) : <EstadoPeticion vacio en={en} nombre={en ? 'genres' : 'géneros'} />}
         </div>
       </div>
     </section>

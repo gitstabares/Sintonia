@@ -20,7 +20,7 @@ export default function SuenaAhora({ textos, enlaces, en }) {
         </Link>
       </div>
       <div className="top-canciones">
-        {populares?.map(album => <Tarjeta key={album.id} album={album} />)}
+        {populares?.length ? populares.map(album => <Tarjeta key={album.id} album={album} />) : <EstadoPeticion vacio en={en} nombre={en ? 'albums' : 'álbumes'} />}
       </div>
     </section>
   );

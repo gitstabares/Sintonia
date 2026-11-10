@@ -5,6 +5,7 @@ import { Route, Routes } from 'react-router-dom';
 import LayoutPublico from './layouts/LayoutPublico.jsx';
 import Home from './pages/Home/Home.jsx';
 import Catalogo from './pages/Catalogo/Catalogo.jsx';
+import NoEncontrada from './pages/NoEncontrada.jsx';
 import { leerConsentimiento, leerIdioma, guardarIdioma, guardarConsentimiento, reiniciarConsentimiento } from './utils/preferencias.js';
 
 const almacenamiento = () => {
@@ -50,6 +51,7 @@ export default function App() {
         }>
           <Route index element={<Home datos={datos} en={en} enlaces={enlaces} />} />
           <Route path="catalogo/:gen_id?" element={<Catalogo datos={datos} en={en} enlaces={enlaces} />} />
+          <Route path="*" element={<NoEncontrada en={en} />} />
         </Route>
       </Routes>
     </div>

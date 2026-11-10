@@ -14,13 +14,13 @@ export default function ArtistasCatalogo({ textos, en, generoActual, estadoGener
     <section className="artistas-catalogo">
       <h2 className={isMobile ? 'titular-h3' : 'titular-h2'}>{artistasTextos?.titulo}</h2>
       <div className="lista-artistas">
-        {generoActual?.artistas?.map(artista => (
+        {generoActual?.artistas?.length ? generoActual.artistas.map(artista => (
           <div key={artista.id} className="artista-item">
             <div className="artista-portada"><Portada {...artista.portada} /></div>
             <div className="cuerpo-m-fuerte">{artista.nombre}</div>
             <div className="cuerpo-p">{artistasTextos?.etiqueta}</div>
           </div>
-        ))}
+        )) : <EstadoPeticion vacio en={en} nombre={en ? 'artists' : 'artistas'} />}
       </div>
     </section>
   );

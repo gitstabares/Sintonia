@@ -22,7 +22,7 @@ export default function Generos({ textos, enlaces, en }) {
         </Link>
       </div>
       <div className="grid-generos">
-        {generos?.map(genero => <TarjetaGenero key={genero.id} genero={genero} enlaces={enlaces} />)}
+        {generos?.length ? generos.map(genero => <TarjetaGenero key={genero.id} genero={genero} enlaces={enlaces} />) : <EstadoPeticion vacio en={en} nombre={en ? 'genres' : 'géneros'} />}
       </div>
     </section>
   );
