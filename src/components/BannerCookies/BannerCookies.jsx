@@ -4,7 +4,7 @@ import Boton from '../Boton/Boton';
 export default function BannerCookies({ textos, onAceptar, onRechazar }) {
   const banner = textos?.cookies?.banner;
   return (
-    <section className="banner-cookies" aria-label={banner?.titulo || 'Cookies'}>
+    <section role="region" className="banner-cookies" aria-label={banner?.titulo || 'Cookies'}>
       <div className="texto">
         <div className="titulo cuerpo-m-fuerte">{banner?.titulo}</div>
         <div className="descripcion cuerpo-p">{banner?.texto}</div>

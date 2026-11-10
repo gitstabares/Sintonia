@@ -12,7 +12,7 @@ body {
 .titular-gigante {
     font-family: var(--fuente-syne);
     font-weight: 800;
-    font-size: 7.5rem;
+    font-size: clamp(3.75rem, 8vw, 7.5rem);
     line-height: 6.75rem;
     letter-spacing: -0.030em;
 }
