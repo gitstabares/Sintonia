@@ -118,6 +118,7 @@ test('extrae solamente textos de accesibilidad del contrato de la API', () => {
     altoContraste: { etiqueta: 'Alto contraste', ayuda: 'Ayuda' },
   };
   assert.deepEqual(extraerTextosAccesibilidad({ textos: { accesibilidad: acc } }), acc);
+  assert.deepEqual(extraerTextosAccesibilidad({ textos: acc }), acc);
   assert.deepEqual(extraerTextosAccesibilidad({ accesibilidad: acc }), acc);
   assert.deepEqual(extraerTextosAccesibilidad(acc), acc);
   assert.equal(extraerTextosAccesibilidad({ textos: {} }), null);
