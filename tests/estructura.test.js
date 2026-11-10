@@ -32,7 +32,7 @@ test('todos los tokens CSS utilizados están declarados', () => {
   const definidos = new Set([...tokens.matchAll(/--([\w-]+)\s*:/g)].map(m => m[1]));
   const sinDefinir = [];
   for (const archivo of recorrer(src).filter(ruta => ruta.endsWith('.css'))) {
-    const css = readFileSync(archivo, 'utf8');
+    const css = readFileSync(archivo, 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
     for (const m of css.matchAll(/var\(--([\w-]+)/g)) {
       if (!definidos.has(m[1])) sinDefinir.push(`${path.relative(src, archivo)}: ${m[1]}`);
     }
