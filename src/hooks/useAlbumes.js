@@ -1,6 +1,6 @@
-import useRecurso from './useRecurso';
+import useRecurso from './useRecurso.js';
 
-export default function useAlbumes(limite = 6, orden = 'populares', filtros = {}) {
-  const { datos, ...estado } = useRecurso('/albumes', { orden, limite, ...filtros });
+export default function useAlbumes(limite = 6, orden = 'populares', filtros = {}, activo = true) {
+  const { datos, ...estado } = useRecurso('/albumes', { orden, limite, ...filtros }, activo);
   return { albumes: datos, ...estado };
 }

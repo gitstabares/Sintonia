@@ -1,30 +1,29 @@
-import useGeneros from '../../hooks/useGeneros';
 import useMediaQuery from '../../hooks/useMediaQuery';
-import './CancionesCatalogo.css'
+import EstadoPeticion from '../EstadoPeticion/EstadoPeticion';
+import './CancionesCatalogo.css';
 
-const CancionesCatalogo = ({ textos, en, gen_id }) => {
-    const canciones_textos = textos?.paginas?.catalogo?.genero?.canciones;
-    const isMobile = useMediaQuery("(max-width: 1023px)");
-    const { generos, cargando } = useGeneros(gen_id);
+export default function CancionesCatalogo({ textos, en, generoActual, estadoGenero }) {
+  const cancionesTextos = textos?.paginas?.catalogo?.genero?.canciones;
+  const isMobile = useMediaQuery('(max-width: 1023px)');
+  if (estadoGenero.cargando || estadoGenero.error) {
+    return <EstadoPeticion {...estadoGenero} en={en} nombre={en ? 'songs' : 'canciones'} />;
+  }
 
-    return (
-        cargando ? <div className={isMobile ? 'titular-h3' : "titular-h2"}>{en ? 'Loading songs...' : 'Cargando canciones...'}</div> :
-            <section className="canciones-catalogo">
-                <div className={isMobile ? 'titular-h3' : "titular-h2"}>{canciones_textos?.titulo}</div>
-                <div className="lista-canciones">
-                    {generos?.pistas?.map((cancion, index) => <div key={cancion?.id} className='cancion-item'>
-                        <div className='cuerpo-m'>{index + 1}</div>
-                        <div className='cancion-contenido'>
-                            <div className='cuerpo-m-fuerte'>{cancion?.titulo}</div>
-                            <div className='cuerpo-p'>{cancion?.artista?.nombre}</div>
-                        </div>
-                        <div className='cuerpo-p'>{
-                            `${Math.floor(cancion?.duracionSeg / 60)}:${String(cancion?.duracionSeg % 60).padStart(2, '0')}`
-                        }</div>
-                    </div>)}
-                </div>
-            </section>
-    )
+  return (
+    <section className="canciones-catalogo">
+      <h2 className={isMobile ? 'titular-h3' : 'titular-h2'}>{cancionesTextos?.titulo}</h2>
+      <div className="lista-canciones">
+        {generoActual?.pistas?.map((cancion, index) => (
+          <div key={cancion.id} className="cancion-item">
+            <div className="cuerpo-m">{index + 1}</div>
+            <div className="cancion-contenido">
+              <div className="cuerpo-m-fuerte">{cancion.titulo}</div>
+              <div className="cuerpo-p">{cancion.artista?.nombre}</div>
+            </div>
+            <div className="cuerpo-p">{`${Math.floor((cancion.duracionSeg || 0) / 60)}:${String((cancion.duracionSeg || 0) % 60).padStart(2, '0')}`}</div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
 }
-
-export default CancionesCatalogo

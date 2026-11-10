@@ -4,17 +4,27 @@ import DestacadosCatalogo from '../../components/DestacadosCatalogo/DestacadosCa
 import ArtistasCatalogo from '../../components/ArtistasCatalogo/ArtistasCatalogo';
 import CancionesCatalogo from '../../components/CancionesCatalogo/CancionesCatalogo';
 import EstadoPeticion from '../../components/EstadoPeticion/EstadoPeticion';
-import { useParams } from 'react-router-dom';
+import useGeneros from '../../hooks/useGeneros';
+import useAlbumes from '../../hooks/useAlbumes';
+import { useParams, useSearchParams } from 'react-router-dom';
 
 export default function Catalogo({ datos, en, enlaces }) {
-  const { gen_id } = useParams();
+  const { gen_id: idRuta } = useParams();
+  const [parametros] = useSearchParams();
+  const gen_id = parametros.get('genero') || idRuta || '';
+  const { generos: listaGeneros, ...estadoLista } = useGeneros();
+  const { generos: generoActual, ...estadoGenero } = useGeneros(gen_id, {}, Boolean(gen_id));
+  const { albumes, ...estadoAlbumes } = useAlbumes(6, 'populares', {}, !gen_id);
   if (datos.cargando || datos.error) return <EstadoPeticion {...datos} en={en} nombre={en ? 'catalog' : 'catálogo'} />;
+
   return (
     <div className="catalogo">
-      <GenerosCatalogo {...datos} enlaces={enlaces} en={en} gen_id={gen_id} />
-      {gen_id && <ArtistasCatalogo {...datos} en={en} gen_id={gen_id} />}
-      <DestacadosCatalogo {...datos} enlaces={enlaces} en={en} gen_id={gen_id} />
-      {gen_id && <CancionesCatalogo {...datos} en={en} gen_id={gen_id} />}
+      <GenerosCatalogo textos={datos.textos} enlaces={enlaces} en={en} gen_id={gen_id}
+        listaGeneros={listaGeneros} estadoLista={estadoLista} generoActual={generoActual} estadoGenero={estadoGenero} />
+      {gen_id && <ArtistasCatalogo textos={datos.textos} en={en} generoActual={generoActual} estadoGenero={estadoGenero} />}
+      <DestacadosCatalogo textos={datos.textos} enlaces={enlaces} en={en} gen_id={gen_id}
+        generoActual={generoActual} estadoGenero={estadoGenero} albumes={albumes} estadoAlbumes={estadoAlbumes} />
+      {gen_id && <CancionesCatalogo textos={datos.textos} en={en} generoActual={generoActual} estadoGenero={estadoGenero} />}
     </div>
   );
 }
