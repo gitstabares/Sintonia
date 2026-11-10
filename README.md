@@ -25,7 +25,7 @@ npm run build
 npm run preview
 ```
 
-Los tests unitarios verifican la construcción de URLs, los parámetros de consulta y el consentimiento de cookies. GitHub Actions ejecuta pruebas y compilación al actualizar `S1-05` o `S1-06`.
+Los tests unitarios verifican la construcción de URLs, los parámetros de consulta y el consentimiento de cookies. GitHub Actions ejecuta pruebas y compilación al actualizar `S1-05`, `S1-06` o una rama `fix/`.
 
 ## Funciones implementadas
 
@@ -51,10 +51,17 @@ Para el alcance, pendientes y límites de validación, consulta `docs/REVISION_S
 
 En escritorio, el botón de accesibilidad abre un panel anclado justo debajo de él, alineado a la derecha (`bottom-end`) y reposicionado automáticamente si no cabe. En pantallas de hasta 1023px, el panel se muestra encima del menú como una hoja inferior fija, de ancho completo y con fondo atenuado.
 
-El panel permite activar cinco ajustes independientes, restablecerlos, cerrarse con Escape o con una pulsación fuera, y acceder a un enlace de declaración de accesibilidad intencionalmente deshabilitado hasta que exista la página. La interfaz está disponible en español e inglés.
+El panel permite modificar el tamaño del texto del 80% al 140% en pasos del 10% y activar cuatro ajustes independientes, restablecerlos, cerrarse con Escape o con una pulsación fuera, y acceder a un enlace de declaración de accesibilidad intencionalmente deshabilitado hasta que exista la página. La interfaz está disponible en español e inglés.
 
 Las opciones se reflejan inmediatamente en el documento. Para respetar el consentimiento de cookies del sprint anterior, se guardan en `localStorage` únicamente si se han aceptado las preferencias; en caso contrario funcionan durante la sesión sin persistencia. El ajuste de movimiento reducido también respeta `prefers-reduced-motion` del sistema operativo.
 
 **Limitación del diseño:** el nodo de Figma proporcionado no fue accesible para contrastar medidas de forma visual. Se respetaron las dimensiones del componente preexistente, los tokens del proyecto y las posiciones desktop/móvil especificadas.
 
 Consulta `docs/ACCESIBILIDAD_S1-06.md` para la implementación y pruebas.
+
+### Correcciones de la rama `fix/panel-accesibilidad`
+
+- El control de tamaño de texto muestra el porcentaje formateado por la API, con botones − y + y valor inicial del 100 %.
+- El panel consulta `/textos?seccion=accesibilidad&idioma=...` mediante `useTextosAccesibilidad`. Todos los nombres, ayudas, textos del pie y etiquetas accesibles provienen de la respuesta: no se usan cadenas locales alternativas en el panel.
+- Las filas de los cuatro interruptores son transparentes, sin iconos; su título y descripción están asociados mediante `aria-labelledby` y `aria-describedby`.
+- El enlace de declaración sigue sin ruta activa. Si la API no entrega la sección, no se presenta un panel con textos inventados.

@@ -2,7 +2,7 @@ name: Validación Sintonía S1
 
 on:
   push:
-    branches: [S1-05, S1-06]
+    branches: [S1-05, S1-06, 'fix/**']
   workflow_dispatch:
 
 jobs:
