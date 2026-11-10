@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { crearUrlRecurso } from '../utils/api.js';
 
-const API_BASE = import.meta.env.VITE_API_URL || 'https://yanethm-sintonia-api.fly.dev/api/v1';
+const API_BASE = import.meta.env.VITE_API_URL;
 
 export default function useRecurso(ruta, parametros = {}, activo = true) {
   const url = crearUrlRecurso(API_BASE, ruta, parametros);
