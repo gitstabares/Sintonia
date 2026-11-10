@@ -4,10 +4,15 @@ import Marca from '../../assets/logos/logo.svg?react';
 import Boton from '../Boton/Boton';
 import BotonIcono from '../BotonIcono/BotonIcono';
 import SelectorIdioma from '../SelectorIdioma/SelectorIdioma';
+import PanelAccesibilidad from '../PanelAccesibilidad/PanelAccesibilidad';
 import useMediaQuery from '../../hooks/useMediaQuery';
 import { Link, useLocation } from 'react-router-dom';
 
-export default function Navbar({ textos, cargando, en, alternarIdioma, alternarTexto, textoGrande, enlaces }) {
+export default function Navbar({
+  textos, cargando, en, alternarIdioma,
+  preferenciasAccesibilidad, alternarAccesibilidad, restablecerAccesibilidad,
+  enlaces,
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const menuId = useId();
   const ubicacion = useLocation();
@@ -24,22 +29,22 @@ export default function Navbar({ textos, cargando, en, alternarIdioma, alternarT
   }, [isOpen]);
 
   return (
-    <header className={`header-container ${isOpen ? 'open' : ''}`}>
-      <nav className="header" aria-label={nav?.aria?.navegacion}>
+    <header className={'header-container' + (isOpen ? ' open' : '')}>
+      <nav className="header" aria-label={nav?.aria?.navegacion || (en ? 'Main navigation' : 'Navegación principal')}>
         <div className="header-top">
-          <Link to={enlaces.inicio} aria-label={nav?.logo?.aria} onClick={() => setIsOpen(false)}><Marca /></Link>
+          <Link to={enlaces.inicio} aria-label={nav?.logo?.aria || 'Sintonía'} onClick={() => setIsOpen(false)}><Marca /></Link>
           <div className="header-top-botones">
             {!isOpen && <Boton className="cuerpo-p-fuerte" tipo="fantasma" href={enlaces.ingresar}>
               {menuMovil?.botones?.invitado?.ingresar}
             </Boton>}
             <BotonIcono ancho={44} tipo="fantasma" icono={isOpen ? 'x' : 'menu'}
-              aria-label={isOpen ? (menuMovil?.cerrar) : (menuMovil?.abrir)}
+              aria-label={isOpen ? menuMovil?.cerrar : menuMovil?.abrir}
               aria-expanded={isOpen} aria-controls={menuId}
               onClick={() => setIsOpen(valor => !valor)} />
           </div>
         </div>
         {cargando ? <div className="cuerpo-p cargando">{en ? 'Loading navigation...' : 'Cargando navegación...'}</div> : (
-          <div id={menuId} className={`header-contenido ${isOpen ? 'open' : ''}`}>
+          <div id={menuId} className={'header-contenido' + (isOpen ? ' open' : '')}>
             <div className="cuerpo-p-fuerte header-enlaces">
               <Link className="header-enlace" to={enlaces.inicio}>{nav?.enlaces?.inicio}</Link>
               <Link className="header-enlace" to={enlaces.catalogo}>{nav?.enlaces?.catalogo}</Link>
@@ -48,14 +53,18 @@ export default function Navbar({ textos, cargando, en, alternarIdioma, alternarT
             <div className="header-utilidades cuerpo-m-fuerte">
               <div className="seccion-utilidades">
                 {isMobile && menuMovil?.secciones?.accesibilidad}
-                <BotonIcono ancho={40} tipo="secundario" icono="person"
-                  aria-label={nav?.aria?.accesibilidad}
-                  aria-pressed={textoGrande} onClick={alternarTexto} />
+                <PanelAccesibilidad
+                  textos={textos}
+                  en={en}
+                  preferencias={preferenciasAccesibilidad}
+                  onAlternar={alternarAccesibilidad}
+                  onRestablecer={restablecerAccesibilidad}
+                />
               </div>
               <div className="seccion-utilidades">
                 {isMobile && menuMovil?.secciones?.idioma}
                 <SelectorIdioma en={en} alternarIdioma={alternarIdioma}
-                  aria-label={nav?.aria?.idioma} />
+                  aria-label={nav?.aria?.idioma || (en ? 'Change language' : 'Cambiar idioma')} />
               </div>
             </div>
             <div className="header-botones">
