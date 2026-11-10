@@ -10,10 +10,10 @@
     justify-content: space-between;
 }
 
-.titulo .enlace {
+.suena-ahora .titulo .enlace {
     color: var(--texto-marca);
     display: flex;
-    gap: 6px;
+    gap: 0.375rem;
     text-decoration: none;
 }
 
@@ -27,7 +27,7 @@
 }
 
 .top-canciones::-webkit-scrollbar {
-    height: 14px;
+    height: 0.875rem;
 }
 
 .top-canciones::-webkit-scrollbar-track {
@@ -36,7 +36,7 @@
 
 .top-canciones::-webkit-scrollbar-thumb {
     background-color: var(--fondo-superficie);
-    border-radius: var(--radio-completo);border: 3px solid transparent;
+    border-radius: var(--radio-completo);border: 0.1875rem solid transparent;
     background-clip: padding-box;
 }
 
@@ -46,7 +46,7 @@
         gap: 0.75rem;
     }
 
-    .titulo .enlace {
+    .suena-ahora .titulo .enlace {
         text-decoration: underline;
     }
 }

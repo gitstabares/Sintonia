@@ -10,10 +10,10 @@
     justify-content: space-between;
 }
 
-.titulo .enlace {
+.destacados-catalogo .titulo .enlace {
     color: var(--texto-marca);
     display: flex;
-    gap: 6px;
+    gap: 0.375rem;
     text-decoration: none;
 }
 
@@ -27,7 +27,7 @@
 }
 
 .albumes-destacados::-webkit-scrollbar {
-    height: 14px;
+    height: 0.875rem;
 }
 
 .albumes-destacados::-webkit-scrollbar-track {
@@ -36,7 +36,7 @@
 
 .albumes-destacados::-webkit-scrollbar-thumb {
     background-color: var(--fondo-superficie);
-    border-radius: var(--radio-completo);border: 3px solid transparent;
+    border-radius: var(--radio-completo);border: 0.1875rem solid transparent;
     background-clip: padding-box;
 }
 

@@ -11,7 +11,7 @@
 }
 
 .lista-artistas::-webkit-scrollbar {
-    height: 14px;
+    height: 0.875rem;
 }
 
 .lista-artistas::-webkit-scrollbar-track {
@@ -21,7 +21,7 @@
 .lista-artistas::-webkit-scrollbar-thumb {
     background-color: var(--fondo-superficie);
     border-radius: var(--radio-completo);
-    border: 3px solid transparent;
+    border: 0.1875rem solid transparent;
     background-clip: padding-box;
 }
 

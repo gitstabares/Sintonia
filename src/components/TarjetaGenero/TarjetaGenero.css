@@ -45,3 +45,7 @@
         left: 5.25rem;
     }
 }
+@media (max-width: 1023px) {
+  .tarjeta-genero { width: 100%; min-width: 0; }
+  .tarjeta-genero .portada-genero { left: auto; right: -0.5rem; }
+}

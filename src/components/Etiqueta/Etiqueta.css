@@ -6,7 +6,7 @@
 
 .etiqueta.neutral {
     background: var(--fondo-sutil);
-    color: var(--detalle-nota-fuerte);
+    color: var(--texto-secundario);
 }
 
 .etiqueta.marca {

@@ -1,0 +1,17 @@
+.estado-peticion {
+  width: 100%;
+  padding: var(--espacio-6);
+  margin: 0;
+  color: var(--texto-secundario);
+  text-align: center;
+}
+.estado-peticion p { margin: 0 0 var(--espacio-4); }
+.estado-peticion button {
+  padding: var(--espacio-3) var(--espacio-6);
+  color: var(--texto-sobre-marca);
+  background: var(--marca-primario);
+  border: 0;
+  border-radius: var(--radio-completo);
+  cursor: pointer;
+}
+.estado-peticion button:hover { background: var(--marca-primario-hover); }
