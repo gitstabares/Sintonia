@@ -8,7 +8,7 @@ export default function LayoutPublico({ datos, en, alternarIdioma, alternarTexto
     <div className="sitio">
       <Navbar {...datos} en={en} alternarIdioma={alternarIdioma}
         alternarTexto={alternarTexto} textoGrande={textoGrande} enlaces={enlaces} />
-      <main><Outlet /></main>
+      <main><Outlet /></main>w
       <Footer {...datos} en={en} enlaces={enlaces} cambiarCookies={cambiarCookies} />
       {consentimiento === null && !datos.cargando && !datos.error && (
         <BannerCookies textos={datos.textos}

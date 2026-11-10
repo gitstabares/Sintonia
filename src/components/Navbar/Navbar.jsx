@@ -4,11 +4,10 @@ import Marca from '../../assets/logos/logo.svg?react';
 import Boton from '../Boton/Boton';
 import BotonIcono from '../BotonIcono/BotonIcono';
 import SelectorIdioma from '../SelectorIdioma/SelectorIdioma';
-import EstadoPeticion from '../EstadoPeticion/EstadoPeticion';
 import useMediaQuery from '../../hooks/useMediaQuery';
 import { Link, useLocation } from 'react-router-dom';
 
-export default function Navbar({ textos, cargando, error, recargar, en, alternarIdioma, alternarTexto, textoGrande, enlaces }) {
+export default function Navbar({ textos, cargando, en, alternarIdioma, alternarTexto, textoGrande, enlaces }) {
   const [isOpen, setIsOpen] = useState(false);
   const menuId = useId();
   const ubicacion = useLocation();
@@ -39,10 +38,7 @@ export default function Navbar({ textos, cargando, error, recargar, en, alternar
               onClick={() => setIsOpen(valor => !valor)} />
           </div>
         </div>
-        {cargando || error ? (
-          <EstadoPeticion cargando={cargando} error={error} recargar={recargar}
-            en={en} nombre={en ? 'navigation' : 'navegación'} />
-        ) : (
+        {cargando ? <div className="cuerpo-p cargando">{en ? 'Loading navigation...' : 'Cargando navegación...'}</div> : (
           <div id={menuId} className={`header-contenido ${isOpen ? 'open' : ''}`}>
             <div className="cuerpo-p-fuerte header-enlaces">
               <Link className="header-enlace" to={enlaces.inicio}>{nav?.enlaces?.inicio}</Link>
