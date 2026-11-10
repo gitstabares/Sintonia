@@ -80,7 +80,7 @@ export default function PanelAccesibilidad({
         <FloatingPortal>
           {movil && (
             <div
-              className="panel-accesibilidad__fondo"
+              className="panel-accesibilidad-fondo"
               aria-hidden="true"
               onClick={() => setAbierto(false)}
             />
@@ -96,10 +96,10 @@ export default function PanelAccesibilidad({
                 'aria-modal': movil ? 'true' : undefined,
               })}
             >
-              <header className="panel-accesibilidad__encabezado">
-                <h2 className="panel-accesibilidad__titulo titular-h3" id={idTitulo}>{txtAcc?.titulo}</h2>
+              <header className="panel-accesibilidad-encabezado">
+                <h2 className="panel-accesibilidad-titulo titular-h3" id={idTitulo}>{txtAcc?.titulo}</h2>
                 <button
-                  className="panel-accesibilidad__cerrar"
+                  className="panel-accesibilidad-cerrar"
                   type="button"
                   onClick={() => setAbierto(false)}
                   aria-label={txtAcc?.aria?.cerrar}
@@ -108,26 +108,26 @@ export default function PanelAccesibilidad({
                 </button>
               </header>
 
-              <section className="panel-accesibilidad__tamano" aria-labelledby={idTamano}>
-                <h3 className="panel-accesibilidad__etiqueta-seccion" id={idTamano}>
+              <section className="panel-accesibilidad-tamano" aria-labelledby={idTamano}>
+                <h3 className="panel-accesibilidad-etiqueta-seccion" id={idTamano}>
                   {txtAcc?.tamanoTexto?.etiqueta}
                 </h3>
-                <div className="panel-accesibilidad__control-tamano" role="group" aria-labelledby={idTamano}>
+                <div className="panel-accesibilidad-control-tamano" role="group" aria-labelledby={idTamano}>
                   <button
                     type="button"
-                    className="panel-accesibilidad__boton-tamano"
+                    className="panel-accesibilidad-boton-tamano"
                     aria-label={txtAcc?.tamanoTexto?.reducir}
                     disabled={preferencias?.tamanoTexto <= TAMANO_TEXTO_MIN}
                     onClick={() => onCambiarTamanoTexto(-1)}
                   >
                     &minus;
                   </button>
-                  <output className="panel-accesibilidad__valor-tamano" aria-live="polite">
+                  <output className="panel-accesibilidad-valor-tamano" aria-live="polite">
                     {porcentaje}
                   </output>
                   <button
                     type="button"
-                    className="panel-accesibilidad__boton-tamano"
+                    className="panel-accesibilidad-boton-tamano"
                     aria-label={txtAcc?.tamanoTexto?.aumentar}
                     disabled={preferencias?.tamanoTexto >= TAMANO_TEXTO_MAX}
                     onClick={() => onCambiarTamanoTexto(1)}
@@ -137,19 +137,19 @@ export default function PanelAccesibilidad({
                 </div>
               </section>
 
-              <div className="panel-accesibilidad__opciones">
+              <div className="panel-accesibilidad-opciones">
                 {opciones.map(opcion => {
                   const activo = preferencias?.[opcion.clave] === true;
                   const idOpcion = idPanel + '-' + opcion.clave;
                   const idAyuda = idOpcion + '-ayuda';
                   return (
-                    <div className="panel-accesibilidad__opcion" key={opcion.clave}>
-                      <div className="panel-accesibilidad__texto">
-                        <h3 className="panel-accesibilidad__etiqueta" id={idOpcion}>{opcion.etiqueta}</h3>
-                        <p className="panel-accesibilidad__descripcion" id={idAyuda}>{opcion.ayuda}</p>
+                    <div className="panel-accesibilidad-opcion" key={opcion.clave}>
+                      <div className="panel-accesibilidad-texto">
+                        <h3 className="panel-accesibilidad-etiqueta" id={idOpcion}>{opcion.etiqueta}</h3>
+                        <p className="panel-accesibilidad-descripcion" id={idAyuda}>{opcion.ayuda}</p>
                       </div>
                       <button
-                        className={'panel-accesibilidad__interruptor' + (activo ? ' panel-accesibilidad__interruptor--activo' : '')}
+                        className={'panel-accesibilidad-interruptor' + (activo ? ' panel-accesibilidad-interruptor--activo' : '')}
                         type="button"
                         role="switch"
                         aria-checked={activo}
@@ -157,25 +157,25 @@ export default function PanelAccesibilidad({
                         aria-describedby={idAyuda}
                         onClick={() => onAlternar(opcion.clave)}
                       >
-                        <span className="panel-accesibilidad__indicador" aria-hidden="true" />
+                        <span className="panel-accesibilidad-indicador" aria-hidden="true" />
                       </button>
                     </div>
                   );
                 })}
               </div>
 
-              <p className="panel-accesibilidad__nota detalle-nota">{txtAcc?.mensajes?.nota}</p>
+              <p className="panel-accesibilidad-nota detalle-nota">{txtAcc?.mensajes?.nota}</p>
 
-              <footer className="panel-accesibilidad__pie">
+              <footer className="panel-accesibilidad-pie">
                 <a
-                  className="panel-accesibilidad__declaracion"
+                  className="panel-accesibilidad-declaracion"
                   href="#"
                   aria-disabled="true"
                   onClick={evento => evento.preventDefault()}
                 >
                   {txtAcc?.enlaces?.declaracion}
                 </a>
-                <button className="panel-accesibilidad__restablecer" type="button" onClick={onRestablecer}>
+                <button className="panel-accesibilidad-restablecer" type="button" onClick={onRestablecer}>
                   {txtAcc?.botones?.restablecer}
                 </button>
               </footer>
