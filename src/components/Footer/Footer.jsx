@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
 import Marca from '../../assets/logos/logo.svg?react';
-import "./Footer.css";
+import './Footer.css';
 
-export default function Footer({ textos, cargando, enlaces, en }) {
+export default function Footer({ textos, cargando, enlaces, en, cambiarCookies }) {
   const footer = textos?.footer;
   const anio = new Date().getFullYear();
   return (
@@ -24,6 +24,9 @@ export default function Footer({ textos, cargando, enlaces, en }) {
           </div>
           <div className="footer-bottom detalle-nota">
             <div>{footer?.legal?.derechos?.replace('{anio}', anio)}</div>
+            <button type="button" className="footer-cookies" onClick={cambiarCookies}>
+              {en ? 'Cookie preferences' : 'Preferencias de cookies'}
+            </button>
             <div>{footer?.legal?.nota}</div>
           </div>
         </>

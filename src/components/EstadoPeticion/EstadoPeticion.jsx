@@ -1,9 +1,11 @@
+import './EstadoPeticion.css';
+
 export default function EstadoPeticion({ cargando, error, recargar, en, nombre = '' }) {
-  if (cargando) return <p role="status" aria-live="polite">{en ? `Loading ${nombre}...` : `Cargando ${nombre}...`}</p>;
+  if (cargando) return <p className="estado-peticion cuerpo-m" role="status" aria-live="polite">{en ? `Loading ${nombre}...` : `Cargando ${nombre}...`}</p>;
   if (error) return (
-    <div role="alert">
+    <div className="estado-peticion cuerpo-m" role="alert">
       <p>{en ? `We couldn't load ${nombre}. Please try again.` : `No pudimos cargar ${nombre}. Inténtalo de nuevo.`}</p>
-      {recargar && <button type="button" onClick={recargar}>{en ? 'Retry' : 'Reintentar'}</button>}
+      {recargar && <button type="button" className="cuerpo-p-fuerte" onClick={recargar}>{en ? 'Retry' : 'Reintentar'}</button>}
     </div>
   );
   return null;
