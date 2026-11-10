@@ -97,7 +97,7 @@ export default function PanelAccesibilidad({
               })}
             >
               <header className="panel-accesibilidad-encabezado">
-                <h2 className="panel-accesibilidad-titulo titular-h3" id={idTitulo}>{txtAcc?.titulo}</h2>
+                <h3 className="panel-accesibilidad-titulo titular-h3" id={idTitulo}>{txtAcc?.titulo}</h3>
                 <button
                   className="panel-accesibilidad-cerrar"
                   type="button"
@@ -109,10 +109,10 @@ export default function PanelAccesibilidad({
               </header>
 
               <section className="panel-accesibilidad-tamano" aria-labelledby={idTamano}>
-                <h3 className="panel-accesibilidad-etiqueta-seccion" id={idTamano}>
+                <h4 className="panel-accesibilidad-etiqueta-seccion cuerpo-m-fuerte" id={idTamano}>
                   {txtAcc?.tamanoTexto?.etiqueta}
-                </h3>
-                <div className="panel-accesibilidad-control-tamano" role="group" aria-labelledby={idTamano}>
+                </h4>
+                <div className="panel-accesibilidad-control-tamano cuerpo-p" role="group" aria-labelledby={idTamano}>
                   <button
                     type="button"
                     className="panel-accesibilidad-boton-tamano"
@@ -122,7 +122,7 @@ export default function PanelAccesibilidad({
                   >
                     &minus;
                   </button>
-                  <output className="panel-accesibilidad-valor-tamano" aria-live="polite">
+                  <output className="panel-accesibilidad-valor-tamano cuerpo-m-fuerte" aria-live="polite">
                     {porcentaje}
                   </output>
                   <button
@@ -145,8 +145,8 @@ export default function PanelAccesibilidad({
                   return (
                     <div className="panel-accesibilidad-opcion" key={opcion.clave}>
                       <div className="panel-accesibilidad-texto">
-                        <h3 className="panel-accesibilidad-etiqueta" id={idOpcion}>{opcion.etiqueta}</h3>
-                        <p className="panel-accesibilidad-descripcion" id={idAyuda}>{opcion.ayuda}</p>
+                        <h3 className="panel-accesibilidad-etiqueta cuerpo-m-fuerte" id={idOpcion}>{opcion.etiqueta}</h3>
+                        <p className="panel-accesibilidad-descripcion cuerpo-p" id={idAyuda}>{opcion.ayuda}</p>
                       </div>
                       <button
                         className={'panel-accesibilidad-interruptor' + (activo ? ' panel-accesibilidad-interruptor--activo' : '')}
@@ -168,14 +168,14 @@ export default function PanelAccesibilidad({
 
               <footer className="panel-accesibilidad-pie">
                 <a
-                  className="panel-accesibilidad-declaracion"
+                  className="panel-accesibilidad-declaracion cuerpo-p-fuerte"
                   href="#"
                   aria-disabled="true"
                   onClick={evento => evento.preventDefault()}
                 >
                   {txtAcc?.enlaces?.declaracion}
                 </a>
-                <button className="panel-accesibilidad-restablecer" type="button" onClick={onRestablecer}>
+                <button className="panel-accesibilidad-restablecer cuerpo-p-fuerte" type="button" onClick={onRestablecer}>
                   {txtAcc?.botones?.restablecer}
                 </button>
               </footer>
