@@ -48,3 +48,7 @@
         width: 100%;
     }
 }
+
+@media (max-width: 640px) {
+  .banner-cookies .botones > * { flex: 1; }
+}
