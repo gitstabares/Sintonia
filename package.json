@@ -1,22 +1,19 @@
 {
   "name": "sintonia",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "private": true,
+  "description": "Catálogo musical responsive de Sintonía",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "vite"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "node --test"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gitstabares/Sintonia.git"
+    "url": "https://github.com/gitstabares/Sintonia.git"
   },
-  "keywords": [],
-  "type": "module",
-  "bugs": {
-    "url": "https://github.com/gitstabares/Sintonia/issues"
-  },
-  "homepage": "https://github.com/gitstabares/Sintonia#readme",
   "dependencies": {
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
