@@ -25,15 +25,15 @@ export default function Navbar({ textos, cargando, en, alternarIdioma, alternarT
 
   return (
     <header className={`header-container ${isOpen ? 'open' : ''}`}>
-      <nav className="header" aria-label={nav?.aria?.navegacion || (en ? 'Navigation' : 'Navegación principal')}>
+      <nav className="header" aria-label={nav?.aria?.navegacion}>
         <div className="header-top">
-          <Link to={enlaces.inicio} aria-label={nav?.logo?.aria || 'Sintonía'} onClick={() => setIsOpen(false)}><Marca /></Link>
+          <Link to={enlaces.inicio} aria-label={nav?.logo?.aria} onClick={() => setIsOpen(false)}><Marca /></Link>
           <div className="header-top-botones">
             {!isOpen && <Boton className="cuerpo-p-fuerte" tipo="fantasma" href={enlaces.ingresar}>
               {menuMovil?.botones?.invitado?.ingresar}
             </Boton>}
             <BotonIcono ancho={44} tipo="fantasma" icono={isOpen ? 'x' : 'menu'}
-              aria-label={isOpen ? (menuMovil?.cerrar || 'Cerrar menú') : (menuMovil?.abrir || 'Abrir menú')}
+              aria-label={isOpen ? (menuMovil?.cerrar) : (menuMovil?.abrir)}
               aria-expanded={isOpen} aria-controls={menuId}
               onClick={() => setIsOpen(valor => !valor)} />
           </div>
@@ -49,13 +49,13 @@ export default function Navbar({ textos, cargando, en, alternarIdioma, alternarT
               <div className="seccion-utilidades">
                 {isMobile && menuMovil?.secciones?.accesibilidad}
                 <BotonIcono ancho={40} tipo="secundario" icono="person"
-                  aria-label={en ? 'Change text size' : 'Cambiar tamaño del texto'}
+                  aria-label={nav?.aria?.accesibilidad}
                   aria-pressed={textoGrande} onClick={alternarTexto} />
               </div>
               <div className="seccion-utilidades">
                 {isMobile && menuMovil?.secciones?.idioma}
                 <SelectorIdioma en={en} alternarIdioma={alternarIdioma}
-                  aria-label={nav?.aria?.idioma || (en ? 'Change language' : 'Cambiar idioma')} />
+                  aria-label={nav?.aria?.idioma} />
               </div>
             </div>
             <div className="header-botones">

@@ -1,0 +1,22 @@
+.panel-accesibilidad {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  width: 22.5rem;
+  border-radius: var(--radio-lg);
+  border: 1px solid var(--borde-sutil);
+  padding: 1.5rem;
+  gap: 1.25rem;
+  background: var(--fondo-elevada);
+}
+
+@media (max-width: 1023px) {
+  .panel-accesibilidad {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    border-radius: var(--radio-lgxl);
+  }
+}
