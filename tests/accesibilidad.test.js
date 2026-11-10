@@ -3,11 +3,15 @@ import assert from 'node:assert/strict';
 import {
   CLAVE_ACCESIBILIDAD,
   PREFERENCIAS_ACCESIBILIDAD,
+  TAMANO_TEXTO_MIN,
+  TAMANO_TEXTO_MAX,
   normalizarAccesibilidad,
+  ajustarTamanoTexto,
   leerAccesibilidad,
   guardarAccesibilidad,
   aplicarAccesibilidad,
 } from '../src/utils/accesibilidad.js';
+import { extraerTextosAccesibilidad } from '../src/utils/textosAccesibilidad.js';
 
 function almacenamientoPrueba() {
   const valores = new Map();
@@ -30,66 +34,93 @@ function raizPrueba() {
   };
 }
 
-test('las cinco preferencias están desactivadas inicialmente', () => {
-  assert.deepEqual(Object.keys(PREFERENCIAS_ACCESIBILIDAD), [
-    'textoGrande', 'altoContraste', 'reducirMovimiento', 'subrayarEnlaces', 'espaciadoLectura',
-  ]);
-  assert.deepEqual(leerAccesibilidad(almacenamientoPrueba(), null), { ...PREFERENCIAS_ACCESIBILIDAD });
-});
-
-test('normaliza valores externos para aceptar solo booleanos verdaderos', () => {
-  assert.deepEqual(normalizarAccesibilidad({ altoContraste: true, reducirMovimiento: 'true', datoDesconocido: true }), {
-    ...PREFERENCIAS_ACCESIBILIDAD, altoContraste: true,
+test('tamaño inicial 100%, con otros cuatro ajustes booleanos', () => {
+  assert.deepEqual(PREFERENCIAS_ACCESIBILIDAD, {
+    tamanoTexto: 100,
+    altoContraste: false,
+    reducirMovimiento: false,
+    subrayarEnlaces: false,
+    espaciado: false,
   });
 });
 
-test('persiste los ajustes solamente tras aceptar el consentimiento', () => {
+test('los controles modifican el tamaño en pasos de 10% entre 80 y 140', () => {
+  assert.equal(ajustarTamanoTexto(100, 1), 110);
+  assert.equal(ajustarTamanoTexto(100, -1), 90);
+  assert.equal(ajustarTamanoTexto(TAMANO_TEXTO_MIN, -1), TAMANO_TEXTO_MIN);
+  assert.equal(ajustarTamanoTexto(TAMANO_TEXTO_MAX, 1), TAMANO_TEXTO_MAX);
+  assert.equal(ajustarTamanoTexto(101, 1), 110);
+});
+
+test('normaliza los porcentajes guardados y los booleanos', () => {
+  assert.deepEqual(normalizarAccesibilidad({
+    tamanoTexto: 999, altoContraste: true, reducirMovimiento: 'true',
+  }), { ...PREFERENCIAS_ACCESIBILIDAD, tamanoTexto: 140, altoContraste: true });
+  assert.equal(normalizarAccesibilidad({ tamanoTexto: -100 }).tamanoTexto, 80);
+  assert.equal(normalizarAccesibilidad({ tamanoTexto: '130' }).tamanoTexto, 100);
+});
+
+test('migra los booleanos antiguos sin perder preferencias', () => {
+  assert.equal(normalizarAccesibilidad({ textoGrande: true }).tamanoTexto, 110);
+  assert.equal(normalizarAccesibilidad({ espaciadoLectura: true }).espaciado, true);
+});
+
+test('persiste ajustes únicamente con consentimiento aceptado', () => {
   const storage = almacenamientoPrueba();
-  guardarAccesibilidad(storage, { textoGrande: true }, 'rechazado');
+  guardarAccesibilidad(storage, { tamanoTexto: 120 }, 'rechazado');
   assert.equal(storage.getItem(CLAVE_ACCESIBILIDAD), null);
-  guardarAccesibilidad(storage, { textoGrande: true, altoContraste: true }, 'aceptado');
-  assert.equal(leerAccesibilidad(storage, 'aceptado').textoGrande, true);
+  guardarAccesibilidad(storage, { tamanoTexto: 120, altoContraste: true }, 'aceptado');
+  assert.equal(leerAccesibilidad(storage, 'aceptado').tamanoTexto, 120);
   assert.equal(leerAccesibilidad(storage, 'aceptado').altoContraste, true);
-  guardarAccesibilidad(storage, { textoGrande: true }, null);
+  guardarAccesibilidad(storage, { tamanoTexto: 120 }, null);
   assert.equal(storage.getItem(CLAVE_ACCESIBILIDAD), null);
 });
 
-test('rechaza datos dañados sin romper la interfaz', () => {
+test('datos dañados y almacenamiento bloqueado no rompen el panel', () => {
   const storage = almacenamientoPrueba();
   storage.setItem(CLAVE_ACCESIBILIDAD, '{');
   assert.deepEqual(leerAccesibilidad(storage, 'aceptado'), { ...PREFERENCIAS_ACCESIBILIDAD });
+  const bloqueado = {
+    getItem() { throw new Error('denegado'); },
+    setItem() { throw new Error('denegado'); },
+  };
+  assert.deepEqual(leerAccesibilidad(bloqueado, 'aceptado'), { ...PREFERENCIAS_ACCESIBILIDAD });
+  assert.equal(guardarAccesibilidad(bloqueado, PREFERENCIAS_ACCESIBILIDAD, 'aceptado'), false);
 });
 
-test('activa y revierte las cinco opciones en el documento', () => {
+test('la tipografía escala con el porcentaje y las otras opciones cambian atributos', () => {
   const raiz = raizPrueba();
   aplicarAccesibilidad(raiz, {
-    textoGrande: true,
+    tamanoTexto: 130,
     altoContraste: true,
     reducirMovimiento: true,
     subrayarEnlaces: true,
-    espaciadoLectura: true,
+    espaciado: true,
   });
-  assert.equal(raiz.style.fontSize, '112.5%');
-  for (const nombre of [
-    'data-accesibilidad-contraste',
-    'data-accesibilidad-movimiento',
-    'data-accesibilidad-enlaces',
-    'data-accesibilidad-lectura',
-  ]) assert.equal(raiz.hasAttribute(nombre), true);
+  assert.equal(raiz.style.fontSize, '130%');
+  for (const atributo of [
+    'data-accesibilidad-contraste', 'data-accesibilidad-movimiento',
+    'data-accesibilidad-enlaces', 'data-accesibilidad-lectura',
+  ]) assert.equal(raiz.hasAttribute(atributo), true);
 
   aplicarAccesibilidad(raiz, PREFERENCIAS_ACCESIBILIDAD);
-  assert.equal(raiz.style.fontSize, '');
+  assert.equal(raiz.style.fontSize, '100%');
   assert.equal(raiz.hasAttribute('data-accesibilidad-contraste'), false);
   assert.equal(raiz.hasAttribute('data-accesibilidad-movimiento'), false);
   assert.equal(raiz.hasAttribute('data-accesibilidad-enlaces'), false);
   assert.equal(raiz.hasAttribute('data-accesibilidad-lectura'), false);
 });
 
-test('tolera el bloqueo de almacenamiento local', () => {
-  const bloqueado = {
-    getItem() { throw new Error('denegado'); },
-    setItem() { throw new Error('denegado'); },
+test('extrae solamente textos de accesibilidad del contrato de la API', () => {
+  const acc = {
+    titulo: 'Accesibilidad',
+    tamanoTexto: { etiqueta: 'Tamaño del texto', reducir: 'Disminuir', aumentar: 'Aumentar', valor: '{valor} %' },
+    altoContraste: { etiqueta: 'Alto contraste', ayuda: 'Ayuda' },
   };
-  assert.deepEqual(leerAccesibilidad(bloqueado, 'aceptado'), { ...PREFERENCIAS_ACCESIBILIDAD });
-  assert.equal(guardarAccesibilidad(bloqueado, { textoGrande: true }, 'aceptado'), false);
+  assert.deepEqual(extraerTextosAccesibilidad({ textos: { accesibilidad: acc } }), acc);
+  assert.deepEqual(extraerTextosAccesibilidad({ textos: acc }), acc);
+  assert.deepEqual(extraerTextosAccesibilidad({ accesibilidad: acc }), acc);
+  assert.deepEqual(extraerTextosAccesibilidad(acc), acc);
+  assert.equal(extraerTextosAccesibilidad({ textos: {} }), null);
+  assert.equal(extraerTextosAccesibilidad(null), null);
 });

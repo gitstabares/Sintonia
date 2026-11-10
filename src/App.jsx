@@ -1,4 +1,5 @@
 import useTextos from './hooks/useTextos.js';
+import useTextosAccesibilidad from './hooks/useTextosAccesibilidad.js';
 import './App.css';
 import { useEffect, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
@@ -7,7 +8,7 @@ import Home from './pages/Home/Home.jsx';
 import Catalogo from './pages/Catalogo/Catalogo.jsx';
 import NoEncontrada from './pages/NoEncontrada.jsx';
 import { leerConsentimiento, leerIdioma, guardarIdioma, guardarConsentimiento, reiniciarConsentimiento } from './utils/preferencias.js';
-import { PREFERENCIAS_ACCESIBILIDAD, leerAccesibilidad, guardarAccesibilidad, aplicarAccesibilidad } from './utils/accesibilidad.js';
+import { PREFERENCIAS_ACCESIBILIDAD, leerAccesibilidad, guardarAccesibilidad, aplicarAccesibilidad, ajustarTamanoTexto } from './utils/accesibilidad.js';
 
 const almacenamiento = () => {
   try { return window.localStorage; } catch { return null; }
@@ -20,6 +21,7 @@ export default function App() {
     () => leerAccesibilidad(almacenamiento(), leerConsentimiento(almacenamiento())),
   );
   const datos = useTextos(idioma);
+  const datosAccesibilidad = useTextosAccesibilidad(idioma);
   const en = idioma === 'en';
   const enlaces = {
     inicio: '/', catalogo: '/catalogo', ingresar: '/iniciarSesion',
@@ -51,6 +53,13 @@ export default function App() {
     setPreferenciasAccesibilidad(actual => ({ ...actual, [clave]: !actual[clave] }));
   };
 
+  const cambiarTamanoTexto = direccion => {
+    setPreferenciasAccesibilidad(actual => ({
+      ...actual,
+      tamanoTexto: ajustarTamanoTexto(actual.tamanoTexto, direccion),
+    }));
+  };
+
   const restablecerAccesibilidad = () => setPreferenciasAccesibilidad({ ...PREFERENCIAS_ACCESIBILIDAD });
 
   return (
@@ -58,10 +67,12 @@ export default function App() {
       <Route path="/" element={
         <LayoutPublico
           datos={datos}
+          textosAccesibilidad={datosAccesibilidad.textos}
           en={en}
           alternarIdioma={() => setIdioma(actual => actual === 'en' ? 'es' : 'en')}
           preferenciasAccesibilidad={preferenciasAccesibilidad}
           alternarAccesibilidad={alternarAccesibilidad}
+          cambiarTamanoTexto={cambiarTamanoTexto}
           restablecerAccesibilidad={restablecerAccesibilidad}
           consentimiento={consentimiento}
           guardarConsentimiento={decidirCookies}

@@ -16,56 +16,15 @@ import { useLocation } from 'react-router-dom';
 import BotonIcono from '../BotonIcono/BotonIcono';
 import Icono from '../Icono';
 import useMediaQuery from '../../hooks/useMediaQuery';
+import { TAMANO_TEXTO_MIN, TAMANO_TEXTO_MAX } from '../../utils/accesibilidad.js';
 import './PanelAccesibilidad.css';
-
-const OPCIONES = [
-  {
-    clave: 'textoGrande',
-    icono: 'plus',
-    es: 'Aumentar tamaño de texto',
-    en: 'Increase text size',
-    descripcionEs: 'Amplía la tipografía en toda la aplicación.',
-    descripcionEn: 'Enlarge text throughout the application.',
-  },
-  {
-    clave: 'altoContraste',
-    icono: 'sun',
-    es: 'Alto contraste',
-    en: 'High contrast',
-    descripcionEs: 'Distingue mejor textos, fondos y bordes.',
-    descripcionEn: 'Make text, backgrounds and borders easier to see.',
-  },
-  {
-    clave: 'reducirMovimiento',
-    icono: 'pause',
-    es: 'Reducir movimiento',
-    en: 'Reduce motion',
-    descripcionEs: 'Desactiva animaciones y transiciones.',
-    descripcionEn: 'Disable animations and transitions.',
-  },
-  {
-    clave: 'subrayarEnlaces',
-    icono: 'arrowr',
-    es: 'Subrayar enlaces',
-    en: 'Underline links',
-    descripcionEs: 'Identifica los enlaces fácilmente.',
-    descripcionEn: 'Make links easier to identify.',
-  },
-  {
-    clave: 'espaciadoLectura',
-    icono: 'rows',
-    es: 'Espaciado de lectura',
-    en: 'Reading spacing',
-    descripcionEs: 'Aumenta el espacio entre líneas y palabras.',
-    descripcionEn: 'Increase spacing between lines and words.',
-  },
-];
 
 export default function PanelAccesibilidad({
   textos,
-  en = false,
+  etiquetaBoton,
   preferencias,
   onAlternar,
+  onCambiarTamanoTexto,
   onRestablecer,
 }) {
   const [abierto, setAbierto] = useState(false);
@@ -73,6 +32,8 @@ export default function PanelAccesibilidad({
   const ubicacion = useLocation();
   const idPanel = useId();
   const idTitulo = useId();
+  const idTamano = useId();
+  const txtAcc = textos?.accesibilidad;
 
   const { refs, floatingStyles, context } = useFloating({
     open: abierto,
@@ -80,26 +41,24 @@ export default function PanelAccesibilidad({
     placement: 'bottom-end',
     strategy: 'fixed',
     whileElementsMounted: autoUpdate,
-    middleware: [
-      offset(10),
-      flip({ fallbackPlacements: ['top-end'] }),
-      shift({ padding: 12 }),
-    ],
+    middleware: [offset(10), flip({ fallbackPlacements: ['top-end'] }), shift({ padding: 12 })],
   });
-
   const click = useClick(context);
   const dismiss = useDismiss(context, { escapeKey: true, outsidePress: true });
   const role = useRole(context, { role: 'dialog' });
   const { getReferenceProps, getFloatingProps } = useInteractions([click, dismiss, role]);
 
-  useEffect(() => {
-    setAbierto(false);
-  }, [ubicacion.pathname, ubicacion.search]);
+  useEffect(() => setAbierto(false), [ubicacion.pathname, ubicacion.search]);
 
-  const titulo = en ? 'Accessibility' : 'Accesibilidad';
-  const subtitulo = en ? 'Customize your experience' : 'Personaliza tu experiencia';
-  const cerrar = en ? 'Close accessibility panel' : 'Cerrar panel de accesibilidad';
-  const etiquetaBoton = textos?.navbar?.aria?.accesibilidad || (en ? 'Accessibility settings' : 'Opciones de accesibilidad');
+  // No hay textos de sustitución: todo procede de /textos?seccion=accesibilidad.
+  const opciones = [
+    { clave: 'altoContraste', etiqueta: txtAcc?.altoContraste?.etiqueta, ayuda: txtAcc?.altoContraste?.ayuda },
+    { clave: 'reducirMovimiento', etiqueta: txtAcc?.reducirMovimiento?.etiqueta, ayuda: txtAcc?.reducirMovimiento?.ayuda },
+    { clave: 'subrayarEnlaces', etiqueta: txtAcc?.subrayarEnlaces?.etiqueta, ayuda: txtAcc?.subrayarEnlaces?.ayuda },
+    { clave: 'espaciado', etiqueta: txtAcc?.espaciado?.etiqueta, ayuda: txtAcc?.espaciado?.ayuda },
+  ];
+
+  const porcentaje = txtAcc?.tamanoTexto?.valor?.replace('{valor}', String(preferencias?.tamanoTexto));
 
   return (
     <>
@@ -113,6 +72,7 @@ export default function PanelAccesibilidad({
           'aria-haspopup': 'dialog',
           'aria-expanded': abierto,
           'aria-controls': abierto ? idPanel : undefined,
+          disabled: !txtAcc?.titulo,
         })}
       />
 
@@ -120,76 +80,106 @@ export default function PanelAccesibilidad({
         <FloatingPortal>
           {movil && (
             <div
-              className="panel-accesibilidad__fondo"
+              className="panel-accesibilidad-fondo"
               aria-hidden="true"
               onClick={() => setAbierto(false)}
             />
           )}
           <FloatingFocusManager context={context} modal={movil} returnFocus>
-            <section
+            <aside
               id={idPanel}
               ref={refs.setFloating}
               className={'panel-accesibilidad' + (movil ? ' panel-accesibilidad--movil' : '')}
               style={movil ? undefined : floatingStyles}
-              aria-labelledby={idTitulo}
-              aria-modal={movil ? 'true' : undefined}
-              {...getFloatingProps()}
+              {...getFloatingProps({
+                'aria-labelledby': idTitulo,
+                'aria-modal': movil ? 'true' : undefined,
+              })}
             >
-              <div className="panel-accesibilidad__encabezado">
-                <div>
-                  <h2 className="panel-accesibilidad__titulo" id={idTitulo}>{titulo}</h2>
-                  <p className="panel-accesibilidad__subtitulo">{subtitulo}</p>
-                </div>
-                <button className="panel-accesibilidad__cerrar" type="button" onClick={() => setAbierto(false)} aria-label={cerrar}>
+              <header className="panel-accesibilidad-encabezado">
+                <h3 className="panel-accesibilidad-titulo titular-h3" id={idTitulo}>{txtAcc?.titulo}</h3>
+                <button
+                  className="panel-accesibilidad-cerrar"
+                  type="button"
+                  onClick={() => setAbierto(false)}
+                  aria-label={txtAcc?.aria?.cerrar}
+                >
                   <Icono nombre="x" aria-hidden="true" />
                 </button>
-              </div>
+              </header>
 
-              <div className="panel-accesibilidad__opciones">
-                {OPCIONES.map(opcion => {
+              <section className="panel-accesibilidad-tamano" aria-labelledby={idTamano}>
+                <h4 className="panel-accesibilidad-etiqueta-seccion cuerpo-m-fuerte" id={idTamano}>
+                  {txtAcc?.tamanoTexto?.etiqueta}
+                </h4>
+                <div className="panel-accesibilidad-control-tamano cuerpo-p" role="group" aria-labelledby={idTamano}>
+                  <button
+                    type="button"
+                    className="panel-accesibilidad-boton-tamano"
+                    aria-label={txtAcc?.tamanoTexto?.reducir}
+                    disabled={preferencias?.tamanoTexto <= TAMANO_TEXTO_MIN}
+                    onClick={() => onCambiarTamanoTexto(-1)}
+                  >
+                    &minus;
+                  </button>
+                  <output className="panel-accesibilidad-valor-tamano cuerpo-m-fuerte" aria-live="polite">
+                    {porcentaje}
+                  </output>
+                  <button
+                    type="button"
+                    className="panel-accesibilidad-boton-tamano"
+                    aria-label={txtAcc?.tamanoTexto?.aumentar}
+                    disabled={preferencias?.tamanoTexto >= TAMANO_TEXTO_MAX}
+                    onClick={() => onCambiarTamanoTexto(1)}
+                  >
+                    +
+                  </button>
+                </div>
+              </section>
+
+              <div className="panel-accesibilidad-opciones">
+                {opciones.map(opcion => {
                   const activo = preferencias?.[opcion.clave] === true;
-                  const etiqueta = en ? opcion.en : opcion.es;
+                  const idOpcion = idPanel + '-' + opcion.clave;
+                  const idAyuda = idOpcion + '-ayuda';
                   return (
-                    <button
-                      key={opcion.clave}
-                      className={'panel-accesibilidad__opcion' + (activo ? ' panel-accesibilidad__opcion--activa' : '')}
-                      type="button"
-                      role="switch"
-                      aria-checked={activo}
-                      aria-label={etiqueta}
-                      onClick={() => onAlternar(opcion.clave)}
-                    >
-                      <span className="panel-accesibilidad__icono" aria-hidden="true">
-                        <Icono nombre={opcion.icono} />
-                      </span>
-                      <span className="panel-accesibilidad__texto">
-                        <span className="panel-accesibilidad__etiqueta">{etiqueta}</span>
-                        <span className="panel-accesibilidad__descripcion">{en ? opcion.descripcionEn : opcion.descripcionEs}</span>
-                      </span>
-                      <span className="panel-accesibilidad__interruptor" aria-hidden="true">
-                        <span className="panel-accesibilidad__indicador" />
-                      </span>
-                    </button>
+                    <div className="panel-accesibilidad-opcion" key={opcion.clave}>
+                      <div className="panel-accesibilidad-texto">
+                        <h3 className="panel-accesibilidad-etiqueta cuerpo-m-fuerte" id={idOpcion}>{opcion.etiqueta}</h3>
+                        <p className="panel-accesibilidad-descripcion cuerpo-p" id={idAyuda}>{opcion.ayuda}</p>
+                      </div>
+                      <button
+                        className={'panel-accesibilidad-interruptor' + (activo ? ' panel-accesibilidad-interruptor--activo' : '')}
+                        type="button"
+                        role="switch"
+                        aria-checked={activo}
+                        aria-labelledby={idOpcion}
+                        aria-describedby={idAyuda}
+                        onClick={() => onAlternar(opcion.clave)}
+                      >
+                        <span className="panel-accesibilidad-indicador" aria-hidden="true" />
+                      </button>
+                    </div>
                   );
                 })}
               </div>
 
-              <div className="panel-accesibilidad__pie">
-                <button className="panel-accesibilidad__restablecer" type="button" onClick={onRestablecer}>
-                  {en ? 'Reset settings' : 'Restablecer ajustes'}
-                </button>
+              <p className="panel-accesibilidad-nota detalle-nota">{txtAcc?.mensajes?.nota}</p>
+
+              <footer className="panel-accesibilidad-pie">
                 <a
-                  className="panel-accesibilidad__declaracion"
+                  className="panel-accesibilidad-declaracion cuerpo-p-fuerte"
                   href="#"
                   aria-disabled="true"
-                  aria-label={en ? 'Accessibility statement (coming soon)' : 'Declaración de accesibilidad (próximamente)'}
                   onClick={evento => evento.preventDefault()}
                 >
-                  {en ? 'Accessibility statement' : 'Declaración de accesibilidad'}
-                  <Icono nombre="arrowr" aria-hidden="true" />
+                  {txtAcc?.enlaces?.declaracion}
                 </a>
-              </div>
-            </section>
+                <button className="panel-accesibilidad-restablecer cuerpo-p-fuerte" type="button" onClick={onRestablecer}>
+                  {txtAcc?.botones?.restablecer}
+                </button>
+              </footer>
+            </aside>
           </FloatingFocusManager>
         </FloatingPortal>
       )}
