@@ -16,3 +16,4 @@ coverage/
 # Variables locales; .env base contiene la URL pública del API
 .env.local
 .env.*.local
+package-lock.json
