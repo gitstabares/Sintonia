@@ -1,0 +1,46 @@
+/* Ajustes optativos aplicados a la aplicación completa. */
+html[data-accesibilidad-contraste] {
+  --fondo-base: #000;
+  --fondo-superficie: #090909;
+  --fondo-elevada: #151515;
+  --fondo-sutil: #242424;
+  --texto-principal: #fff;
+  --texto-secundario: #fff;
+  --texto-terciario: #e4e4e4;
+  --texto-marca: #ffec3d;
+  --marca-primario: #ffec3d;
+  --marca-primario-hover: #fffa86;
+  --marca-primario-presionado: #efdc18;
+  --texto-sobre-marca: #000;
+  --borde-sutil: #aaa;
+  --borde-fuerte: #fff;
+}
+html[data-accesibilidad-enlaces] a {
+  text-decoration: underline !important;
+  text-underline-offset: 0.18em;
+  text-decoration-thickness: max(1px, 0.08em);
+}
+html[data-accesibilidad-lectura] {
+  letter-spacing: 0.035em;
+  word-spacing: 0.12em;
+}
+html[data-accesibilidad-lectura] :where(
+  .cuerpo-g, .cuerpo-m, .cuerpo-m-fuerte,
+  .cuerpo-p, .cuerpo-p-fuerte, .detalle-nota, .detalle-nota-fuerte,
+  .titular-h1, .titular-h2, .titular-h3, .titular-h4
+) {
+  line-height: 1.75 !important;
+  letter-spacing: 0.035em !important;
+  word-spacing: 0.12em;
+}
+html[data-accesibilidad-movimiento] {
+  scroll-behavior: auto !important;
+}
+html[data-accesibilidad-movimiento] *,
+html[data-accesibilidad-movimiento] *::before,
+html[data-accesibilidad-movimiento] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
