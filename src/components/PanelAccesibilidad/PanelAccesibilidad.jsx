@@ -132,6 +132,7 @@ export default function PanelAccesibilidad({
               className={'panel-accesibilidad' + (movil ? ' panel-accesibilidad--movil' : '')}
               style={movil ? undefined : floatingStyles}
               aria-labelledby={idTitulo}
+              aria-modal={movil ? 'true' : undefined}
               {...getFloatingProps()}
             >
               <div className="panel-accesibilidad__encabezado">
