@@ -40,8 +40,7 @@ export default function App() {
   };
 
   return (
-    <div className="sitio">
-      <Routes>
+    <Routes>
         <Route path="/" element={
           <LayoutPublico datos={datos} en={en} textoGrande={textoGrande}
             alternarIdioma={() => setIdioma(actual => actual === 'en' ? 'es' : 'en')}
@@ -53,7 +52,6 @@ export default function App() {
           <Route path="catalogo/:gen_id?" element={<Catalogo datos={datos} en={en} enlaces={enlaces} />} />
           <Route path="*" element={<NoEncontrada en={en} />} />
         </Route>
-      </Routes>
-    </div>
+    </Routes>
   );
 }
