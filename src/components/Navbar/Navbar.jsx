@@ -9,8 +9,8 @@ import useMediaQuery from '../../hooks/useMediaQuery';
 import { Link, useLocation } from 'react-router-dom';
 
 export default function Navbar({
-  textos, cargando, en, alternarIdioma,
-  preferenciasAccesibilidad, alternarAccesibilidad, restablecerAccesibilidad,
+  textos, textosAccesibilidad, cargando, en, alternarIdioma,
+  preferenciasAccesibilidad, alternarAccesibilidad, cambiarTamanoTexto, restablecerAccesibilidad,
   enlaces,
 }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -54,10 +54,11 @@ export default function Navbar({
               <div className="seccion-utilidades">
                 {isMobile && menuMovil?.secciones?.accesibilidad}
                 <PanelAccesibilidad
-                  textos={textos}
-                  en={en}
+                  textos={textosAccesibilidad}
+                  etiquetaBoton={textos?.navbar?.aria?.accesibilidad}
                   preferencias={preferenciasAccesibilidad}
                   onAlternar={alternarAccesibilidad}
+                  onCambiarTamanoTexto={cambiarTamanoTexto}
                   onRestablecer={restablecerAccesibilidad}
                 />
               </div>

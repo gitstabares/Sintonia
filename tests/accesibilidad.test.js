@@ -11,7 +11,7 @@ import {
   guardarAccesibilidad,
   aplicarAccesibilidad,
 } from '../src/utils/accesibilidad.js';
-import { extraerTextosAccesibilidad } from '../src/hooks/useTextosAccesibilidad.js';
+import { extraerTextosAccesibilidad } from '../src/utils/textosAccesibilidad.js';
 
 function almacenamientoPrueba() {
   const valores = new Map();
