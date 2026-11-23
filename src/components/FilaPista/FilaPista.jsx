@@ -1,5 +1,4 @@
 import Portada from '../Portada/Portada.jsx';
-import { formatearDuracion } from '../../utils/detalleAlbum.js';
 import './FilaPista.css';
 
 export default function FilaPista({ pista, posicion, album, en }) {
@@ -20,7 +19,7 @@ export default function FilaPista({ pista, posicion, album, en }) {
         <span className="fila-pista__artista cuerpo-p">{artista}</span>
       </div>
       <span className="fila-pista__reproducciones cuerpo-p">{reproduccionesTexto}</span>
-      <span className="fila-pista__duracion cuerpo-p">{formatearDuracion(pista.duracionSeg)}</span>
+      <span className="fila-pista__duracion cuerpo-p">{`${Math.floor((pista.duracionSeg || 0) / 60)}:${String((pista.duracionSeg || 0) % 60).padStart(2, '0')}`}</span>
     </li>
   );
 }

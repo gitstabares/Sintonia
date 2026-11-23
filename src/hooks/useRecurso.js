@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from 'react';
-import { crearUrlRecurso } from '../utils/api.js';
+import { useCallback, useEffect, useState } from "react";
+import { crearUrlRecurso } from "../utils/api.js";
 
 const API_BASE = import.meta.env.VITE_API_URL;
 
@@ -8,8 +8,9 @@ export default function useRecurso(ruta, parametros = {}, activo = true) {
   const [datos, setDatos] = useState(null);
   const [cargando, setCargando] = useState(activo);
   const [error, setError] = useState(null);
+  const [statusCode, setStatusCode] = useState(0);
   const [intento, setIntento] = useState(0);
-  const recargar = useCallback(() => setIntento(valor => valor + 1), []);
+  const recargar = useCallback(() => setIntento((valor) => valor + 1), []);
 
   useEffect(() => {
     if (!activo) {
@@ -28,11 +29,19 @@ export default function useRecurso(ruta, parametros = {}, activo = true) {
     async function cargar() {
       try {
         const respuesta = await fetch(url, { signal: controlador.signal });
-        if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
+        if (!respuesta.ok) {
+          setStatusCode(respuesta?.status);
+          throw new Error(`HTTP ${respuesta.status}`);
+        }
         const contenido = await respuesta.json();
         if (vigente) setDatos(contenido?.datos ?? contenido);
       } catch (fallo) {
-        if (vigente) setError(fallo.name === 'AbortError' ? new Error('Tiempo de espera agotado') : fallo);
+        if (vigente)
+          setError(
+            fallo.name === "AbortError"
+              ? new Error("Tiempo de espera agotado")
+              : fallo,
+          );
       } finally {
         clearTimeout(temporizador);
         if (vigente) setCargando(false);
@@ -47,5 +56,5 @@ export default function useRecurso(ruta, parametros = {}, activo = true) {
     };
   }, [url, intento, activo]);
 
-  return { datos, cargando, error, recargar };
+  return { datos, cargando, error, statusCode, recargar };
 }
