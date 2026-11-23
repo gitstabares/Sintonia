@@ -9,13 +9,13 @@ import EstadoPeticion from '../../components/EstadoPeticion/EstadoPeticion.jsx';
 import useDetalleAlbum from '../../hooks/useDetalleAlbum.js';
 import useMetadatosAlbum from '../../hooks/useMetadatosAlbum.js';
 import { duracionTotalMinutos } from '../../utils/detalleAlbum.js';
+import LayoutPublico from '../../layouts/LayoutPublico.jsx';
+import useTextos from '../../hooks/useTextos.js';
+import useTextosAccesibilidad from '../../hooks/useTextosAccesibilidad.js';
 import './DetalleAlbum.css';
 
-export default function DetalleAlbum({ en, textos }) {
-  const { id } = useParams();
-  const { album, cargando, error, statusCode, recargar } = useDetalleAlbum(id);
+function ContenidoDetalleAlbum({ en, textos, album, cargando, error, statusCode, recargar }) {
   const textosAlbum = textos?.paginas?.album;
-  useMetadatosAlbum(album);
 
   if (statusCode == 404) {
     return (
@@ -122,5 +122,19 @@ export default function DetalleAlbum({ en, textos }) {
         )}
       </section>
     </article>
+  );
+}
+
+export default function DetalleAlbum({ configuracion }) {
+  const { id } = useParams();
+  const datos = useTextos(configuracion.idioma);
+  const datosAccesibilidad = useTextosAccesibilidad(configuracion.idioma);
+  const detalle = useDetalleAlbum(id);
+  useMetadatosAlbum(detalle.album);
+
+  return (
+    <LayoutPublico {...configuracion} datos={datos} textosAccesibilidad={datosAccesibilidad.textos}>
+      <ContenidoDetalleAlbum {...detalle} en={configuracion.en} textos={datos.textos} />
+    </LayoutPublico>
   );
 }

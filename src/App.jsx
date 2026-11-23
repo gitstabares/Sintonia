@@ -1,9 +1,6 @@
-import useTextos from './hooks/useTextos.js';
-import useTextosAccesibilidad from './hooks/useTextosAccesibilidad.js';
 import './App.css';
 import { useEffect, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
-import LayoutPublico from './layouts/LayoutPublico.jsx';
 import Home from './pages/Home/Home.jsx';
 import Catalogo from './pages/Catalogo/Catalogo.jsx';
 import NoEncontrada from './pages/NoEncontrada.jsx';
@@ -21,8 +18,6 @@ export default function App() {
   const [preferenciasAccesibilidad, setPreferenciasAccesibilidad] = useState(
     () => leerAccesibilidad(almacenamiento(), leerConsentimiento(almacenamiento())),
   );
-  const datos = useTextos(idioma);
-  const datosAccesibilidad = useTextosAccesibilidad(idioma);
   const en = idioma === 'en';
   const enlaces = {
     inicio: '/', catalogo: '/catalogo', ingresar: '/iniciarSesion',
@@ -63,29 +58,21 @@ export default function App() {
 
   const restablecerAccesibilidad = () => setPreferenciasAccesibilidad({ ...PREFERENCIAS_ACCESIBILIDAD });
 
+  // Las preferencias son globales; las peticiones a la API pertenecen a cada página.
+  const configuracion = {
+    idioma, en, enlaces,
+    alternarIdioma: () => setIdioma(actual => actual === 'en' ? 'es' : 'en'),
+    preferenciasAccesibilidad,
+    alternarAccesibilidad, cambiarTamanoTexto, restablecerAccesibilidad,
+    consentimiento, guardarConsentimiento: decidirCookies, cambiarCookies,
+  };
+
   return (
     <Routes>
-      <Route path="/" element={
-        <LayoutPublico
-          datos={datos}
-          textosAccesibilidad={datosAccesibilidad.textos}
-          en={en}
-          alternarIdioma={() => setIdioma(actual => actual === 'en' ? 'es' : 'en')}
-          preferenciasAccesibilidad={preferenciasAccesibilidad}
-          alternarAccesibilidad={alternarAccesibilidad}
-          cambiarTamanoTexto={cambiarTamanoTexto}
-          restablecerAccesibilidad={restablecerAccesibilidad}
-          consentimiento={consentimiento}
-          guardarConsentimiento={decidirCookies}
-          cambiarCookies={cambiarCookies}
-          enlaces={enlaces}
-        />
-      }>
-        <Route index element={<Home datos={datos} en={en} enlaces={enlaces} />} />
-        <Route path="catalogo/:gen_id?" element={<Catalogo datos={datos} en={en} enlaces={enlaces} />} />
-        <Route path="albumes/:id" element={<DetalleAlbum en={en} textos={datos.textos} />} />
-        <Route path="*" element={<NoEncontrada en={en} />} />
-      </Route>
+      <Route path="/" element={<Home configuracion={configuracion} />} />
+      <Route path="/catalogo/:gen_id?" element={<Catalogo configuracion={configuracion} />} />
+      <Route path="/albumes/:id" element={<DetalleAlbum configuracion={configuracion} />} />
+      <Route path="*" element={<NoEncontrada configuracion={configuracion} />} />
     </Routes>
   );
 }
