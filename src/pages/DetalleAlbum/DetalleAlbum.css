@@ -1,0 +1,115 @@
+.detalle-album {
+  margin: 12px 12px 8px 8px;
+  padding: 8px 28px 36px;
+  border-radius: var(--radio-lg);
+  background: var(--fondo-superficie);
+  min-width: 0;
+}
+.detalle-album__volver { display: none; }
+.detalle-album__cabecera {
+  display: flex;
+  align-items: flex-end;
+  gap: 28px;
+  margin-bottom: 28px;
+}
+.detalle-album__portada {
+  flex: 0 0 232px;
+  width: 232px;
+  height: 232px;
+  box-shadow: var(--sombra-flotante);
+  border-radius: var(--radio-lg);
+}
+.detalle-album__portada .portada { border-radius: var(--radio-lg); }
+.detalle-album__presentacion { flex: 1; min-width: 0; }
+.detalle-album__etiquetas { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.detalle-album__titulo {
+  margin: 0 0 10px;
+  font: 800 clamp(40px, 4.6vw, 64px)/1.06 var(--fuente-syne);
+  letter-spacing: -0.02em;
+  overflow-wrap: anywhere;
+}
+.detalle-album__resumen {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  color: var(--texto-secundario);
+}
+.detalle-album__avatar { width: 28px; height: 28px; flex-shrink: 0; }
+.detalle-album__avatar .portada { border-radius: var(--radio-completo); }
+.detalle-album__artista { font-weight: 600; color: var(--texto-principal); }
+.detalle-album__encabezado-pistas {
+  display: grid;
+  grid-template-columns: 24px 40px minmax(0, 1fr) 220px 44px;
+  gap: 16px;
+  align-items: center;
+  padding: 0 16px 8px;
+  border-bottom: 1px solid var(--borde-sutil);
+  color: var(--texto-terciario);
+}
+.detalle-album__encabezado-pistas > :first-child { text-align: center; }
+.detalle-album__nombre-columna { grid-column: span 2; }
+.detalle-album__reloj { justify-self: end; }
+.detalle-album__reloj svg { display: block; width: 14px; height: 14px; }
+.detalle-album__lista { list-style: none; margin: 0; padding: 0; }
+.detalle-album__creditos { margin: 26px 0 28px; color: var(--texto-secundario); }
+.detalle-album__creditos p { margin: 0 0 2px; }
+.detalle-album__creditos .detalle-nota { color: var(--texto-terciario); }
+.detalle-album__relacionados { margin-top: 28px; }
+.detalle-album__relacionados h2 { margin: 0 0 14px; }
+.detalle-album__tarjetas {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+.detalle-album__tarjetas .tarjeta-album {
+  background: transparent;
+  width: 200px;
+}
+.detalle-album__tarjetas .tarjeta-album:hover { background: var(--fondo-elevada); }
+.detalle-album--estado { min-height: 320px; display: grid; align-content: center; }
+@media (max-width: 1023px) {
+  .sitio:has(.detalle-album) .header-container { display: none; }
+  .detalle-album {
+    margin: 0;
+    padding: 8px 16px 28px;
+    background: var(--fondo-base);
+    border-radius: 0;
+  }
+  .detalle-album__volver {
+    display: inline-flex;
+    width: 26px;
+    height: 26px;
+    align-items: center;
+    justify-content: center;
+    color: var(--texto-principal);
+    margin-bottom: 18px;
+  }
+  .detalle-album__volver svg { width: 26px; height: 26px; }
+  .detalle-album__cabecera { display: block; margin: 0 0 18px; }
+  .detalle-album__portada {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 18px;
+    border-radius: var(--radio-ml);
+  }
+  .detalle-album__portada .portada { border-radius: var(--radio-ml); }
+  .detalle-album__etiquetas { margin-bottom: 6px; }
+  .detalle-album__etiquetas .etiqueta.neutral {
+    background: var(--marca-secundario-suave);
+    color: var(--marca-secundario);
+  }
+  .detalle-album__titulo { font-size: 28px; line-height: 34px; letter-spacing: -0.01em; margin-bottom: 6px; }
+  .detalle-album__resumen { font-size: 14px; line-height: 20px; gap: 5px; }
+  .detalle-album__avatar { display: none; }
+  .detalle-album__artista { color: var(--texto-secundario); font-weight: 400; }
+  .detalle-album__encabezado-pistas { display: none; }
+  .detalle-album__lista { display: flex; flex-direction: column; gap: 14px; }
+  .detalle-album__creditos { margin: 24px 0; }
+  .detalle-album__relacionados { margin-top: 24px; }
+  .detalle-album__relacionados h2 { font-size: 20px; line-height: 26px; }
+  .detalle-album__tarjetas { justify-content: flex-start; }
+  .detalle-album__tarjetas .tarjeta-album { width: 180px; }
+}

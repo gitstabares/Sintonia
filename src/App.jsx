@@ -7,6 +7,7 @@ import LayoutPublico from './layouts/LayoutPublico.jsx';
 import Home from './pages/Home/Home.jsx';
 import Catalogo from './pages/Catalogo/Catalogo.jsx';
 import NoEncontrada from './pages/NoEncontrada.jsx';
+import DetalleAlbum from './pages/DetalleAlbum/DetalleAlbum.jsx';
 import { leerConsentimiento, leerIdioma, guardarIdioma, guardarConsentimiento, reiniciarConsentimiento } from './utils/preferencias.js';
 import { PREFERENCIAS_ACCESIBILIDAD, leerAccesibilidad, guardarAccesibilidad, aplicarAccesibilidad, ajustarTamanoTexto } from './utils/accesibilidad.js';
 
@@ -82,6 +83,7 @@ export default function App() {
       }>
         <Route index element={<Home datos={datos} en={en} enlaces={enlaces} />} />
         <Route path="catalogo/:gen_id?" element={<Catalogo datos={datos} en={en} enlaces={enlaces} />} />
+        <Route path="albumes/:id" element={<DetalleAlbum en={en} textos={datos.textos} />} />
         <Route path="*" element={<NoEncontrada en={en} />} />
       </Route>
     </Routes>
