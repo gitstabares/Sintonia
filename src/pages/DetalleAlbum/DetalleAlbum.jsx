@@ -8,7 +8,7 @@ import FilaPista from '../../components/FilaPista/FilaPista.jsx';
 import EstadoPeticion from '../../components/EstadoPeticion/EstadoPeticion.jsx';
 import useDetalleAlbum from '../../hooks/useDetalleAlbum.js';
 import useMetadatosAlbum from '../../hooks/useMetadatosAlbum.js';
-import {duracionTotalMinutos} from '../../utils/detalleAlbum.js';
+import { duracionTotalMinutos } from '../../utils/detalleAlbum.js';
 import './DetalleAlbum.css';
 
 export default function DetalleAlbum({ en, textos }) {
@@ -68,12 +68,10 @@ export default function DetalleAlbum({ en, textos }) {
             <span className="detalle-album__avatar" aria-hidden="true">
               <Portada {...album?.portada} />
             </span>
-            <span className="detalle-album__artista">{artista}</span>
-            {anio && <><span aria-hidden="true">·</span><span>{anio}</span></>}
-            <span aria-hidden="true">·</span>
-            <span>{(canciones?.length == 1 ? textosAlbum?.encabezado?.canciones?.uno : textosAlbum?.encabezado?.canciones?.otro)?.replace('{cantidad}', canciones?.length)}</span>
-            <span aria-hidden="true">·</span>
-            <span>{textosAlbum?.encabezado?.duracion?.replace('{minutos}', duracionTotalMinutos(album))}</span>
+            <span className="detalle-album__artista">{artista}</span>·
+            <span>{anio}</span>·
+            <span>{(album?.totalPistas == 1 ? textosAlbum?.encabezado?.canciones?.uno : textosAlbum?.encabezado?.canciones?.otro)?.replace('{cantidad}', album?.totalPistas)}</span>·
+            <span>{textosAlbum?.encabezado?.duracion?.replace('{minutos}', Math.floor(album?.duracionSeg / 60))}</span>
           </div>
         </div>
       </header>
@@ -85,10 +83,10 @@ export default function DetalleAlbum({ en, textos }) {
           <span>{etiquetas?.reproducciones}</span>
           <span aria-label={etiquetas?.duracion} className="detalle-album__reloj"><Icono nombre="clock" /></span>
         </div>
-        {canciones.length ? (
+        {canciones?.length ? (
           <ol className="detalle-album__lista">
-            {canciones.map((pista, indice) => (
-              <FilaPista key={pista.id} pista={pista} posicion={indice + 1} album={album} en={en} />
+            {canciones?.map((pista, indice) => (
+              <FilaPista key={pista.id} pista={pista} posicion={indice + 1} en={en} />
             ))}
           </ol>
         ) : (
@@ -96,7 +94,7 @@ export default function DetalleAlbum({ en, textos }) {
         )}
       </section>
 
-      {(fecha || album.copyright) && (
+      {(fecha) && (
         <div className="detalle-album__creditos">
           <p className="cuerpo-p">{fecha?.toLocaleDateString('es-CO', {
             year: 'numeric',
