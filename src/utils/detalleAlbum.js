@@ -75,12 +75,27 @@ export function obtenerGenero(album) {
   return typeof genero === "string" ? genero : (genero?.nombre ?? "");
 }
 
+export function obtenerOtrosAlbumes(respuesta, album) {
+  const candidatos = respuesta?.otrosAlbumes
+    ?? respuesta?.albumesRelacionados
+    ?? respuesta?.albumesDelArtista
+    ?? album?.otrosAlbumes
+    ?? album?.albumesRelacionados
+    ?? album?.artista?.albumes;
+  if (!Array.isArray(candidatos)) return [];
+  return candidatos.filter(otro =>
+    otro && otro.id != null && String(otro.id) !== String(album?.id) &&
+    (!otro.artista?.id || !album?.artista?.id ||
+      String(otro.artista.id) === String(album.artista.id))
+  );
+}
+
 export function normalizarDetalleAlbum(respuesta) {
   const album = respuesta?.album ?? respuesta?.detalle ?? respuesta;
   if (!album || typeof album !== "object" || Array.isArray(album)) {
-    return { album: null };
+    return { album: null, otrosAlbumes: [] };
   }
-  return { album };
+  return { album, otrosAlbumes: obtenerOtrosAlbumes(respuesta, album) };
 }
 
 export function duracionTotalMinutos(album) {
