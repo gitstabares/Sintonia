@@ -185,3 +185,23 @@ Consulta los documentos `docs/REVISION_S1.md` y `docs/ACCESIBILIDAD_S1-06.md` pa
 ---
 
 *Este README se elaboró a partir de los archivos presentes en la rama `main` del repositorio, consultados el 11 de noviembre de 2026. No implica que se hayan ejecutado las pruebas localmente ni que se haya auditado visualmente Figma.*
+
+
+## Sprint 2 — S2-03 Inicio de sesión
+
+La rama `S2-03` añade la ruta /iniciarSesion` (React + Vite + React Router)
+con la vista 4 web/móvil de Figma. El formulario solicita correo y contraseña,
+valida y enfoca el primer campo con error, anuncia la visibilidad de la contraseña,
+y envía `POST /sesion` mediante `useMutacion`.
+
+Solo al obtener una respuesta exitosa de la API se actualiza la identidad visible
+en la navegación y se regresa al inicio. Los enlaces a /crearCuenta` y
+/recuperarContrasena` están presentes, pero esas páginas aún no se desarrollan.
+
+**Contrato por validar:** el cuerpo actual del POST es `{correo, clave}`.
+La API no estuvo accesible para verificar el nombre real del campo de contraseña
+ni el mecanismo de sesión del backend. El cliente conserva solo nombre y correo,
+no contraseñas ni tokens. El almacenamiento por sí solo no autentica al usuario
+ante la API. Revisar el PR antes de integrar en producción.
+
+Validación: `npm test` y `npm run build`.

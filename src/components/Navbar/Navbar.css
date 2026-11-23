@@ -137,3 +137,24 @@
   .header-contenido.open { overflow-y: auto; flex: 1; }
 }
 .header-enlace:hover { color: var(--texto-principal); background: var(--fondo-elevada); }
+
+.header-sesion { display: flex; align-items: center; gap: 16px; min-width: 0; }
+.header-sesion__usuario {
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.header-sesion__salir {
+  background: var(--fondo-elevada);
+  border: 1px solid var(--borde-fuerte);
+  border-radius: var(--radio-completo);
+  color: var(--texto-principal);
+  cursor: pointer;
+  padding: 10px 16px;
+}
+.header-sesion__salir:hover { background: var(--fondo-sutil); }
+@media (max-width: 1023px) {
+  .header-sesion { width: 100%; justify-content: space-between; }
+  .header-sesion__usuario { max-width: 60%; }
+}

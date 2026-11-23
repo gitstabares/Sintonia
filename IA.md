@@ -346,6 +346,46 @@ Se elaboró el presente documento `IA.md` con las solicitudes de React/Sintonía
 Se añadieron pruebas de las funciones de duración, fechas, normalización de álbumes, pistas y metadatos, y un workflow de GitHub Actions para ejecutar `npm test` y `npm run build` en `S2-01`. La API externa no fue accesible desde la herramienta de consulta en esta sesión: se contemplan las formas `canciones` y `pistas`, y varios nombres plausibles para las colecciones de otros álbumes, pero **la forma real del JSON sigue pendiente de comprobarse contra el servidor**. No se abrió un pull request.
 
 
+
+
+---
+
+## 12. Sprint 2 · Historia S2-03 — Iniciar sesión
+
+**Fecha:** 23 de noviembre de 2026  
+**Rama:** `S2-03` creada desde `main`  
+**Diseño Figma:** Vista 4 «Iniciar sesión» web (`6:523`) y móvil (`14:1329`).
+
+### Solicitud del usuario [literal]
+
+> Bien, ahora vamos a relizar la historia de usuario 3. Crea una rama desde main llamada S2-03 y desarrolla las siguientes caracteristicas:
+>
+> Como persona con una cuenta en Sintonía, quiero ingresar con mi correo y mi contraseña para usar el sitio con mi sesión. Alcance: vista 4 en web y móvil, con `POST /sesion`.
+>
+> 1. El formulario pide correo y contraseña, con etiquetas visibles asociadas a cada campo.
+> 2. El botón con el ojo muestra y oculta la contraseña, y dice su estado a los lectores de pantalla.
+> 3. Si falta un dato, el mensaje aparece junto al campo y el foco va al primer campo con error.
+> 4. Con datos correctos (`sara.quintero@correo.co`, clave `sintonia123`) la persona entra y vuelve al inicio con la sesión iniciada.
+> 5. Hay enlaces a Crear cuenta y a «¿Olvidaste tu contraseña?». Referencia de diseño: Figma, bloque «Sprint 2», columna «4 · Iniciar sesión».
+>
+> Ten en cuenta que:
+>
+> - No existe un hook que haga solicitudes POST aun, se debe crear.
+> - La página que se debe crear es la de Iniciar Sesión, la de crear Cuenta debe quedar pendiente todavia, esta vez, deja un PR pendiente para main
+
+### Implementación realizada
+
+- Ruta de React Router /iniciarSesion` y nueva página responsive `src/pages/IniciarSesion`; sin crear las páginas de registro y recuperación.
+- Diseño adaptado de Figma: formulario en la parte izquierda y mosaico de portadas reutilizadas del kit en escritorio; composición compacta en móvil. Logotipo y tokens existentes.
+- Componente `FormularioSesion`: campos con etiquetas e identificadores asociados, errores específicos junto a cada entrada, foco en el primero con error, accesibilidad con `aria-invalid`, `aria-describedby` y `role=alert`, botón ocular con estado anunciado por `aria-pressed` y nombre accesible variable.
+- Nuevo hook `useMutacion` para POST bajo demanda, estado de petición, errores, tiempo límite y cancelación. La función común `solicitarPost` envía JSON a la API y distingue respuestas exitosas y errores HTTP.
+- El formulario envía `{correo, clave}` a `POST /sesion`; no concede acceso por comparación local con las credenciales demostrativas. Solo después de una respuesta 2xx exitosa actualiza el estado de sesión y navega a la portada.
+- Se añadió una identidad de sesión para la navegación del sitio; el encabezado reemplaza botones de visitante por nombre y opción de cerrar sesión. El almacenamiento temporal o permanente depende de la opción «Mantener la sesión iniciada», y solo incluye nombre/correo, **nunca contraseñas ni tokens**.
+- Se mantiene la consulta de textos por página (`useTextos`). La vista usa claves propuestas de la API con el texto de Figma como respaldo cuando las claves no están presentes.
+- Se agregaron pruebas unitarias y workflow de GitHub Actions y se abrió un pull request **sin fusionar**, apuntando de `S2-03` a `main`.
+
+**Limitaciones de integración:** el servidor de API no respondió durante esta sesión; no se pudo verificar si el campo JSON exigido es `clave` ni si el backend mantiene la autenticación mediante cookies o tokens. El frontend no guarda tokens y una identidad recordada no implica verificación de vigencia de la sesión por el servidor. Hasta comprobar el contrato real no se puede afirmar que el acceso con las credenciales de ejemplo esté validado de extremo a extremo. Los enlaces a Crear cuenta y Recuperar contraseña llevan a rutas pendientes cuya vista es «No encontrada».
+
 ## Referencias del proyecto
 
 - **Repositorio:** https://github.com/gitstabares/Sintonia

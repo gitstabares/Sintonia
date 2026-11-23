@@ -5,6 +5,8 @@ import Home from './pages/Home/Home.jsx';
 import Catalogo from './pages/Catalogo/Catalogo.jsx';
 import NoEncontrada from './pages/NoEncontrada.jsx';
 import DetalleAlbum from './pages/DetalleAlbum/DetalleAlbum.jsx';
+import IniciarSesion from './pages/IniciarSesion/IniciarSesion.jsx';
+import { leerSesion, guardarSesion, limpiarSesion } from './utils/sesion.js';
 import { leerConsentimiento, leerIdioma, guardarIdioma, guardarConsentimiento, reiniciarConsentimiento } from './utils/preferencias.js';
 import { PREFERENCIAS_ACCESIBILIDAD, leerAccesibilidad, guardarAccesibilidad, aplicarAccesibilidad, ajustarTamanoTexto } from './utils/accesibilidad.js';
 
@@ -12,9 +14,14 @@ const almacenamiento = () => {
   try { return window.localStorage; } catch { return null; }
 };
 
+const almacenamientoSesion = () => {
+  try { return window.sessionStorage; } catch { return null; }
+};
+
 export default function App() {
   const [consentimiento, setConsentimiento] = useState(() => leerConsentimiento(almacenamiento()));
   const [idioma, setIdioma] = useState(() => leerIdioma(almacenamiento()));
+  const [sesion, setSesion] = useState(() => leerSesion(almacenamientoSesion(), almacenamiento()));
   const [preferenciasAccesibilidad, setPreferenciasAccesibilidad] = useState(
     () => leerAccesibilidad(almacenamiento(), leerConsentimiento(almacenamiento())),
   );
@@ -58,6 +65,16 @@ export default function App() {
 
   const restablecerAccesibilidad = () => setPreferenciasAccesibilidad({ ...PREFERENCIAS_ACCESIBILIDAD });
 
+  const iniciarSesion = (identidad, recordar) => {
+    guardarSesion(identidad, recordar, almacenamientoSesion(), almacenamiento());
+    setSesion(identidad);
+  };
+
+  const cerrarSesion = () => {
+    limpiarSesion(almacenamientoSesion(), almacenamiento());
+    setSesion(null);
+  };
+
   // Las preferencias son globales; las peticiones a la API pertenecen a cada página.
   const configuracion = {
     idioma, en, enlaces,
@@ -65,6 +82,7 @@ export default function App() {
     preferenciasAccesibilidad,
     alternarAccesibilidad, cambiarTamanoTexto, restablecerAccesibilidad,
     consentimiento, guardarConsentimiento: decidirCookies, cambiarCookies,
+    sesion, iniciarSesion, cerrarSesion,
   };
 
   return (
@@ -73,6 +91,7 @@ export default function App() {
       <Route path="/catalogo" element={<Catalogo configuracion={configuracion} />} />
       <Route path="/catalogo/:gen_id" element={<Catalogo configuracion={configuracion} />} />
       <Route path="/albumes/:id" element={<DetalleAlbum configuracion={configuracion} />} />
+      <Route path="/iniciarSesion" element={<IniciarSesion configuracion={configuracion} />} />
       <Route path="*" element={<NoEncontrada configuracion={configuracion} />} />
     </Routes>
   );

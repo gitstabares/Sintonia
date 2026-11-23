@@ -11,7 +11,7 @@ import { Link, useLocation } from 'react-router-dom';
 export default function Navbar({
   textos, textosAccesibilidad, cargando, en, alternarIdioma,
   preferenciasAccesibilidad, alternarAccesibilidad, cambiarTamanoTexto, restablecerAccesibilidad,
-  enlaces,
+  enlaces, sesion, onCerrarSesion,
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const menuId = useId();
@@ -34,7 +34,7 @@ export default function Navbar({
         <div className="header-top">
           <Link to={enlaces.inicio} aria-label={nav?.logo?.aria || 'Sintonía'} onClick={() => setIsOpen(false)}><Marca /></Link>
           <div className="header-top-botones">
-            {!isOpen && <Boton className="cuerpo-p-fuerte" tipo="fantasma" href={enlaces.ingresar}>
+            {!isOpen && !sesion && <Boton className="cuerpo-p-fuerte" tipo="fantasma" href={enlaces.ingresar}>
               {menuMovil?.botones?.invitado?.ingresar}
             </Boton>}
             <BotonIcono ancho={44} tipo="fantasma" icono={isOpen ? 'x' : 'menu'}
@@ -69,8 +69,21 @@ export default function Navbar({
               </div>
             </div>
             <div className="header-botones">
-              <Boton className="cuerpo-p-fuerte" tipo={isMobile ? 'secundario' : 'fantasma'} href={enlaces.ingresar}>{nav?.botones?.invitado?.ingresar}</Boton>
-              <Boton className="cuerpo-p-fuerte" tipo="primario" href={enlaces.crearCuenta}>{nav?.botones?.invitado?.crearCuenta}</Boton>
+              {sesion ? (
+                <div className="header-sesion">
+                  <span className="cuerpo-p-fuerte header-sesion__usuario" title={sesion.correo}>
+                    {sesion.nombre}
+                  </span>
+                  <button className="header-sesion__salir cuerpo-p-fuerte" type="button" onClick={onCerrarSesion}>
+                    {nav?.sesion?.cerrar ?? (en ? 'Sign out' : 'Cerrar sesión')}
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <Boton className="cuerpo-p-fuerte" tipo={isMobile ? 'secundario' : 'fantasma'} href={enlaces.ingresar}>{nav?.botones?.invitado?.ingresar}</Boton>
+                  <Boton className="cuerpo-p-fuerte" tipo="primario" href={enlaces.crearCuenta}>{nav?.botones?.invitado?.crearCuenta}</Boton>
+                </>
+              )}
             </div>
           </div>
         )}
