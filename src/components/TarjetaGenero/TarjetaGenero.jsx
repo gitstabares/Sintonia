@@ -5,7 +5,7 @@ import './TarjetaGenero.css';
 
 export default function TarjetaGenero({ genero, enlaces }) {
   const isMobile = useMediaQuery('(max-width: 1023px)');
-  const destino = `${enlaces.catalogo}?genero=${encodeURIComponent(genero.id)}`;
+  const destino = `${enlaces.catalogo.replace(/\/+$/, '')}/${encodeURIComponent(genero.id)}`;
   return (
     <Link to={destino} className="tarjeta-genero" style={{ background: genero?.portada?.fondo }}>
       <div className={`titulo-genero ${isMobile ? 'titular-h4' : 'titular-h3'}`}>{genero.nombre}</div>

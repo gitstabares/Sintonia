@@ -9,15 +9,13 @@ import useTextos from '../../hooks/useTextos.js';
 import useTextosAccesibilidad from '../../hooks/useTextosAccesibilidad.js';
 import useGeneros from '../../hooks/useGeneros.js';
 import useAlbumes from '../../hooks/useAlbumes.js';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 export default function Catalogo({ configuracion }) {
   const { idioma, en, enlaces } = configuracion;
   const datos = useTextos(idioma);
   const datosAccesibilidad = useTextosAccesibilidad(idioma);
-  const { gen_id: idRuta } = useParams();
-  const [parametros] = useSearchParams();
-  const gen_id = parametros.get('genero') || idRuta || '';
+  const { gen_id = '' } = useParams();
   const { generos: listaGeneros, ...estadoLista } = useGeneros();
   const { generos: generoActual, ...estadoGenero } = useGeneros(gen_id, {}, Boolean(gen_id));
   const { albumes, ...estadoAlbumes } = useAlbumes(6, 'populares', {}, !gen_id);

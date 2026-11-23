@@ -70,7 +70,8 @@ export default function App() {
   return (
     <Routes>
       <Route path="/" element={<Home configuracion={configuracion} />} />
-      <Route path="/catalogo/:gen_id?" element={<Catalogo configuracion={configuracion} />} />
+      <Route path="/catalogo" element={<Catalogo configuracion={configuracion} />} />
+      <Route path="/catalogo/:gen_id" element={<Catalogo configuracion={configuracion} />} />
       <Route path="/albumes/:id" element={<DetalleAlbum configuracion={configuracion} />} />
       <Route path="*" element={<NoEncontrada configuracion={configuracion} />} />
     </Routes>
