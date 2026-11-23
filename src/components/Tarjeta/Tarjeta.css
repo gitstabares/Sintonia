@@ -7,12 +7,28 @@
   padding: var(--espacio-3);
   background: var(--fondo-superficie);
   flex-shrink: 0;
+  text-decoration: none;
+  color: inherit;
 }
-.tarjeta-album:hover { background: var(--fondo-elevada); box-shadow: var(--sombra-tarjeta); }
-.texto-album { display: flex; flex-direction: column; gap: 0.125rem; }
-.tarjeta-titulo { color: var(--texto-principal); }
-.tarjeta-artista { color: var(--texto-secundario); }
-.portada-album { position: relative; aspect-ratio: 1; }
+.tarjeta-album:hover {
+  background: var(--fondo-elevada);
+  box-shadow: var(--sombra-tarjeta);
+}
+.texto-album {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+.tarjeta-titulo {
+  color: var(--texto-principal);
+}
+.tarjeta-artista {
+  color: var(--texto-secundario);
+}
+.portada-album {
+  position: relative;
+  aspect-ratio: 1;
+}
 .portada-album .boton-play {
   display: none;
   position: absolute;
@@ -26,5 +42,6 @@
   background: var(--marca-primario);
   border-radius: var(--radio-completo);
 }
-.tarjeta-album:hover .boton-play { display: flex; }
-@media (hover: none) { .tarjeta-album .boton-play { display: none; } }
+.tarjeta-album:hover .boton-play {
+  display: flex;
+}

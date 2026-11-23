@@ -4,12 +4,10 @@ import Tarjeta from '../Tarjeta/Tarjeta';
 import EstadoPeticion from '../EstadoPeticion/EstadoPeticion';
 import './SuenaAhora.css';
 import useMediaQuery from '../../hooks/useMediaQuery';
-import useAlbumes from '../../hooks/useAlbumes';
 
-export default function SuenaAhora({ textos, enlaces, en }) {
+export default function SuenaAhora({ textos, enlaces, en, populares, estado }) {
   const destacados = textos?.paginas?.inicioPublico?.destacados;
   const isMobile = useMediaQuery('(max-width: 1023px)');
-  const { albumes: populares, ...estado } = useAlbumes(6, 'populares');
   if (estado.cargando || estado.error) return <EstadoPeticion {...estado} en={en} nombre={en ? 'albums' : 'álbumes'} />;
   return (
     <section className="suena-ahora">

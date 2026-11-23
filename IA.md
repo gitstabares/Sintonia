@@ -308,6 +308,44 @@ Se elaboró el presente documento `IA.md` con las solicitudes de React/Sintonía
 
 ---
 
+
+---
+
+## 11. Sprint 2 · S2-01 · Detalle de un álbum con React y Vite
+
+**Fecha:** 23 de noviembre de 2026.  
+**Rama:** `S2-01`, creada de nuevo a partir de `main`.  
+**Diseño:** archivo Figma «Sintonía copia», «Sprint 2», columna «3 · Detalle de un álbum», web (nodo `8:1911`) y móvil (nodo `14:505`).
+
+### Prompt del usuario [literal]
+
+> Acabo de borrar la rama S2-01, vas a repetir solo los siguientes cambios:
+>
+> Como visitante de Sintonía, quiero ver el detalle de un álbum para conocer las canciones de un álbum. Alcance: vista 3 en web y móvil, en la ruta dinámica /albumes/[id]`.
+>
+> 1. La vista muestra la portada, el artista, el año, el género y la lista de canciones con su duración, y otros álbumes del mismo artista. No hay reproducción, con datos de `GET /albumes/:id`.
+> 2. La página tiene título y descripción propios (`generateMetadata`) a partir de `titulo` y `artista.nombre` del álbum.
+> 3. `duracionSeg` se muestra como minutos y segundos (`1:10`). `fechaPublicacion` es un día sin hora: no se pasa por `new Date()`.
+> 4. Referencia de diseño: Figma, bloque «Sprint 2», columna «3 · Detalle de un álbum» (web y móvil).
+>
+> Nuevamente crea S2-01 a partir de main, y crea las paginas correspondientes. Si necesitas modificar algun script o funcion hazlo pero realiza los cambios correspondientes en los demas componentes que los utilicen. Añade una nueva entrada al archivo IA.md con los cambios realizados y al finalizar indicame por aqui que archivos nuevos creaste y o modificaste.
+
+### Resultado de la implementación [respuesta técnica]
+
+- Se verificó que la rama anterior `S2-01` ya no existía y se creó **desde `main`**, sin incorporar la implementación previa de Next.js.
+- Se conservó la arquitectura **React 19 + Vite + React Router**. Se agregó la ruta de React Router /albumes/:id`, equivalente en Vite a la intención dinámica /albumes/[id]` de la historia.
+- Se implementó una página adaptable a escritorio y móvil, siguiendo la estructura visual real de Figma, con cabecera, portada, artista, género, año, lista de pistas y duración, fecha de publicación y otros álbumes del mismo artista.
+- Se crearon `useDetalleAlbum`, `useMetadatosAlbum`, el componente de fila de pista y utilidades para extraer los datos de `GET /albumes/:id`, formatear las duraciones y tratar las fechas como días del calendario.
+- **Metadatos:** `generateMetadata()` es una función exclusiva de Next.js y no existe en Vite. Se implementó el comportamiento requerido usando un hook que actualiza `document.title` y `meta[name="description"]` con el título y nombre del artista obtenidos de la API, restaurándolos al abandonar la página. Este mecanismo funciona del lado cliente y no proporciona metadatos SSR.
+- **Formato:** `duracionSeg = 70` se representa como `1:10`. `fechaPublicacion` se procesa como texto ISO de día (`YYYY-MM-DD`), sin `new Date()` y sin riesgo de desplazarla por zona horaria.
+- Se modificó el componente compartido `Tarjeta` para navegar con `<Link>` a cada detalle y permitir mostrar la información de año/tipo en las tarjetas relacionadas; se retiró su botón ficticio de reproducción. Las secciones que ya consumen `Tarjeta` siguen utilizando sus mismas propiedades existentes.
+- Se conservaron los hooks de catálogo y el mecanismo global de textos de `main`. La petición del usuario fue limitada exclusivamente a la historia 1; no se aplicó ninguna migración ni refactorización general de otras páginas.
+
+### Verificaciones y límite de acceso
+
+Se añadieron pruebas de las funciones de duración, fechas, normalización de álbumes, pistas y metadatos, y un workflow de GitHub Actions para ejecutar `npm test` y `npm run build` en `S2-01`. La API externa no fue accesible desde la herramienta de consulta en esta sesión: se contemplan las formas `canciones` y `pistas`, y varios nombres plausibles para las colecciones de otros álbumes, pero **la forma real del JSON sigue pendiente de comprobarse contra el servidor**. No se abrió un pull request.
+
+
 ## Referencias del proyecto
 
 - **Repositorio:** https://github.com/gitstabares/Sintonia

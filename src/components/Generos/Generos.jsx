@@ -4,12 +4,10 @@ import TarjetaGenero from '../TarjetaGenero/TarjetaGenero';
 import EstadoPeticion from '../EstadoPeticion/EstadoPeticion';
 import './Generos.css';
 import useMediaQuery from '../../hooks/useMediaQuery';
-import useGeneros from '../../hooks/useGeneros';
 
-export default function Generos({ textos, enlaces, en }) {
+export default function Generos({ textos, enlaces, en, generos, estado }) {
   const texGeneros = textos?.paginas?.inicioPublico?.generos;
   const isMobile = useMediaQuery('(max-width: 1023px)');
-  const { generos, ...estado } = useGeneros();
   if (estado.cargando || estado.error) {
     return <EstadoPeticion {...estado} en={en} nombre={en ? 'genres' : 'géneros musicales'} />;
   }
