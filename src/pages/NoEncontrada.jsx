@@ -1,20 +1,16 @@
-import Boton from '../components/Boton/Boton';
+import Boton from '../components/Boton/Boton.jsx';
 import LayoutPublico from '../layouts/LayoutPublico.jsx';
-import useTextos from '../hooks/useTextos.js';
-import useTextosAccesibilidad from '../hooks/useTextosAccesibilidad.js';
+import { obtenerTextoNoEncontrada } from '../utils/textosInterfaz.js';
 
 export default function NoEncontrada({ configuracion }) {
-  const { idioma, en } = configuracion;
-  const datos = useTextos(idioma);
-  const datosAccesibilidad = useTextosAccesibilidad(idioma);
+  const { enlaces, datos } = configuracion;
+  const mensaje = obtenerTextoNoEncontrada(datos.textos);
   return (
-    <LayoutPublico {...configuracion} datos={datos} textosAccesibilidad={datosAccesibilidad.textos}>
-      <section className="estado-peticion">
-        <h2 className="titular-h2">{en ? 'Page not available' : 'Página no disponible'}</h2>
-        <p className="cuerpo-m">{en
-          ? 'This section is not implemented in the current sprint.'
-          : 'Esta sección todavía no está implementada en el sprint actual.'}</p>
-        <Boton className="cuerpo-p-fuerte" href="/">{en ? 'Back to home' : 'Volver al inicio'}</Boton>
+    <LayoutPublico {...configuracion}>
+      <section className="estado-peticion" aria-labelledby="titulo-no-encontrada">
+        {mensaje.titulo && <h1 id="titulo-no-encontrada" className="titular-h2">{mensaje.titulo}</h1>}
+        {mensaje.texto && <p className="cuerpo-m">{mensaje.texto}</p>}
+        {mensaje.boton && <Boton className="cuerpo-p-fuerte" href={enlaces.inicio}>{mensaje.boton}</Boton>}
       </section>
     </LayoutPublico>
   );

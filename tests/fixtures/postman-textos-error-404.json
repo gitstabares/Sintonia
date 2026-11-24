@@ -1,0 +1,27 @@
+{
+  "error": {
+    "codigo": "seccion_no_encontrada",
+    "mensaje": "No existe la sección «paginas.noExiste».",
+    "detalles": {
+      "noEncontradas": [
+        "paginas.noExiste"
+      ],
+      "disponibles": [
+        "sitio",
+        "navbar",
+        "menuMovil",
+        "footer",
+        "panel",
+        "paginas",
+        "componentes",
+        "formularios",
+        "estados",
+        "errores",
+        "cookies",
+        "accesibilidad",
+        "idioma",
+        "general"
+      ]
+    }
+  }
+}

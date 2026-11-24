@@ -1,68 +1,40 @@
 /**
- * Las claves de /textos se consultan primero. Los valores alternativos son el
- * texto visible de la vista 4 de Figma, no contenido de cuentas de prueba.
+ * Adapta únicamente las cadenas que llegan desde GET /textos.
+ * En caso de respuesta válida pero incompleta, NO crea textos de sustitución.
+ * Un fallo de /textos se presenta desde App mediante EstadoPeticion.
  */
-export function textosInicioSesion(textos, en = false) {
+export function textosInicioSesion(textos) {
+  // Contrato real GET /textos (24-11-2026): paginas.ingresar y formularios.
+  const ingresar = textos?.paginas?.ingresar;
+  const formularioIngreso = ingresar?.formulario;
+  const general = textos?.formularios;
   const p = textos?.paginas?.iniciarSesion ?? textos?.paginas?.inicioSesion
     ?? textos?.paginas?.sesion ?? textos?.paginas?.ingreso;
-  const defecto = en ? {
-    titulo: 'Sign in to your account',
-    descripcion: 'Sign in with the email and password for your account.',
-    correo: 'Email address',
-    contrasena: 'Password',
-    mostrar: 'Show password',
-    ocultar: 'Hide password',
-    recordar: 'Keep me signed in',
-    recuperar: 'Forgot your password?',
-    ingresar: 'Sign in',
-    ingresando: 'Signing in...',
-    sinCuenta: "Don't have an account?",
-    crear: 'Create an account',
-    obligatorio: 'This field is required.',
-    formato: 'Enter a valid email address.',
-    credenciales: 'Incorrect email or password.',
-    servidor: 'We could not sign you in. Please try again.',
-    marcaTitulo: 'Your music, always within reach',
-    marcaDescripcion: 'Explore albums and artists from every genre.',
-  } : {
-    titulo: 'Ingresa a tu cuenta',
-    descripcion: 'Ingresa con el correo y la contraseña de tu cuenta.',
-    correo: 'Correo electrónico',
-    contrasena: 'Contraseña',
-    mostrar: 'Mostrar contraseña',
-    ocultar: 'Ocultar contraseña',
-    recordar: 'Mantener la sesión iniciada',
-    recuperar: '¿Olvidaste tu contraseña?',
-    ingresar: 'Ingresar',
-    ingresando: 'Ingresando...',
-    sinCuenta: '¿No tienes cuenta?',
-    crear: 'Crea una cuenta',
-    obligatorio: 'Este campo es obligatorio.',
-    formato: 'Ingresa un correo electrónico válido.',
-    credenciales: 'Correo o contraseña incorrectos.',
-    servidor: 'No pudimos iniciar sesión. Inténtalo de nuevo.',
-    marcaTitulo: 'Tu música, siempre a mano',
-    marcaDescripcion: 'Explora álbumes y artistas de todos los géneros.',
-  };
+  const f = textos?.formularios?.iniciarSesion ?? textos?.formularios?.inicioSesion
+    ?? textos?.formularios?.sesion ?? p?.formulario;
 
   return {
-    titulo: p?.titulo ?? p?.encabezado?.titulo ?? defecto.titulo,
-    descripcion: p?.descripcion ?? p?.encabezado?.descripcion ?? defecto.descripcion,
-    correo: p?.formulario?.correo?.etiqueta ?? p?.campos?.correo?.etiqueta ?? defecto.correo,
-    contrasena: p?.formulario?.contrasena?.etiqueta ?? p?.campos?.contrasena?.etiqueta ?? defecto.contrasena,
-    mostrar: p?.formulario?.contrasena?.mostrar ?? p?.botones?.mostrarContrasena ?? defecto.mostrar,
-    ocultar: p?.formulario?.contrasena?.ocultar ?? p?.botones?.ocultarContrasena ?? defecto.ocultar,
-    recordar: p?.formulario?.recordar ?? p?.opciones?.mantenerSesion ?? defecto.recordar,
-    recuperar: p?.enlaces?.recuperarContrasena ?? defecto.recuperar,
-    ingresar: p?.botones?.ingresar ?? p?.formulario?.botones?.ingresar ?? defecto.ingresar,
-    ingresando: p?.mensajes?.ingresando ?? defecto.ingresando,
-    sinCuenta: p?.enlaces?.sinCuenta ?? defecto.sinCuenta,
-    crear: p?.enlaces?.crearCuenta ?? defecto.crear,
-    obligatorio: p?.errores?.obligatorio ?? defecto.obligatorio,
-    formato: p?.errores?.correoInvalido ?? defecto.formato,
-    credenciales: p?.errores?.credenciales ?? defecto.credenciales,
-    servidor: p?.errores?.servidor ?? defecto.servidor,
-    marcaTitulo: p?.marca?.titulo ?? defecto.marcaTitulo,
-    marcaDescripcion: p?.marca?.descripcion ?? defecto.marcaDescripcion,
+    titulo: formularioIngreso?.titulo ?? p?.titulo ?? p?.encabezado?.titulo ?? f?.titulo,
+    descripcion: formularioIngreso?.subtitulo ?? p?.descripcion ?? p?.encabezado?.descripcion ?? f?.descripcion,
+    correo: formularioIngreso?.etiquetas?.correo ?? general?.campos?.correo?.label ?? f?.correo?.etiqueta ?? p?.campos?.correo?.etiqueta,
+    correoPlaceholder: formularioIngreso?.placeholders?.correo ?? general?.campos?.correo?.placeholder ?? f?.correo?.placeholder ?? p?.campos?.correo?.placeholder,
+    contrasenaPlaceholder: formularioIngreso?.placeholders?.clave ?? general?.campos?.clave?.placeholder ?? f?.contrasena?.placeholder ?? p?.campos?.contrasena?.placeholder,
+    contrasena: formularioIngreso?.etiquetas?.clave ?? general?.campos?.clave?.label ?? f?.contrasena?.etiqueta ?? p?.campos?.contrasena?.etiqueta,
+    mostrar: formularioIngreso?.botones?.mostrarClave ?? general?.campos?.clave?.mostrar ?? f?.contrasena?.mostrar ?? p?.botones?.mostrarContrasena,
+    ocultar: formularioIngreso?.botones?.ocultarClave ?? general?.campos?.clave?.ocultar ?? f?.contrasena?.ocultar ?? p?.botones?.ocultarContrasena,
+    recordar: formularioIngreso?.etiquetas?.mantenerSesion ?? f?.recordar ?? p?.opciones?.mantenerSesion,
+    recuperar: formularioIngreso?.enlaces?.olvidasteClave ?? p?.enlaces?.recuperarContrasena,
+    ingresar: formularioIngreso?.botones?.ingresar ?? p?.botones?.ingresar ?? f?.botones?.ingresar,
+    ingresando: formularioIngreso?.mensajes?.ingresando ?? p?.mensajes?.ingresando,
+    sinCuenta: formularioIngreso?.mensajes?.sinCuenta ?? p?.enlaces?.sinCuenta,
+    crear: formularioIngreso?.enlaces?.crearCuenta ?? p?.enlaces?.crearCuenta,
+    obligatorio: general?.validacion?.requerido ?? p?.errores?.obligatorio,
+    correoObligatorio: ingresar?.errores?.correoObligatorio ?? general?.validacion?.requerido,
+    claveObligatoria: ingresar?.errores?.claveObligatoria ?? general?.validacion?.requerido,
+    formato: general?.validacion?.correo ?? p?.errores?.correoInvalido,
+    credenciales: ingresar?.errores?.credenciales?.texto ?? p?.errores?.credenciales,
+    servidor: ingresar?.errores?.conexion?.texto ?? p?.errores?.servidor,
+    marcaTitulo: ingresar?.presentacion?.titulo ?? p?.marca?.titulo,
+    marcaDescripcion: ingresar?.presentacion?.texto ?? p?.marca?.descripcion,
   };
 }

@@ -3,24 +3,25 @@ import { Link, useNavigate } from 'react-router-dom';
 import Marca from '../../assets/logos/logo.svg?react';
 import ArteSesion from '../../components/ArteSesion/ArteSesion.jsx';
 import FormularioSesion from '../../components/FormularioSesion/FormularioSesion.jsx';
-import useTextos from '../../hooks/useTextos.js';
 import useMutacion from '../../hooks/useMutacion.js';
 import { cuerpoInicioSesion, identidadDeSesion } from '../../utils/sesion.js';
 import { textosInicioSesion } from '../../utils/textosInicioSesion.js';
 import './IniciarSesion.css';
 
 export default function IniciarSesion({ configuracion }) {
-  const { idioma, en, enlaces, iniciarSesion } = configuracion;
-  const { textos: textosApi } = useTextos(idioma);
-  const t = textosInicioSesion(textosApi, en);
+  const { enlaces, iniciarSesion, datos } = configuracion;
+  const textosApi = datos.textos;
+  const t = textosInicioSesion(textosApi);
   const { ejecutar, cargando, error } = useMutacion('/sesion');
   const navegar = useNavigate();
 
   useEffect(() => {
     const anterior = document.title;
-    document.title = t.titulo + ' | Sintonía';
+    if (textosApi?.paginas?.ingresar?.seo?.titulo ?? t.titulo) {
+      document.title = textosApi?.paginas?.ingresar?.seo?.titulo ?? t.titulo;
+    }
     return () => { document.title = anterior; };
-  }, [t.titulo]);
+  }, [t.titulo, textosApi?.paginas?.ingresar?.seo?.titulo]);
 
   const enviarCredenciales = async (credenciales, recordar) => {
     try {
@@ -35,13 +36,12 @@ export default function IniciarSesion({ configuracion }) {
   };
 
   const legal = textosApi?.paginas?.iniciarSesion?.pie
-    ?? textosApi?.footer?.legal?.derechos?.replace('{anio}', new Date().getFullYear())
-    ?? '© ' + new Date().getFullYear() + ' Sintonía · Proyecto académico';
+    ?? textosApi?.footer?.legal?.derechos?.replace('{anio}', new Date().getFullYear());
 
   return (
     <main className="pagina-sesion">
       <section className="pagina-sesion__panel-formulario" aria-labelledby="pagina-sesion-titulo">
-        <Link className="pagina-sesion__logo" to={enlaces.inicio} aria-label="Sintonía">
+        <Link className="pagina-sesion__logo" to={enlaces.inicio} aria-label={textosApi?.navbar?.logo?.aria}>
           <Marca />
         </Link>
         <div className="pagina-sesion__contenido">
@@ -51,6 +51,7 @@ export default function IniciarSesion({ configuracion }) {
           </header>
           <FormularioSesion
             textos={t}
+            textosApi={textosApi}
             enviando={cargando}
             error={error}
             alEnviar={enviarCredenciales}

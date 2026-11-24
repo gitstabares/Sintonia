@@ -112,13 +112,22 @@ export function duracionTotalMinutos(album) {
   return Number.isFinite(total) && total >= 0 ? Math.round(total / 60) : 0;
 }
 
-export function obtenerMetadatosAlbum(album) {
+export function obtenerMetadatosAlbum(album, textos = null) {
   const titulo = album?.titulo;
   const artista = album?.artista?.nombre;
   if (!titulo || !artista) return null;
+
+  const plantilla = textos?.paginas?.album?.seo
+    ?? textos?.paginas?.album?.metadatos
+    ?? textos?.paginas?.detalleAlbum?.metadatos;
+  const valores = { titulo, artista };
+  const interpolar = origen => String(origen).replace(/\{(titulo|artista)\}/g,
+    (coincidencia, clave) => valores[clave] ?? coincidencia);
+  // Cuando los textos son válidos pero falta esta plantilla no se crea
+  // contenido lingüístico: se presenta únicamente información del álbum.
+  const datosAlbum = titulo + ' — ' + artista;
   return {
-    title: titulo + " — " + artista + " | Sintonía",
-    description:
-      "Canciones del álbum " + titulo + " de " + artista + " en Sintonía.",
+    title: plantilla?.titulo ? interpolar(plantilla.titulo) : datosAlbum,
+    description: plantilla?.descripcion ? interpolar(plantilla.descripcion) : datosAlbum,
   };
 }

@@ -7,7 +7,7 @@ export default function ArtistasCatalogo({ textos, en, generoActual, estadoGener
   const artistasTextos = textos?.paginas?.catalogo?.genero?.artistas;
   const isMobile = useMediaQuery('(max-width: 1023px)');
   if (estadoGenero.cargando || estadoGenero.error) {
-    return <EstadoPeticion {...estadoGenero} en={en} nombre={en ? 'artists' : 'artistas'} />;
+    return <EstadoPeticion {...estadoGenero} textos={textos} recurso="artistas" />;
   }
 
   return (
@@ -20,7 +20,7 @@ export default function ArtistasCatalogo({ textos, en, generoActual, estadoGener
             <div className="cuerpo-m-fuerte">{artista.nombre}</div>
             <div className="cuerpo-p">{artistasTextos?.etiqueta}</div>
           </div>
-        )) : <EstadoPeticion vacio en={en} nombre={en ? 'artists' : 'artistas'} />}
+        )) : <EstadoPeticion vacio textos={textos} recurso="artistas" />}
       </div>
     </section>
   );

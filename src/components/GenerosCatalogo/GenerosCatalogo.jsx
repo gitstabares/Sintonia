@@ -7,10 +7,10 @@ export default function GenerosCatalogo({ textos, enlaces, en, gen_id, listaGene
   const catalogo = textos?.paginas?.catalogo;
   const isMobile = useMediaQuery('(max-width: 1023px)');
   if (estadoLista.cargando || estadoLista.error) {
-    return <EstadoPeticion {...estadoLista} en={en} nombre={en ? 'genres' : 'géneros musicales'} />;
+    return <EstadoPeticion {...estadoLista} textos={textos} recurso="generos" />;
   }
   if (gen_id && (estadoGenero.cargando || estadoGenero.error)) {
-    return <EstadoPeticion {...estadoGenero} en={en} nombre={en ? 'genre' : 'género'} />;
+    return <EstadoPeticion {...estadoGenero} textos={textos} recurso="genero" />;
   }
 
   return (
@@ -22,7 +22,7 @@ export default function GenerosCatalogo({ textos, enlaces, en, gen_id, listaGene
       <div className="explorar-por-genero">
         <h2 className={isMobile ? 'titular-h3' : 'titular-h2'}>{catalogo?.generos?.titulo}</h2>
         <div className="grid-generos-catalogo">
-          {listaGeneros?.length ? listaGeneros.map(genero => <TarjetaGenero key={genero.id} genero={genero} enlaces={enlaces} />) : <EstadoPeticion vacio en={en} nombre={en ? 'genres' : 'géneros'} />}
+          {listaGeneros?.length ? listaGeneros.map(genero => <TarjetaGenero key={genero.id} genero={genero} enlaces={enlaces} />) : <EstadoPeticion vacio textos={textos} recurso="generos" />}
         </div>
       </div>
     </section>

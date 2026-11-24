@@ -2,7 +2,7 @@ name: Validación Sintonía S2-03
 
 on:
   push:
-    branches: [S2-03]
+    branches: [S2-03, refactor/textos-unificados-S2-03]
   pull_request:
     branches: [main]
   workflow_dispatch:

@@ -6,6 +6,7 @@ import BotonIcono from '../BotonIcono/BotonIcono';
 import SelectorIdioma from '../SelectorIdioma/SelectorIdioma';
 import PanelAccesibilidad from '../PanelAccesibilidad/PanelAccesibilidad';
 import useMediaQuery from '../../hooks/useMediaQuery';
+import EstadoPeticion from '../EstadoPeticion/EstadoPeticion.jsx';
 import { Link, useLocation } from 'react-router-dom';
 
 export default function Navbar({
@@ -30,9 +31,9 @@ export default function Navbar({
 
   return (
     <header className={'header-container' + (isOpen ? ' open' : '')}>
-      <nav className="header" aria-label={nav?.aria?.navegacion || (en ? 'Main navigation' : 'Navegación principal')}>
+      <nav className="header" aria-label={nav?.aria?.navegacion}>
         <div className="header-top">
-          <Link to={enlaces.inicio} aria-label={nav?.logo?.aria || 'Sintonía'} onClick={() => setIsOpen(false)}><Marca /></Link>
+          <Link to={enlaces.inicio} aria-label={nav?.logo?.aria} onClick={() => setIsOpen(false)}><Marca /></Link>
           <div className="header-top-botones">
             {!isOpen && !sesion && <Boton className="cuerpo-p-fuerte" tipo="fantasma" href={enlaces.ingresar}>
               {menuMovil?.botones?.invitado?.ingresar}
@@ -43,10 +44,10 @@ export default function Navbar({
               onClick={() => setIsOpen(valor => !valor)} />
           </div>
         </div>
-        {cargando ? <div className="cuerpo-p cargando">{en ? 'Loading navigation...' : 'Cargando navegación...'}</div> : (
+        {cargando ? <EstadoPeticion cargando textos={textos} recurso="navegacion" /> : (
           <div id={menuId} className={'header-contenido' + (isOpen ? ' open' : '')}>
             <div className="cuerpo-p-fuerte header-enlaces">
-              <Link className="header-enlace" to={enlaces.inicio}>{nav?.enlaces?.inicio}</Link>
+              <Link className="header-enlace" to={enlaces.inicio}>{nav?.enlaces?.inicio ?? (sesion ? nav?.enlaces?.conSesion?.inicio : undefined)}</Link>
               <Link className="header-enlace" to={enlaces.catalogo}>{nav?.enlaces?.catalogo}</Link>
             </div>
             <span style={{ flexGrow: 1 }} />
@@ -65,7 +66,8 @@ export default function Navbar({
               <div className="seccion-utilidades">
                 {isMobile && menuMovil?.secciones?.idioma}
                 <SelectorIdioma en={en} alternarIdioma={alternarIdioma}
-                  aria-label={nav?.aria?.idioma || (en ? 'Change language' : 'Cambiar idioma')} />
+                  idiomas={textos?.idioma?.codigos ?? nav?.idiomas ?? textos?.idiomas ?? textos?.selectorIdioma}
+                  aria-label={nav?.aria?.idioma} />
               </div>
             </div>
             <div className="header-botones">
@@ -75,7 +77,7 @@ export default function Navbar({
                     {sesion.nombre}
                   </span>
                   <button className="header-sesion__salir cuerpo-p-fuerte" type="button" onClick={onCerrarSesion}>
-                    {nav?.sesion?.cerrar ?? (en ? 'Sign out' : 'Cerrar sesión')}
+                    {nav?.usuario?.cerrarSesion ?? nav?.sesion?.cerrar ?? textos?.sesion?.cerrar?.etiqueta ?? textos?.sesion?.botones?.cerrar}
                   </button>
                 </div>
               ) : (
