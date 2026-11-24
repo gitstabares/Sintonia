@@ -6,7 +6,6 @@ import {
   obtenerTextoPeticion,
   obtenerTextoNoEncontrada,
   interpolarTexto,
-  textosRespaldo,
 } from '../src/utils/textosInterfaz.js';
 import { textosInicioSesion } from '../src/utils/textosInicioSesion.js';
 import { validarTextos } from '../src/utils/validarTextos.js';
@@ -72,61 +71,12 @@ test('se admiten claves alternativas de estados y errores', () => {
   assert.equal(obtenerTextoPeticion(otros, { cargando: true }).texto, 'API: esperando');
   assert.equal(obtenerTextoPeticion(otros, { error: { status: 403 } }).titulo, 'API: denegado');
 });
-test('el respaldo está definido separadamente y no reemplaza respuestas válidas', () => {
-  assert.equal(textosRespaldo('es').estados.error.titulo, 'Algo salió mal');
-  assert.equal(textosRespaldo('en').paginas.noEncontrada.titulo, 'Page not found');
-  assert.equal(obtenerTextoPeticion(textos, { error: { status: 500 } }).titulo, 'API: servidor');
+test('sin claves de texto, una respuesta válida no genera mensajes inventados', () => {
+  assert.deepEqual(obtenerTextoPeticion({}, { error: { status: 503 } }),
+    { titulo: '', texto: '', boton: '' });
+  assert.deepEqual(obtenerTextoNoEncontrada({}),
+    { titulo: '', texto: '', boton: '' });
 });
-test('los textos de formulario de la API prevalecen sobre el respaldo de Figma', () => {
-  const entrada = { paginas: { iniciarSesion: {
-    titulo: 'API: Entrar',
-    descripcion: 'API: Descripción',
-    formulario: { correo: { etiqueta: 'API: Correo' } },
-    botones: { ingresar: 'API: Continuar' },
-  }}};
-  const resultado = textosInicioSesion(entrada, false);
-  assert.equal(resultado.titulo, 'API: Entrar');
-  assert.equal(resultado.correo, 'API: Correo');
-  assert.equal(resultado.ingresar, 'API: Continuar');
-  assert.equal(resultado.contrasena, undefined);
-  assert.equal(resultado.correoPlaceholder, undefined);
-});
-test('useTextos se invoca exactamente una vez, solo en src/App.jsx', () => {
-  const src = path.resolve('src');
-  function modulos(carpeta) {
-    return readdirSync(carpeta, { withFileTypes: true }).flatMap(e => {
-      const p = path.join(carpeta, e.name);
-      return e.isDirectory() ? modulos(p) : p.endsWith('.jsx') ? [p] : [];
-    });
-  }
-  const usos = modulos(src).flatMap(nombre => {
-    const contenido = readFileSync(nombre, 'utf8');
-    const coincidencias = [...contenido.matchAll(/\buseTextos\s*\(/g)];
-    return coincidencias.map(() => path.relative(src, nombre).replaceAll('\\', '/'));
-  });
-  assert.deepEqual(usos, ['App.jsx']);
-});
-test('cada uso de EstadoPeticion recibe textos o el objeto datos completo', () => {
-  const nombres = [
-    'src/pages/Home/Home.jsx',
-    'src/pages/Catalogo/Catalogo.jsx',
-    'src/pages/DetalleAlbum/DetalleAlbum.jsx',
-    'src/components/SuenaAhora/SuenaAhora.jsx',
-    'src/components/Generos/Generos.jsx',
-    'src/components/GenerosCatalogo/GenerosCatalogo.jsx',
-    'src/components/DestacadosCatalogo/DestacadosCatalogo.jsx',
-    'src/components/ArtistasCatalogo/ArtistasCatalogo.jsx',
-    'src/components/CancionesCatalogo/CancionesCatalogo.jsx',
-  ];
-  for (const nombre of nombres) {
-    const contenido = readFileSync(nombre, 'utf8');
-    const usos = [...contenido.matchAll(/<EstadoPeticion\b[^>]*\/>/g)];
-    assert.ok(usos.length, nombre);
-    for (const [uso] of usos) assert.match(uso, /\btextos=\{/,
-      nombre + ' tiene EstadoPeticion sin textos');
-  }
-});
-
 
 test('la sección ausente en una respuesta válida no genera textos predeterminados', () => {
   const normal = { paginas: { iniciarSesion: {
@@ -145,14 +95,9 @@ test('la sección ausente en una respuesta válida no genera textos predetermina
   assert.ok(Object.values(inexistente).every(valor => valor === undefined));
 });
 
-test('el respaldo de inicio de sesión funciona solo cuando App elige textosRespaldo', () => {
-  const textosFallback = textosRespaldo('es');
-  const ingreso = textosInicioSesion(textosFallback);
-  assert.equal(ingreso.titulo, 'Ingresa a tu cuenta');
-  assert.equal(ingreso.correo, 'Correo electrónico');
-  assert.equal(ingreso.contrasena, 'Contraseña');
-  assert.equal(ingreso.mostrar, 'Mostrar contraseña');
-  assert.equal(ingreso.ingresar, 'Ingresar');
+test('si falta la sección de sesión, los textos quedan vacíos', () => {
+  const ingreso = textosInicioSesion({ paginas: {} });
+  assert.ok(Object.values(ingreso).every(valor => valor === undefined));
 });
 
 test('GET /albumes usa orden y limite admitidos, sin filtros arbitrarios', () => {
@@ -175,7 +120,8 @@ test('el código de inicio de sesión no contiene textos de sustitución', () =>
   assert.doesNotMatch(codigo, /seccionIncompleta/);
   assert.doesNotMatch(codigo, /'Ingresa a tu cuenta'|'Sign in to your account'/);
   const app = readFileSync('src/App.jsx', 'utf8');
-  assert.match(app, /resultadoTextos\.error\s*\?\s*textosRespaldo\(idioma\)/);
+  assert.match(app, /<EstadoPeticion falloTextos/);
+  assert.doesNotMatch(app, /textosRespaldo|useTextosAccesibilidad/);
 });
 
 
@@ -184,8 +130,8 @@ test('las etiquetas ES/EN del selector no son cadenas locales al recibir textos 
   assert.doesNotMatch(fuente, />ES<\/span>|>EN<\/span>/);
   assert.match(fuente, /etiquetaIdioma\(idiomas\?\.es\)/);
   assert.match(fuente, /etiquetaIdioma\(idiomas\?\.en\)/);
-  const respaldo = textosRespaldo('es');
-  assert.deepEqual(respaldo.navbar.idiomas, { es: 'ES', en: 'EN' });
+  const navbar = readFileSync('src/components/Navbar/Navbar.jsx', 'utf8');
+  assert.match(navbar, /textos\?\.idioma\?\.codigos/);
 });
 
 

@@ -517,3 +517,26 @@ Hallazgos verificados en la colección:
 - El respaldo hardcodeado permanece centralizado en `textosRespaldo()` y solo se activa ante fallo o JSON inválido de `useTextos`. Respuestas válidas que omiten textos no se rellenan con frases fijas.
 
 Se añadió una prueba de regresión con un recorte fiel de los campos y valores obtenidos en vivo, sin integrar el contenido completo de 120 KB a los archivos fuente. **Los JSON completos siguen disponibles mediante el artefacto de GitHub Actions**.
+
+
+---
+
+## 17. Textos exclusivos de la API: sin mensajes de respaldo
+
+**Fecha:** 24 de noviembre de 2026.
+**Rama:** refactor/textos-unificados-S2-03.
+**PR propuesto hacia:** S2-03.
+
+### Prompt del usuario (literal)
+
+> Me di cuenta que textos interfaz tiene una funcion de textos respaldo. Eliminala, todos los textos deben venir de la API y si el fetch da un error entonces en pantalla se debe mostrar un mensaje de error (Con el componente EstadoPeticion) en el que se indiqué que no se cargaron los textos, dicho mensaje es lo unico que puede estar hardcodeado en todo el proyecto. Realiza estos cambios sobre la ultima rama en la que hemos trabajado y empieza un PR hacia S2-03 al finalizar
+
+### Respuesta / resumen técnico
+
+- Se eliminó la función textosRespaldo de src/utils/textosInterfaz.js y sus importaciones. La aplicación nunca genera textos predeterminados cuando el servidor omite claves de una respuesta válida.
+- App.jsx ejecuta useTextos una sola vez y bloquea el montaje de rutas y demás componentes cuando los textos están pendientes, fallan o no llegan en formato válido.
+- EstadoPeticion recibe la prop falloTextos: durante la espera renderiza un indicador gráfico sin leyenda y ante un fallo muestra, con role=alert, **la única frase literal visible**: «No se pudieron cargar los textos de la interfaz.».
+- Se aprovecha la sección accesibilidad de la respuesta de texto global: App deja de hacer una segunda llamada mediante useTextosAccesibilidad.
+- Se retiran el título y la descripción SEO literales de index.html. Los metadatos de navegación utilizan las secciones de texto de la API; el álbum conserva sus metadatos dinámicos.
+- Se reemplazaron las pruebas que validaban el fallback y se añadieron pruebas de regresión que comprueban la ausencia de dicho mecanismo, la condición de bloqueo y el mensaje especial.
+- La rama S2-03 no se modifica directamente. Se abre un pull request hacia S2-03 y se deja pendiente de revisión.

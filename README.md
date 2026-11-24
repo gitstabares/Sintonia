@@ -247,3 +247,16 @@ La estructura real incluye `paginas.ingresar.formulario`,
 `estados.noEncontrado`, `navbar.usuario.cerrarSesion`,
 `idioma.codigos`, `cookies.preferencias.titulo` y
 `paginas.album.seo`. La documentación técnica completa se encuentra en `IA.md`.
+
+
+### Actualización: textos exclusivos de la API
+
+La rama refactor/textos-unificados-S2-03 **no utiliza textos de respaldo**.
+Toda la interfaz se monta únicamente después de una respuesta válida de GET /textos.
+Durante la carga se muestra un indicador gráfico. Si el servidor falla o devuelve
+una estructura inválida, EstadoPeticion muestra el único mensaje permitido:
+«No se pudieron cargar los textos de la interfaz.».
+
+La misma respuesta global proporciona los textos de accesibilidad; no se requiere
+una segunda petición. El documento HTML inicial ya no contiene título ni
+descripción SEO fijos.
