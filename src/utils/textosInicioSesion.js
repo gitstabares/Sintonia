@@ -1,7 +1,7 @@
 /**
  * Adapta únicamente las cadenas que llegan desde GET /textos.
  * En caso de respuesta válida pero incompleta, NO crea textos de sustitución.
- * El respaldo de fallos de /textos vive exclusivamente en textosRespaldo().
+ * Un fallo de /textos se presenta desde App mediante EstadoPeticion.
  */
 export function textosInicioSesion(textos) {
   // Contrato real GET /textos (24-11-2026): paginas.ingresar y formularios.
