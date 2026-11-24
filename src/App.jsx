@@ -1,14 +1,14 @@
 import './App.css';
 import useTextos from './hooks/useTextos.js';
 import EstadoPeticion from './components/EstadoPeticion/EstadoPeticion.jsx';
-import { useEffect, useState } from 'react';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { Route, Routes, useLocation, useNavigate, Navigate } from 'react-router-dom';
 import Home from './pages/Home/Home.jsx';
 import Catalogo from './pages/Catalogo/Catalogo.jsx';
 import NoEncontrada from './pages/NoEncontrada.jsx';
 import DetalleAlbum from './pages/DetalleAlbum/DetalleAlbum.jsx';
 import IniciarSesion from './pages/IniciarSesion/IniciarSesion.jsx';
-import { leerSesion, guardarSesion, limpiarSesion } from './utils/sesion.js';
+import useSesion from './hooks/useSesion.js';
 import { leerConsentimiento, leerIdioma, guardarIdioma, guardarConsentimiento, reiniciarConsentimiento } from './utils/preferencias.js';
 import { PREFERENCIAS_ACCESIBILIDAD, leerAccesibilidad, guardarAccesibilidad, aplicarAccesibilidad, ajustarTamanoTexto } from './utils/accesibilidad.js';
 
@@ -16,19 +16,26 @@ const almacenamiento = () => {
   try { return window.localStorage; } catch { return null; }
 };
 
-const almacenamientoSesion = () => {
-  try { return window.sessionStorage; } catch { return null; }
-};
-
 export default function App() {
   const [consentimiento, setConsentimiento] = useState(() => leerConsentimiento(almacenamiento()));
   const [idioma, setIdioma] = useState(() => leerIdioma(almacenamiento()));
-  const [sesion, setSesion] = useState(() => leerSesion(almacenamientoSesion(), almacenamiento()));
   const [preferenciasAccesibilidad, setPreferenciasAccesibilidad] = useState(
     () => leerAccesibilidad(almacenamiento(), leerConsentimiento(almacenamiento())),
   );
   const en = idioma === 'en';
   const { pathname } = useLocation();
+  const navegar = useNavigate();
+  const onExpirada = useCallback(() => navegar('/iniciarSesion', { replace: true }), [navegar]);
+  const estadoSesion = useSesion(onExpirada);
+  const rutaAnterior = useRef(pathname);
+
+  // Revalidar la cookie al navegar cuando ya había una sesión confirmada.
+  useEffect(() => {
+    if (rutaAnterior.current === pathname) return;
+    rutaAnterior.current = pathname;
+    if (estadoSesion.usuario) estadoSesion.verificar({ silencioso: true }).catch(() => {});
+  }, [pathname, estadoSesion.usuario, estadoSesion.verificar]);
+
   // Único punto de lectura de /textos: compartido entre todas las rutas.
   const resultadoTextos = useTextos(idioma);
   const datos = resultadoTextos;
@@ -71,14 +78,12 @@ export default function App() {
 
   const restablecerAccesibilidad = () => setPreferenciasAccesibilidad({ ...PREFERENCIAS_ACCESIBILIDAD });
 
-  const iniciarSesion = (identidad, recordar) => {
-    guardarSesion(identidad, recordar, almacenamientoSesion(), almacenamiento());
-    setSesion(identidad);
-  };
+  const iniciarSesion = () => estadoSesion.confirmarIngreso();
 
-  const cerrarSesion = () => {
-    limpiarSesion(almacenamientoSesion(), almacenamiento());
-    setSesion(null);
+  const cerrarSesion = async () => {
+    const cerrada = await estadoSesion.cerrar();
+    if (cerrada) navegar(enlaces.inicio, { replace: true });
+    return cerrada;
   };
 
   // Los textos y las preferencias son globales; las demás consultas siguen en cada página.
@@ -107,7 +112,8 @@ export default function App() {
     preferenciasAccesibilidad,
     alternarAccesibilidad, cambiarTamanoTexto, restablecerAccesibilidad,
     consentimiento, guardarConsentimiento: decidirCookies, cambiarCookies,
-    sesion, iniciarSesion, cerrarSesion,
+    sesion: estadoSesion.usuario, iniciarSesion, cerrarSesion,
+    saliendo: estadoSesion.saliendo, errorCierre: estadoSesion.errorCierre,
   };
 
   // Sin los textos de la API no se montan páginas ni controles de navegación.
@@ -119,13 +125,33 @@ export default function App() {
     );
   }
 
+  if (estadoSesion.cargando) {
+    return (
+      <main className="sitio">
+        <EstadoPeticion cargando textos={datos.textos} recurso="sesion" />
+      </main>
+    );
+  }
+  if (estadoSesion.error && pathname !== enlaces.ingresar) {
+    return (
+      <main className="sitio">
+        <EstadoPeticion error={estadoSesion.error} textos={datos.textos}
+          statusCode={estadoSesion.error.status}
+          recargar={() => estadoSesion.verificar()} recurso="sesion" />
+      </main>
+    );
+  }
+
   return (
     <Routes>
       <Route path="/" element={<Home configuracion={configuracion} />} />
       <Route path="/catalogo" element={<Catalogo configuracion={configuracion} />} />
       <Route path="/catalogo/:gen_id" element={<Catalogo configuracion={configuracion} />} />
       <Route path="/albumes/:id" element={<DetalleAlbum configuracion={configuracion} />} />
-      <Route path="/iniciarSesion" element={<IniciarSesion configuracion={configuracion} />} />
+      <Route path="/iniciarSesion"
+        element={estadoSesion.usuario
+          ? <Navigate to={enlaces.inicio} replace />
+          : <IniciarSesion configuracion={configuracion} />} />
       <Route path="*" element={<NoEncontrada configuracion={configuracion} />} />
     </Routes>
   );

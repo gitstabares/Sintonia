@@ -260,3 +260,25 @@ una estructura inválida, EstadoPeticion muestra el único mensaje permitido:
 La misma respuesta global proporciona los textos de accesibilidad; no se requiere
 una segunda petición. El documento HTML inicial ya no contiene título ni
 descripción SEO fijos.
+
+
+### Historia S2-05: cookie HttpOnly y cuenta verificada
+
+La rama `S2-05` elimina el estado de cuenta persistido localmente. Al cargar
+el sitio se consulta `GET /sesion` con `credentials: 'include'`: solo después de
+una respuesta válida se muestra el menú de cuenta en la navegación web o móvil.
+`POST /sesion` establece la cookie desde el backend y se confirma con un GET.
+Cerrar sesión solicita `DELETE /sesion` y solo al obtener 204 elimina la
+identidad visible. Si una cuenta previamente verificada recibe 401
+`no_autenticado`, se dirige a /iniciarSesion`.
+
+Ningún token se guarda en localStorage/sessionStorage. El navegador conserva,
+como máximo, un indicador booleano no sensible para identificar expiraciones
+tras recargar; **la cookie HttpOnly del backend siempre es la fuente de verdad**.
+
+**Despliegue:** la colección Postman documenta `SameSite=Lax`. Para una
+SPA en otro sitio es preciso coordinar la configuración de cookie/cors con
+el backend o usar un proxy same-site: `credentials: 'include'` no resuelve
+por sí solo las restricciones de cookies entre sitios.
+
+Verificar con `npm test` y `npm run build`.
