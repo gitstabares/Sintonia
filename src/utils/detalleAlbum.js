@@ -75,12 +75,27 @@ export function obtenerGenero(album) {
   return typeof genero === "string" ? genero : (genero?.nombre ?? "");
 }
 
+export function obtenerOtrosAlbumes(respuesta, album) {
+  const candidatos = respuesta?.otrosAlbumes
+    ?? respuesta?.albumesRelacionados
+    ?? respuesta?.albumesDelArtista
+    ?? album?.otrosAlbumes
+    ?? album?.albumesRelacionados
+    ?? album?.artista?.albumes;
+  if (!Array.isArray(candidatos)) return [];
+  return candidatos.filter(otro =>
+    otro && otro.id != null && String(otro.id) !== String(album?.id) &&
+    (!otro.artista?.id || !album?.artista?.id ||
+      String(otro.artista.id) === String(album.artista.id))
+  );
+}
+
 export function normalizarDetalleAlbum(respuesta) {
   const album = respuesta?.album ?? respuesta?.detalle ?? respuesta;
   if (!album || typeof album !== "object" || Array.isArray(album)) {
-    return { album: null };
+    return { album: null, otrosAlbumes: [] };
   }
-  return { album };
+  return { album, otrosAlbumes: obtenerOtrosAlbumes(respuesta, album) };
 }
 
 export function duracionTotalMinutos(album) {
@@ -97,13 +112,22 @@ export function duracionTotalMinutos(album) {
   return Number.isFinite(total) && total >= 0 ? Math.round(total / 60) : 0;
 }
 
-export function obtenerMetadatosAlbum(album) {
+export function obtenerMetadatosAlbum(album, textos = null) {
   const titulo = album?.titulo;
   const artista = album?.artista?.nombre;
   if (!titulo || !artista) return null;
+
+  const plantilla = textos?.paginas?.album?.seo
+    ?? textos?.paginas?.album?.metadatos
+    ?? textos?.paginas?.detalleAlbum?.metadatos;
+  const valores = { titulo, artista };
+  const interpolar = origen => String(origen).replace(/\{(titulo|artista)\}/g,
+    (coincidencia, clave) => valores[clave] ?? coincidencia);
+  // Cuando los textos son válidos pero falta esta plantilla no se crea
+  // contenido lingüístico: se presenta únicamente información del álbum.
+  const datosAlbum = titulo + ' — ' + artista;
   return {
-    title: titulo + " — " + artista + " | Sintonía",
-    description:
-      "Canciones del álbum " + titulo + " de " + artista + " en Sintonía.",
+    title: plantilla?.titulo ? interpolar(plantilla.titulo) : datosAlbum,
+    description: plantilla?.descripcion ? interpolar(plantilla.descripcion) : datosAlbum,
   };
 }

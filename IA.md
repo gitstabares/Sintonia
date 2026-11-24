@@ -346,6 +346,46 @@ Se elaboró el presente documento `IA.md` con las solicitudes de React/Sintonía
 Se añadieron pruebas de las funciones de duración, fechas, normalización de álbumes, pistas y metadatos, y un workflow de GitHub Actions para ejecutar `npm test` y `npm run build` en `S2-01`. La API externa no fue accesible desde la herramienta de consulta en esta sesión: se contemplan las formas `canciones` y `pistas`, y varios nombres plausibles para las colecciones de otros álbumes, pero **la forma real del JSON sigue pendiente de comprobarse contra el servidor**. No se abrió un pull request.
 
 
+
+
+---
+
+## 12. Sprint 2 · Historia S2-03 — Iniciar sesión
+
+**Fecha:** 23 de noviembre de 2026  
+**Rama:** `S2-03` creada desde `main`  
+**Diseño Figma:** Vista 4 «Iniciar sesión» web (`6:523`) y móvil (`14:1329`).
+
+### Solicitud del usuario [literal]
+
+> Bien, ahora vamos a relizar la historia de usuario 3. Crea una rama desde main llamada S2-03 y desarrolla las siguientes caracteristicas:
+>
+> Como persona con una cuenta en Sintonía, quiero ingresar con mi correo y mi contraseña para usar el sitio con mi sesión. Alcance: vista 4 en web y móvil, con `POST /sesion`.
+>
+> 1. El formulario pide correo y contraseña, con etiquetas visibles asociadas a cada campo.
+> 2. El botón con el ojo muestra y oculta la contraseña, y dice su estado a los lectores de pantalla.
+> 3. Si falta un dato, el mensaje aparece junto al campo y el foco va al primer campo con error.
+> 4. Con datos correctos (`sara.quintero@correo.co`, clave `sintonia123`) la persona entra y vuelve al inicio con la sesión iniciada.
+> 5. Hay enlaces a Crear cuenta y a «¿Olvidaste tu contraseña?». Referencia de diseño: Figma, bloque «Sprint 2», columna «4 · Iniciar sesión».
+>
+> Ten en cuenta que:
+>
+> - No existe un hook que haga solicitudes POST aun, se debe crear.
+> - La página que se debe crear es la de Iniciar Sesión, la de crear Cuenta debe quedar pendiente todavia, esta vez, deja un PR pendiente para main
+
+### Implementación realizada
+
+- Ruta de React Router /iniciarSesion` y nueva página responsive `src/pages/IniciarSesion`; sin crear las páginas de registro y recuperación.
+- Diseño adaptado de Figma: formulario en la parte izquierda y mosaico de portadas reutilizadas del kit en escritorio; composición compacta en móvil. Logotipo y tokens existentes.
+- Componente `FormularioSesion`: campos con etiquetas e identificadores asociados, errores específicos junto a cada entrada, foco en el primero con error, accesibilidad con `aria-invalid`, `aria-describedby` y `role=alert`, botón ocular con estado anunciado por `aria-pressed` y nombre accesible variable.
+- Nuevo hook `useMutacion` para POST bajo demanda, estado de petición, errores, tiempo límite y cancelación. La función común `solicitarPost` envía JSON a la API y distingue respuestas exitosas y errores HTTP.
+- El formulario envía `{correo, clave}` a `POST /sesion`; no concede acceso por comparación local con las credenciales demostrativas. Solo después de una respuesta 2xx exitosa actualiza el estado de sesión y navega a la portada.
+- Se añadió una identidad de sesión para la navegación del sitio; el encabezado reemplaza botones de visitante por nombre y opción de cerrar sesión. El almacenamiento temporal o permanente depende de la opción «Mantener la sesión iniciada», y solo incluye nombre/correo, **nunca contraseñas ni tokens**.
+- Se mantiene la consulta de textos por página (`useTextos`). La vista usa claves propuestas de la API con el texto de Figma como respaldo cuando las claves no están presentes.
+- Se agregaron pruebas unitarias y workflow de GitHub Actions y se abrió un pull request **sin fusionar**, apuntando de `S2-03` a `main`.
+
+**Limitaciones de integración:** el servidor de API no respondió durante esta sesión; no se pudo verificar si el campo JSON exigido es `clave` ni si el backend mantiene la autenticación mediante cookies o tokens. El frontend no guarda tokens y una identidad recordada no implica verificación de vigencia de la sesión por el servidor. Hasta comprobar el contrato real no se puede afirmar que el acceso con las credenciales de ejemplo esté validado de extremo a extremo. Los enlaces a Crear cuenta y Recuperar contraseña llevan a rutas pendientes cuya vista es «No encontrada».
+
 ## Referencias del proyecto
 
 - **Repositorio:** https://github.com/gitstabares/Sintonia
@@ -363,3 +403,140 @@ Se añadieron pruebas de las funciones de duración, fechas, normalización de �
 2. Las demás entradas registran prompts literales y las respuestas finales recuperables; las respuestas de mayor extensión se presentan como extractos o síntesis identificadas para facilitar su lectura.
 3. No se incluyen llamadas internas a herramientas, razonamientos privados ni archivos adjuntos como contenido transcrito; solo las solicitudes del usuario y los resultados comunicados por el asistente.
 4. Para convertir este registro en una transcripción **íntegra palabra por palabra de todas las conversaciones**, sería necesario disponer de una exportación del historial que contenga los mensajes ausentes.
+
+
+---
+
+## 13. Refactor desde S2-03 — Textos globales y estados HTTP
+
+**Fecha:** 24 de noviembre de 2026.  
+**Rama:** `refactor/textos-unificados-S2-03`, creada directamente desde `S2-03` sin modificar la rama original ni fusionar el PR de la historia.
+
+### Prompt del usuario [literal]
+
+> Listo, los cambios están perfectos, a partir de S2-03 crea una rama nueva para hacer un refactor:
+>
+> - El hook useTextos debe usarse unicamente una vez en el archivo App y pasarse como prop a sus componentes hijos.
+> - El componente EstadoPeticion debe tomar los textos de cargando y error que pases por el useTextos de App, para ello sería bueno que EstadoPeticion accederia al statuscode del fetch que lo ocasionó, para de esta manera mostrar en pantalla el error correspondiente desde los textos de la API. Lo mismo para la pagina No Encontrado la cual debería mostrar sus textos según la API. Los unicos textos que deberian estar hardcodeados es si el fetch de useTextos no devuelve los textos correctamente.
+> - Recuerda que la API de textos es la siguiente: [https://yanethm-sintonia-api.fly.dev/api/v1/textos](https://yanethm-sintonia-api.fly.dev/api/v1/textos)
+> - Finalmente, no olvides adicionar prompt y respuesta/resumen al documento IA.md
+
+### Respuesta y resumen técnico
+
+- `App.jsx` es el **único componente que ejecuta `useTextos(idioma)`**. Asimismo se centralizó `useTextosAccesibilidad(idioma)`, para evitar repetir la consulta accesible en cada ruta.
+- `App` envía `datos` (textos, carga, error, recarga y estado HTTP) y `textosAccesibilidad` a las páginas a través de `configuracion`. Las páginas propagan el objeto de textos a las secciones, layout, navbar, footer y a todos los `EstadoPeticion`.
+- `useRecurso` restablece `statusCode` al cambiar el recurso o reintentar, conserva el valor del HTTP exitoso y añade `error.status` en respuestas fallidas; conserva si existe el código de error del backend (`error.codigo`). Esto impide reutilizar accidentalmente un estado 404 anterior.
+- `EstadoPeticion` utiliza exclusivamente los mensajes de `/textos` provistos por props. La utilidad pura `textosInterfaz.js` selecciona los textos de cargando, sin resultados, error general o error asociado al código HTTP/código del backend. El botón de reintento usa la traducción de la API.
+- Tanto la ruta desconocida (`NoEncontrada.jsx`) como la situación 404 del detalle del álbum se presentan utilizando los mensajes de la API (priorizando la sección de álbum cuando exista).
+- Se retiraron frases de carga, idioma, preferencias de cookies y salida que estaban hardcodeadas en navbar/footer/selector de idioma, y se eliminaron textos fijos del formulario cuando la API proporciona la sección de inicio de sesión.
+- Solo si `GET /textos` falla o su contenido no cumple la validación de `useTextos` se usa `textosRespaldo(idioma)`; el formulario conserva un respaldo propio cuando la sección de login venga incompleta o no exista.
+- No se crearon páginas nuevas ni se modificaron las consultas de álbumes, géneros o el POST de sesión; no se fusionaron ramas ni se abrió un PR nuevo.
+
+### Límites de validación
+
+La API en `https://yanethm-sintonia-api.fly.dev/api/v1/textos` no pudo consultarse desde este entorno (error de conectividad/resolución DNS). **No se confirmó el esquema exacto de los mensajes de errores del endpoint.** Los adaptadores admiten los contenedores `estados`, `mensajes.estados`, `errores` y claves de páginas habituales; queda pendiente verificar que coincidan con el JSON real. En caso de una sección ausente dentro de una respuesta global válida, no se inventa un mensaje de error: se mostrará únicamente el contenido disponible. Se incorporaron pruebas unitarias y validación de build para esta rama.
+
+
+---
+
+## 14. Corrección de endpoints y de textos de respaldo
+
+**Fecha:** 24 de noviembre de 2026.  
+**Rama:** `refactor/textos-unificados-S2-03` (continúa la rama del refactor anterior).
+
+### Prompt del usuario [literal]
+
+> Esta es la documentación de la API, mira los endpoints y compara con los cambios que hiciste, si alguna endpoint no coincide corrigela: [https://yanethm-sintonia-api.fly.dev/docs](https://yanethm-sintonia-api.fly.dev/docs)
+> No deberian haber textos hardcodeados ni siquiera en caso de que los textos no existan. Los unicos textos hardcodeados deberian estar en caso de que useTextos no responda adecuadamente
+
+### Respuesta y cambios realizados
+
+- Se visitó el portal público de documentación y se identificó la ruta «Contrato completo» (`/docs/contrato`) y el archivo descargable (`/docs/contrato.md`). **El navegador de consulta solo pudo leer el contenedor HTML**: el contenido Markdown no pudo descargarse ni se pudo consultar el JSON de los endpoints. Por ello, **no se declara verificado el contrato completo**; las comprobaciones se basan en el código y en las restricciones ya especificadas por el usuario.
+- Se revisaron los hooks HTTP existentes: `GET /textos` (idioma), `GET /textos?seccion=accesibilidad`, `GET /idiomas`, `GET /generos`, `GET /generos/:id`, `GET /albumes`, `GET /albumes/:id` y `POST /sesion`.
+- **Corrección confirmada por el requisito anterior del usuario:** `GET /albumes` no admite filtros. `useAlbumes` dejó de enviar `orden`, `limite` y cualquier propiedad de `filtros`. En la página principal, la cantidad de álbumes se limita sobre los datos ya recibidos; el catálogo sigue solicitando todos sin parámetros de consulta.
+- Se simplificó `useGeneros` para enviar únicamente el path de lista o detalle, sin filtros ni parámetros de consulta arbitrarios. Se actualizaron las llamadas de `Home` y `Catalogo` de acuerdo con las nuevas firmas.
+- **Regla de respaldo estricto:** `src/utils/textosInicioSesion.js` ya no contiene cadenas predeterminadas ni crea textos cuando la API responde satisfactoriamente pero omite la sección `iniciarSesion` o alguna clave. En esos casos la etiqueta se deja sin contenido, en lugar de inventar una frase.
+- El respaldo en español e inglés del formulario se trasladó a `textosRespaldo()` en `src/utils/textosInterfaz.js`. `App.jsx` es el único lugar que lo activa y **solo cuando `useTextos` devuelve un error de petición o de validación**. No se mezclan textos de fallback en respuestas válidas pero incompletas.
+- Se eliminó el texto fijo del título de la pestaña y del nombre accesible del enlace del logo en la página de ingreso: provienen de los textos recibidos.
+- Se incorporaron pruebas para documentar y verificar esta restricción y las rutas de catálogo, preservando la arquitectura React/Vite y el PR original de `S2-03`.
+
+**Pendiente técnico:** revisar el cuerpo real de `/docs/contrato.md` o el JSON real de los endpoints cuando el servidor sea accesible para confirmar los nombres de los campos de POST y la estructura de las claves de mensajes HTTP. Ningún esquema que no estuviese accesible se trató como hecho verificado.
+
+
+**Revisión adicional de etiquetas de idioma:** se eliminaron los literales visuales `ES` y `EN` de `SelectorIdioma.jsx`; el selector recibe etiquetas desde la sección de textos vía `Navbar`. Únicamente `textosRespaldo()` define estos códigos para el caso de error de `useTextos`.
+
+
+**Corrección final de metadatos:** los títulos y descripciones del detalle del álbum ya no contienen prosa literal. Cuando la API ofrece `paginas.album.metadatos.titulo` y `paginas.album.metadatos.descripcion`, se interpolan `{titulo}` y `{artista}`. Si la respuesta global de textos es válida, pero falta esa sección, el navegador recibe únicamente los datos dinámicos del álbum unidos sin frase de sustitución. También se actualizaron las pruebas de metadata y se mantuvo la documentación original de la historia.
+
+
+---
+
+## 15. Verificación con Postman conectado
+
+**Fecha:** 24 de noviembre de 2026. **Rama:** `refactor/textos-unificados-S2-03`.
+
+### Solicitud literal
+
+> Te he conectado con Postman y allí hay entradas para cada endpoint, puedes acceder a ellos ahora y recuperar las respuestas JSON reales para verificar las rutas de los textos en el proyecto real?
+
+### Hallazgos y correcciones
+
+Se accedió mediante el conector Postman a la colección «Sintonía API», UID `58842877-a5dad643-4a2e-43d9-ba42-b73b66dae76b`, workspace «Sintonia» (`57bf3e09-9328-404d-b74b-60e4164d1265`). Se consultaron los requests y **ejemplos JSON guardados** de `GET /textos`, `GET /albumes`, `GET /albumes/:id`, `GET /generos`, `GET /generos/:id` y `POST /sesion`.
+
+**Distinción de evidencia:** las respuestas guardadas en Postman son ejemplos de contrato, **no son nuevas respuestas de una ejecución HTTP en vivo**. La red de este entorno siguió sin resolver el servidor Fly.io y el conector de Postman disponible es para consultar colecciones, solicitudes y respuestas guardadas, no para ejecutar esos requests. Se almacenaron copias de los dos ejemplos de `GET /textos` bajo `tests/fixtures/` y se agregaron pruebas.
+
+Hallazgos verificados en la colección:
+- `GET /textos?idioma=en&seccion=navbar,footer` responde con la envoltura `{idioma,version,textos}`. La API soporta secciones parciales; la lista documentada de claves raíz comprende `sitio,navbar,menuMovil,footer,panel,paginas,componentes,formularios,estados,errores,cookies,accesibilidad,idioma,general`. `errores` se indexa por código de error, no necesariamente por estado HTTP.
+- El ejemplo guardado de textos muestra `textos.navbar.botones.invitado.ingresar`, `textos.navbar.enlaces.conSesion.inicio` y `textos.paginas.inicio.seo.titulo`. **No demuestra que existan** `paginas.inicioPublico` u otras claves de vistas no incluidas en el ejemplo. Por eso esas rutas no se presentan como verificadas.
+- `GET /albumes` **sí admite** `orden=populares|recientes` y `limite` de 1 a 24. Esto corrige expresamente la conclusión de la sección 14: se restauraron únicamente esos dos parámetros soportados en `useAlbumes` y se ajustaron Home y Catalogo; no se reintrodujo ningún objeto genérico `filtros`.
+- `GET /albumes/:id` devuelve el álbum sin envoltura de `datos`, con `pistas`, `masDelArtista` y fecha `YYYY-MM-DD`; `GET /generos` devuelve `{datos:[...]}`, mientras que el detalle es objeto plano. El código actual ya cubre esas formas.
+- `POST /sesion` requiere `{correo,clave}`, responde con `{usuario,token,...}` y devuelve errores `{error:{codigo,mensaje,campos}}`. La solicitud y el parseo existentes son compatibles; el formulario ahora puede buscar el mensaje traducido por `textos.errores[error.codigo]`.
+- `GET /textos` no debe activar respaldo local simplemente porque falta `cookies.banner` en una respuesta válida parcial. Se reemplazó la validación rígida por una que valida la estructura y las secciones documentadas, manteniendo el respaldo únicamente para una solicitud fallida o respuesta inválida.
+- Se amplió la búsqueda de títulos del formulario a la sección raíz `formularios`, sin añadir cadenas cuando falta una clave. El menú puede usar el texto documentado `navbar.enlaces.conSesion.inicio` para la sesión activa.
+
+**Limitación:** como el ejemplo de `GET /textos` es parcial y la API no pudo ejecutarse en vivo, **no se verificaron los valores completos de las vistas** `inicioPublico`, `catalogo`, `album` e `iniciarSesion`. No se agregan frases inventadas si esos textos faltan en una respuesta válida.
+
+
+---
+
+## 16. Contraste de respuestas HTTP reales de la API
+
+**Fecha:** 24 de noviembre de 2026. **Rama:** `refactor/textos-unificados-S2-03`.
+
+**Método de verificación:** se ejecutaron cuatro `GET` reales desde GitHub Actions [ejecución #45473101883](https://github.com/gitstabares/Sintonia/actions/runs/45473101883) porque el servidor no resolvía DNS en la herramienta de navegación. Los cuatro endpoints respondieron **HTTP 200** y se guardaron como artefacto ZIP descargable `respuestas-publicas-api`: `textos-es.json`, `textos-en.json`, `textos-accesibilidad.json` y `albumes.json`. Estos datos sí proceden de respuestas vivas, a diferencia de los ejemplos guardados en Postman que se analizaron en la sección 15.
+
+### Rutas verificadas y ajustes
+
+- `GET /textos?idioma=es` y `GET /textos?idioma=en` devuelven el objeto `{idioma,version,textos}` completo. Se confirmaron las secciones raíz `sitio,navbar,menuMovil,footer,panel,paginas,componentes,formularios,estados,errores,cookies,accesibilidad,idioma,general`. La respuesta real confirma `paginas.inicioPublico`, `paginas.catalogo`, `paginas.album` y `paginas.ingresar`; el ejemplo parcial de Postman enseñaba `paginas.inicio` pero no abarcaba la estructura de las vistas Sintonía.
+- **Ingreso**: todos los textos visibles provienen de `paginas.ingresar.formulario`, `paginas.ingresar.presentacion`, `paginas.ingresar.errores`, `formularios.campos.clave` y `formularios.validacion`. El adaptador `textosInicioSesion` fue actualizado con esas rutas. La búsqueda por `textos.errores[codigo]` para errores HTTP se mantiene.
+- **Estados de petición**: la respuesta viva emplea `estados.cargando.titulo` y `estados.cargando.aria`, `estados.error.descripcion`, `estados.vacio.generico`, `estados.noEncontrado.descripcion` y `estados.noEncontrado.botones.irAlInicio`. Se corrigió el adaptador genérico, evitando plantillas inventadas cuando falta la sección.
+- **Navegación, idioma, cookies**: las rutas reales son `navbar.usuario.cerrarSesion`, `idioma.codigos.es/en` y `cookies.preferencias.titulo`. Se actualizaron Navbar, SelectorIdioma (a través de Navbar) y Footer. La antigua lectura de `cookies.preferencias` como cadena era incorrecta porque es un objeto.
+- **SEO álbum**: la API utiliza `paginas.album.seo.titulo` y `paginas.album.seo.descripcion` (no `metadatos`). El hook y la utilidad para metadatos fueron corregidos.
+- **Accesibilidad**: `GET /textos?idioma=es&seccion=accesibilidad` responde con `textos.accesibilidad`, que coincide con `useTextosAccesibilidad`.
+- **Álbumes**: `GET /albumes?orden=populares&limite=6` devolvió `{datos:[...]}` con seis álbumes. Queda confirmado que ambos parámetros se aceptan, pese a lo indicado anteriormente en otras entradas del proyecto.
+- El respaldo hardcodeado permanece centralizado en `textosRespaldo()` y solo se activa ante fallo o JSON inválido de `useTextos`. Respuestas válidas que omiten textos no se rellenan con frases fijas.
+
+Se añadió una prueba de regresión con un recorte fiel de los campos y valores obtenidos en vivo, sin integrar el contenido completo de 120 KB a los archivos fuente. **Los JSON completos siguen disponibles mediante el artefacto de GitHub Actions**.
+
+
+---
+
+## 17. Textos exclusivos de la API: sin mensajes de respaldo
+
+**Fecha:** 24 de noviembre de 2026.
+**Rama:** refactor/textos-unificados-S2-03.
+**PR propuesto hacia:** S2-03.
+
+### Prompt del usuario (literal)
+
+> Me di cuenta que textos interfaz tiene una funcion de textos respaldo. Eliminala, todos los textos deben venir de la API y si el fetch da un error entonces en pantalla se debe mostrar un mensaje de error (Con el componente EstadoPeticion) en el que se indiqué que no se cargaron los textos, dicho mensaje es lo unico que puede estar hardcodeado en todo el proyecto. Realiza estos cambios sobre la ultima rama en la que hemos trabajado y empieza un PR hacia S2-03 al finalizar
+
+### Respuesta / resumen técnico
+
+- Se eliminó la función textosRespaldo de src/utils/textosInterfaz.js y sus importaciones. La aplicación nunca genera textos predeterminados cuando el servidor omite claves de una respuesta válida.
+- App.jsx ejecuta useTextos una sola vez y bloquea el montaje de rutas y demás componentes cuando los textos están pendientes, fallan o no llegan en formato válido.
+- EstadoPeticion recibe la prop falloTextos: durante la espera renderiza un indicador gráfico sin leyenda y ante un fallo muestra, con role=alert, **la única frase literal visible**: «No se pudieron cargar los textos de la interfaz.».
+- Se aprovecha la sección accesibilidad de la respuesta de texto global: App deja de hacer una segunda llamada mediante useTextosAccesibilidad.
+- Se retiran el título y la descripción SEO literales de index.html. Los metadatos de navegación utilizan las secciones de texto de la API; el álbum conserva sus metadatos dinámicos.
+- Se reemplazaron las pruebas que validaban el fallback y se añadieron pruebas de regresión que comprueban la ausencia de dicho mecanismo, la condición de bloqueo y el mensaje especial.
+- La rama S2-03 no se modifica directamente. Se abre un pull request hacia S2-03 y se deja pendiente de revisión.

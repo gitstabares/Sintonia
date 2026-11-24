@@ -9,7 +9,7 @@ export default function Generos({ textos, enlaces, en, generos, estado }) {
   const texGeneros = textos?.paginas?.inicioPublico?.generos;
   const isMobile = useMediaQuery('(max-width: 1023px)');
   if (estado.cargando || estado.error) {
-    return <EstadoPeticion {...estado} en={en} nombre={en ? 'genres' : 'géneros musicales'} />;
+    return <EstadoPeticion {...estado} textos={textos} recurso="generos" />;
   }
   return (
     <section className="generos">
@@ -20,7 +20,7 @@ export default function Generos({ textos, enlaces, en, generos, estado }) {
         </Link>
       </div>
       <div className="grid-generos">
-        {generos?.length ? generos.map(genero => <TarjetaGenero key={genero.id} genero={genero} enlaces={enlaces} />) : <EstadoPeticion vacio en={en} nombre={en ? 'genres' : 'géneros'} />}
+        {generos?.length ? generos.map(genero => <TarjetaGenero key={genero.id} genero={genero} enlaces={enlaces} />) : <EstadoPeticion vacio textos={textos} recurso="generos" />}
       </div>
     </section>
   );

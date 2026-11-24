@@ -185,3 +185,78 @@ Consulta los documentos `docs/REVISION_S1.md` y `docs/ACCESIBILIDAD_S1-06.md` pa
 ---
 
 *Este README se elaboró a partir de los archivos presentes en la rama `main` del repositorio, consultados el 11 de noviembre de 2026. No implica que se hayan ejecutado las pruebas localmente ni que se haya auditado visualmente Figma.*
+
+
+## Sprint 2 — S2-03 Inicio de sesión
+
+La rama `S2-03` añade la ruta /iniciarSesion` (React + Vite + React Router)
+con la vista 4 web/móvil de Figma. El formulario solicita correo y contraseña,
+valida y enfoca el primer campo con error, anuncia la visibilidad de la contraseña,
+y envía `POST /sesion` mediante `useMutacion`.
+
+Solo al obtener una respuesta exitosa de la API se actualiza la identidad visible
+en la navegación y se regresa al inicio. Los enlaces a /crearCuenta` y
+/recuperarContrasena` están presentes, pero esas páginas aún no se desarrollan.
+
+**Contrato por validar:** el cuerpo actual del POST es `{correo, clave}`.
+La API no estuvo accesible para verificar el nombre real del campo de contraseña
+ni el mecanismo de sesión del backend. El cliente conserva solo nombre y correo,
+no contraseñas ni tokens. El almacenamiento por sí solo no autentica al usuario
+ante la API. Revisar el PR antes de integrar en producción.
+
+Validación: `npm test` y `npm run build`.
+
+
+### Actualización del refactor de textos y API
+
+En `refactor/textos-unificados-S2-03`, los componentes utilizan solo textos procedentes
+de `GET /textos` cuando este responde correctamente. Las cadenas locales de respaldo se
+agrupan en `textosRespaldo()` y únicamente se usan cuando el hook `useTextos`
+reporta un error HTTP o una respuesta global inválida. Una sección parcial en una respuesta
+global válida no activa respaldo.
+
+`GET /albumes` se consume sin parámetros `orden` ni `limite` (no admitidos
+por el endpoint, según la restricción indicada para el proyecto); el recorte de resultados
+se realiza en la página. `GET /generos` y `GET /generos/:id` se invocan sin
+filtros inventados.
+
+**Verificación pendiente:** la documentación web [Contrato completo](https://yanethm-sintonia-api.fly.dev/docs/contrato)
+enlaza a un Markdown que no pudo recuperarse desde el entorno de consulta; se requiere
+validar contra ese contrato las estructuras JSON de sesión y mensajes HTTP.
+
+
+### Contrato comprobado en Postman (24 de noviembre de 2026)
+
+La colección [Sintonía API](https://go.postman.co/collection/58842877-a5dad643-4a2e-43d9-ba42-b73b66dae76b)
+documenta que **GET /albumes** sí admite `?orden=populares&limite=6` y
+que **GET /textos** permite `?idioma=es|en&seccion=...`. Esta fuente
+corrige la nota anterior sobre la ausencia de parámetros en `/albumes`.
+El proyecto conserva los textos existentes si la API responde con una sección
+parcial válida; el respaldo local solo se activa ante error de solicitud o JSON inválido.
+
+Los JSON almacenados en `tests/fixtures/postman-textos-*.json` son
+**ejemplos guardados en la colección**, no respuestas nuevas de una ejecución live.
+
+
+### Validación HTTP real de textos (24/11/2026)
+
+La inspección [GitHub Actions #45473101883](https://github.com/gitstabares/Sintonia/actions/runs/45473101883)
+consultó la API en vivo (HTTP 200 para español, inglés, accesibilidad y álbumes)
+y guardó las cuatro respuestas JSON como artifact `respuestas-publicas-api`.
+La estructura real incluye `paginas.ingresar.formulario`,
+`estados.noEncontrado`, `navbar.usuario.cerrarSesion`,
+`idioma.codigos`, `cookies.preferencias.titulo` y
+`paginas.album.seo`. La documentación técnica completa se encuentra en `IA.md`.
+
+
+### Actualización: textos exclusivos de la API
+
+La rama refactor/textos-unificados-S2-03 **no utiliza textos de respaldo**.
+Toda la interfaz se monta únicamente después de una respuesta válida de GET /textos.
+Durante la carga se muestra un indicador gráfico. Si el servidor falla o devuelve
+una estructura inválida, EstadoPeticion muestra el único mensaje permitido:
+«No se pudieron cargar los textos de la interfaz.».
+
+La misma respuesta global proporciona los textos de accesibilidad; no se requiere
+una segunda petición. El documento HTML inicial ya no contiene título ni
+descripción SEO fijos.

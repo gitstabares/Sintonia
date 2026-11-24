@@ -5,7 +5,7 @@ import BannerCookies from '../components/BannerCookies/BannerCookies.jsx';
 export default function LayoutPublico({
   datos, textosAccesibilidad, children, en, alternarIdioma,
   preferenciasAccesibilidad, alternarAccesibilidad, cambiarTamanoTexto, restablecerAccesibilidad,
-  consentimiento, guardarConsentimiento, cambiarCookies, enlaces,
+  consentimiento, guardarConsentimiento, cambiarCookies, enlaces, sesion, cerrarSesion,
 }) {
   return (
     <div className="sitio">
@@ -19,6 +19,8 @@ export default function LayoutPublico({
         cambiarTamanoTexto={cambiarTamanoTexto}
         restablecerAccesibilidad={restablecerAccesibilidad}
         enlaces={enlaces}
+        sesion={sesion}
+        onCerrarSesion={cerrarSesion}
       />
       <main>{children}</main>
       <Footer {...datos} en={en} enlaces={enlaces} cambiarCookies={cambiarCookies} />

@@ -1,0 +1,99 @@
+.pagina-sesion {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: grid;
+  grid-template-columns: minmax(0, 44.4444%) minmax(0, 55.5556%);
+  color: var(--texto-principal);
+  background: var(--fondo-base);
+}
+.pagina-sesion__panel-formulario {
+  min-height: 100vh;
+  min-height: 100dvh;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 56px;
+}
+.pagina-sesion__logo { display: inline-flex; align-items: center; width: 128px; flex: 0 0 auto; }
+.pagina-sesion__logo svg { display: block; width: 128px; height: 32px; }
+.pagina-sesion__contenido {
+  width: min(100%, 400px);
+  margin-block: auto;
+  padding-block: 40px;
+}
+.pagina-sesion__encabezado { margin-bottom: 20px; }
+.pagina-sesion__encabezado h1 {
+  font: 700 40px/46px var(--fuente-syne);
+  letter-spacing: -0.035em;
+  margin: 0 0 20px;
+  max-width: 370px;
+}
+.pagina-sesion__encabezado p {
+  margin: 0;
+  color: var(--texto-secundario);
+}
+.pagina-sesion__legal {
+  color: var(--texto-terciario);
+  font-family: var(--fuente-inter);
+  margin: 0;
+}
+.pagina-sesion__panel-marca {
+  background: var(--fondo-superficie);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 32px;
+  min-width: 0;
+  padding: 56px;
+}
+.pagina-sesion__marca-texto { max-width: 688px; }
+.pagina-sesion__marca-texto h2 {
+  font-size: clamp(28px, 3.4vw, 40px);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin: 0 0 24px;
+}
+.pagina-sesion__marca-texto p {
+  color: var(--texto-secundario);
+  margin: 0;
+}
+@media (min-width: 768px) and (max-width: 1150px) {
+  .pagina-sesion__panel-formulario { padding: 32px; }
+  .pagina-sesion__panel-marca { padding: 32px; }
+}
+@media (max-width: 767px) {
+  .pagina-sesion {
+    display: flex;
+    flex-direction: column;
+    padding: 0 24px 36px;
+    min-height: 100dvh;
+  }
+  .pagina-sesion__panel-marca {
+    order: -1;
+    padding: 16px 0 0;
+    background: transparent;
+    gap: 0;
+  }
+  .pagina-sesion__marca-texto { display: none; }
+  .pagina-sesion__panel-formulario {
+    padding: 0;
+    display: flex;
+    min-height: 0;
+    flex: 1;
+  }
+  .pagina-sesion__logo { margin-top: 8px; margin-bottom: 18px; }
+  .pagina-sesion__contenido {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+  }
+  .pagina-sesion__encabezado { margin: 0 0 18px; }
+  .pagina-sesion__encabezado h1 {
+    font-size: 40px;
+    line-height: 46px;
+    letter-spacing: -0.035em;
+    margin-bottom: 16px;
+  }
+  .pagina-sesion__legal { display: none; }
+}

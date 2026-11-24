@@ -8,7 +8,7 @@ import useMediaQuery from '../../hooks/useMediaQuery';
 export default function SuenaAhora({ textos, enlaces, en, populares, estado }) {
   const destacados = textos?.paginas?.inicioPublico?.destacados;
   const isMobile = useMediaQuery('(max-width: 1023px)');
-  if (estado.cargando || estado.error) return <EstadoPeticion {...estado} en={en} nombre={en ? 'albums' : 'álbumes'} />;
+  if (estado.cargando || estado.error) return <EstadoPeticion {...estado} textos={textos} recurso="albumes" />;
   return (
     <section className="suena-ahora">
       <div className="titulo">
@@ -18,7 +18,7 @@ export default function SuenaAhora({ textos, enlaces, en, populares, estado }) {
         </Link>
       </div>
       <div className="top-canciones">
-        {populares?.length ? populares.map(album => <Tarjeta key={album.id} album={album} />) : <EstadoPeticion vacio en={en} nombre={en ? 'albums' : 'álbumes'} />}
+        {populares?.length ? populares.map(album => <Tarjeta key={album.id} album={album} />) : <EstadoPeticion vacio textos={textos} recurso="albumes" />}
       </div>
     </section>
   );

@@ -1,13 +1,14 @@
 import { Link } from 'react-router-dom';
 import Marca from '../../assets/logos/logo.svg?react';
 import './Footer.css';
+import EstadoPeticion from '../EstadoPeticion/EstadoPeticion.jsx';
 
 export default function Footer({ textos, cargando, enlaces, en, cambiarCookies }) {
   const footer = textos?.footer;
   const anio = new Date().getFullYear();
   return (
     <footer className="footer">
-      {cargando ? <div className="cuerpo-p cargando">{en ? 'Loading footer...' : 'Cargando pie de página...'}</div> : (
+      {cargando ? <EstadoPeticion cargando textos={textos} recurso="pie" /> : (
         <>
           <div className="footer-top">
             <div className="cuerpo-p brand"><Marca />{footer?.lema}</div>
@@ -25,7 +26,8 @@ export default function Footer({ textos, cargando, enlaces, en, cambiarCookies }
           <div className="footer-bottom detalle-nota">
             <div>{footer?.legal?.derechos?.replace('{anio}', anio)}</div>
             <button type="button" className="footer-cookies" onClick={cambiarCookies}>
-              {en ? 'Cookie preferences' : 'Preferencias de cookies'}
+              {footer?.botones?.preferenciasCookies ?? footer?.cookies?.preferencias
+                ?? textos?.cookies?.preferencias?.titulo ?? textos?.cookies?.botones?.preferencias}
             </button>
             <div>{footer?.legal?.nota}</div>
           </div>

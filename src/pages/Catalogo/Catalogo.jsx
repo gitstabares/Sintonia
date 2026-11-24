@@ -5,25 +5,21 @@ import DestacadosCatalogo from '../../components/DestacadosCatalogo/DestacadosCa
 import ArtistasCatalogo from '../../components/ArtistasCatalogo/ArtistasCatalogo.jsx';
 import CancionesCatalogo from '../../components/CancionesCatalogo/CancionesCatalogo.jsx';
 import EstadoPeticion from '../../components/EstadoPeticion/EstadoPeticion.jsx';
-import useTextos from '../../hooks/useTextos.js';
-import useTextosAccesibilidad from '../../hooks/useTextosAccesibilidad.js';
 import useGeneros from '../../hooks/useGeneros.js';
 import useAlbumes from '../../hooks/useAlbumes.js';
 import { useParams } from 'react-router-dom';
 
 export default function Catalogo({ configuracion }) {
-  const { idioma, en, enlaces } = configuracion;
-  const datos = useTextos(idioma);
-  const datosAccesibilidad = useTextosAccesibilidad(idioma);
+  const { en, enlaces, datos } = configuracion;
   const { gen_id = '' } = useParams();
   const { generos: listaGeneros, ...estadoLista } = useGeneros();
-  const { generos: generoActual, ...estadoGenero } = useGeneros(gen_id, {}, Boolean(gen_id));
-  const { albumes, ...estadoAlbumes } = useAlbumes(6, 'populares', {}, !gen_id);
+  const { generos: generoActual, ...estadoGenero } = useGeneros(gen_id, Boolean(gen_id));
+  const { albumes, ...estadoAlbumes } = useAlbumes(6, 'populares', !gen_id);
 
   return (
-    <LayoutPublico {...configuracion} datos={datos} textosAccesibilidad={datosAccesibilidad.textos}>
+    <LayoutPublico {...configuracion}>
       {datos.cargando || datos.error ? (
-        <EstadoPeticion {...datos} en={en} nombre={en ? 'catalog' : 'catálogo'} />
+        <EstadoPeticion {...datos} textos={datos.textos} recurso="catalogo" />
       ) : (
         <div className="catalogo">
           <GenerosCatalogo textos={datos.textos} enlaces={enlaces} en={en} gen_id={gen_id}
