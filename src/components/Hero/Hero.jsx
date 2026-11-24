@@ -4,7 +4,7 @@ import CollagePortadas from "../../assets/portadas/collage.svg?react";
 import useMediaQuery from "../../hooks/useMediaQuery.js"
 import "./Hero.css";
 
-export default function Hero({ textos, enlaces, totalGeneros = 0 }) {
+export default function Hero({ textos, enlaces, totalGeneros = 0, sesion }) {
   const hero = textos?.paginas?.inicioPublico?.hero;
   const cifras = textos?.paginas?.inicioPublico?.cifras;
   const isMobile = useMediaQuery("(max-width: 1023px)");
@@ -20,7 +20,7 @@ export default function Hero({ textos, enlaces, totalGeneros = 0 }) {
           {hero?.subtitulo}
         </div>
         <div className="grupo-botones">
-          <Boton tipo="primario" href={enlaces['crearCuenta']} className="cuerpo-m-fuerte">{hero?.botones?.crearCuentaGratis}</Boton>
+          {!sesion && <Boton tipo="primario" href={enlaces['crearCuenta']} className="cuerpo-m-fuerte">{hero?.botones?.crearCuentaGratis}</Boton>}
           <Boton tipo="secundario" href={enlaces['catalogo']} className="cuerpo-m-fuerte">{hero?.botones?.explorarCatalogo}</Boton>
         </div>
         <dl className="cifras-hero">

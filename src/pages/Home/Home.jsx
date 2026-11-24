@@ -9,7 +9,7 @@ import useAlbumes from '../../hooks/useAlbumes.js';
 import useGeneros from '../../hooks/useGeneros.js';
 
 export default function Home({ configuracion }) {
-  const { en, enlaces, datos } = configuracion;
+  const { en, enlaces, datos, sesion } = configuracion;
   const { albumes: populares, ...estadoAlbumes } = useAlbumes(6, 'populares');
   const { generos, ...estadoGeneros } = useGeneros();
 
@@ -19,12 +19,12 @@ export default function Home({ configuracion }) {
         <EstadoPeticion {...datos} textos={datos.textos} recurso="inicio" />
       ) : (
         <div className="inicio-publico">
-          <Hero {...datos} enlaces={enlaces} en={en} />
+          <Hero {...datos} enlaces={enlaces} en={en} {...configuracion} />
           <SuenaAhora {...datos} enlaces={enlaces} en={en}
             populares={populares} estado={estadoAlbumes} />
           <Generos {...datos} enlaces={enlaces} en={en}
             generos={generos} estado={estadoGeneros} />
-          <BannerInvitado {...datos} enlaces={enlaces} en={en} />
+          {!sesion && <BannerInvitado {...datos} enlaces={enlaces} en={en} />}
         </div>
       )}
     </LayoutPublico>
