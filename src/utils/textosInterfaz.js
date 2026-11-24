@@ -15,8 +15,8 @@ function mensaje(nodo) {
   if (!nodo || typeof nodo !== 'object') return { titulo: '', texto: '', boton: '' };
   return {
     titulo: texto(nodo.titulo ?? nodo.encabezado?.titulo ?? nodo.title),
-    texto: texto(nodo.texto ?? nodo.descripcion ?? nodo.mensaje ?? nodo.detalle ?? nodo.description),
-    boton: texto(nodo.botones?.reintentar ?? nodo.botones?.volver
+    texto: texto(nodo.texto ?? nodo.descripcion ?? nodo.generico ?? nodo.mensaje ?? nodo.detalle ?? nodo.description ?? nodo.aria),
+    boton: texto(nodo.botones?.reintentar ?? nodo.botones?.volver ?? nodo.botones?.irAlInicio
       ?? nodo.acciones?.reintentar ?? nodo.acciones?.volver
       ?? nodo.reintentar ?? nodo.volver ?? nodo.boton),
   };
@@ -72,8 +72,9 @@ export function obtenerTextoNoEncontrada(textos, { recurso = '' } = {}) {
     textos?.noEncontrada,
   );
   const estados = estadoGlobal(textos);
-  const elegido = especifico ?? global ?? nodoError(textos, 404, 'no_encontrado')
-    ?? estados?.noEncontrado;
+  const elegido = especifico ?? global ?? estados?.noEncontrado
+    ?? nodoError(textos, 404, 'ruta_no_encontrada')
+    ?? nodoError(textos, 404, 'no_encontrado');
   const base = mensaje(elegido);
   return {
     ...base,
@@ -103,7 +104,8 @@ export function obtenerTextoPeticion(textos, {
     nodo ??= estados?.error ?? estados?.fallo ?? textos?.mensajes?.error;
   } else if (vacio) {
     const vacios = estados?.vacios ?? estados?.sinResultados ?? {};
-    nodo = vacios?.[recurso] ?? estados?.vacio ?? estados?.sinDatos
+    nodo = vacios?.[recurso] ?? estados?.vacio?.[recurso] ?? estados?.vacio?.generico
+      ?? estados?.vacio ?? estados?.sinDatos
       ?? textos?.mensajes?.vacio;
   }
   const resultado = mensaje(nodo);

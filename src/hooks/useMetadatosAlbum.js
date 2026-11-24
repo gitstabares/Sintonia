@@ -8,9 +8,11 @@ import { obtenerMetadatosAlbum } from '../utils/detalleAlbum.js';
 export default function useMetadatosAlbum(album, textos) {
   const titulo = album?.titulo;
   const artista = album?.artista?.nombre;
-  const plantillaTitulo = textos?.paginas?.album?.metadatos?.titulo
+  const plantillaTitulo = textos?.paginas?.album?.seo?.titulo
+    ?? textos?.paginas?.album?.metadatos?.titulo
     ?? textos?.paginas?.detalleAlbum?.metadatos?.titulo;
-  const plantillaDescripcion = textos?.paginas?.album?.metadatos?.descripcion
+  const plantillaDescripcion = textos?.paginas?.album?.seo?.descripcion
+    ?? textos?.paginas?.album?.metadatos?.descripcion
     ?? textos?.paginas?.detalleAlbum?.metadatos?.descripcion;
 
   useEffect(() => {

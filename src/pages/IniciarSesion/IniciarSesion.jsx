@@ -17,9 +17,11 @@ export default function IniciarSesion({ configuracion }) {
 
   useEffect(() => {
     const anterior = document.title;
-    if (t.titulo) document.title = t.titulo;
+    if (textosApi?.paginas?.ingresar?.seo?.titulo ?? t.titulo) {
+      document.title = textosApi?.paginas?.ingresar?.seo?.titulo ?? t.titulo;
+    }
     return () => { document.title = anterior; };
-  }, [t.titulo]);
+  }, [t.titulo, textosApi?.paginas?.ingresar?.seo?.titulo]);
 
   const enviarCredenciales = async (credenciales, recordar) => {
     try {

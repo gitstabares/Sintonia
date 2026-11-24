@@ -84,3 +84,15 @@ test('los metadatos lingüísticos utilizan /textos sin frases predeterminadas',
   assert.equal(apiSinMetadatos.title, 'Luz — Marea Baja');
   assert.equal(apiSinMetadatos.description, 'Luz — Marea Baja');
 });
+
+
+test('la API real suministra las plantillas SEO de album', () => {
+  const a = { titulo: 'Luz de páramo', artista: { nombre: 'Marea Baja' } };
+  const t = { paginas: { album: { seo: {
+    titulo: '{titulo} · Sintonía',
+    descripcion: 'Consulta el álbum completo, con todas sus canciones y su duración.',
+  } } } };
+  const r = obtenerMetadatosAlbum(a, t);
+  assert.equal(r.title, 'Luz de páramo · Sintonía');
+  assert.equal(r.description, 'Consulta el álbum completo, con todas sus canciones y su duración.');
+});

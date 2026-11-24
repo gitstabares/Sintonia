@@ -65,7 +65,7 @@ export default function FormularioSesion({
         />
         {errores.correo && (
           <p className="formulario-sesion__error detalle-nota" id="inicio-sesion-correo-error" role="alert">
-            {errores.correo === 'formato' ? textos.formato : textos.obligatorio}
+            {errores.correo === 'formato' ? textos.formato : (textos.correoObligatorio ?? textos.obligatorio)}
           </p>
         )}
       </div>
@@ -105,7 +105,7 @@ export default function FormularioSesion({
         </div>
         {errores.contrasena && (
           <p className="formulario-sesion__error detalle-nota" id="inicio-sesion-contrasena-error" role="alert">
-            {textos.obligatorio}
+            {textos.claveObligatoria ?? textos.obligatorio}
           </p>
         )}
       </div>

@@ -117,7 +117,8 @@ export function obtenerMetadatosAlbum(album, textos = null) {
   const artista = album?.artista?.nombre;
   if (!titulo || !artista) return null;
 
-  const plantilla = textos?.paginas?.album?.metadatos
+  const plantilla = textos?.paginas?.album?.seo
+    ?? textos?.paginas?.album?.metadatos
     ?? textos?.paginas?.detalleAlbum?.metadatos;
   const valores = { titulo, artista };
   const interpolar = origen => String(origen).replace(/\{(titulo|artista)\}/g,

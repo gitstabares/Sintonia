@@ -66,7 +66,7 @@ export default function Navbar({
               <div className="seccion-utilidades">
                 {isMobile && menuMovil?.secciones?.idioma}
                 <SelectorIdioma en={en} alternarIdioma={alternarIdioma}
-                  idiomas={nav?.idiomas ?? textos?.idiomas ?? textos?.selectorIdioma}
+                  idiomas={textos?.idioma?.codigos ?? nav?.idiomas ?? textos?.idiomas ?? textos?.selectorIdioma}
                   aria-label={nav?.aria?.idioma} />
               </div>
             </div>
@@ -77,7 +77,7 @@ export default function Navbar({
                     {sesion.nombre}
                   </span>
                   <button className="header-sesion__salir cuerpo-p-fuerte" type="button" onClick={onCerrarSesion}>
-                    {nav?.sesion?.cerrar ?? textos?.sesion?.cerrar?.etiqueta ?? textos?.sesion?.botones?.cerrar}
+                    {nav?.usuario?.cerrarSesion ?? nav?.sesion?.cerrar ?? textos?.sesion?.cerrar?.etiqueta ?? textos?.sesion?.botones?.cerrar}
                   </button>
                 </div>
               ) : (

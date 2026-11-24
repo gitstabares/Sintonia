@@ -236,3 +236,14 @@ parcial válida; el respaldo local solo se activa ante error de solicitud o JSON
 
 Los JSON almacenados en `tests/fixtures/postman-textos-*.json` son
 **ejemplos guardados en la colección**, no respuestas nuevas de una ejecución live.
+
+
+### Validación HTTP real de textos (24/11/2026)
+
+La inspección [GitHub Actions #45473101883](https://github.com/gitstabares/Sintonia/actions/runs/45473101883)
+consultó la API en vivo (HTTP 200 para español, inglés, accesibilidad y álbumes)
+y guardó las cuatro respuestas JSON como artifact `respuestas-publicas-api`.
+La estructura real incluye `paginas.ingresar.formulario`,
+`estados.noEncontrado`, `navbar.usuario.cerrarSesion`,
+`idioma.codigos`, `cookies.preferencias.titulo` y
+`paginas.album.seo`. La documentación técnica completa se encuentra en `IA.md`.

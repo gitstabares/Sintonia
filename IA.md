@@ -495,3 +495,25 @@ Hallazgos verificados en la colección:
 - Se amplió la búsqueda de títulos del formulario a la sección raíz `formularios`, sin añadir cadenas cuando falta una clave. El menú puede usar el texto documentado `navbar.enlaces.conSesion.inicio` para la sesión activa.
 
 **Limitación:** como el ejemplo de `GET /textos` es parcial y la API no pudo ejecutarse en vivo, **no se verificaron los valores completos de las vistas** `inicioPublico`, `catalogo`, `album` e `iniciarSesion`. No se agregan frases inventadas si esos textos faltan en una respuesta válida.
+
+
+---
+
+## 16. Contraste de respuestas HTTP reales de la API
+
+**Fecha:** 24 de noviembre de 2026. **Rama:** `refactor/textos-unificados-S2-03`.
+
+**Método de verificación:** se ejecutaron cuatro `GET` reales desde GitHub Actions [ejecución #45473101883](https://github.com/gitstabares/Sintonia/actions/runs/45473101883) porque el servidor no resolvía DNS en la herramienta de navegación. Los cuatro endpoints respondieron **HTTP 200** y se guardaron como artefacto ZIP descargable `respuestas-publicas-api`: `textos-es.json`, `textos-en.json`, `textos-accesibilidad.json` y `albumes.json`. Estos datos sí proceden de respuestas vivas, a diferencia de los ejemplos guardados en Postman que se analizaron en la sección 15.
+
+### Rutas verificadas y ajustes
+
+- `GET /textos?idioma=es` y `GET /textos?idioma=en` devuelven el objeto `{idioma,version,textos}` completo. Se confirmaron las secciones raíz `sitio,navbar,menuMovil,footer,panel,paginas,componentes,formularios,estados,errores,cookies,accesibilidad,idioma,general`. La respuesta real confirma `paginas.inicioPublico`, `paginas.catalogo`, `paginas.album` y `paginas.ingresar`; el ejemplo parcial de Postman enseñaba `paginas.inicio` pero no abarcaba la estructura de las vistas Sintonía.
+- **Ingreso**: todos los textos visibles provienen de `paginas.ingresar.formulario`, `paginas.ingresar.presentacion`, `paginas.ingresar.errores`, `formularios.campos.clave` y `formularios.validacion`. El adaptador `textosInicioSesion` fue actualizado con esas rutas. La búsqueda por `textos.errores[codigo]` para errores HTTP se mantiene.
+- **Estados de petición**: la respuesta viva emplea `estados.cargando.titulo` y `estados.cargando.aria`, `estados.error.descripcion`, `estados.vacio.generico`, `estados.noEncontrado.descripcion` y `estados.noEncontrado.botones.irAlInicio`. Se corrigió el adaptador genérico, evitando plantillas inventadas cuando falta la sección.
+- **Navegación, idioma, cookies**: las rutas reales son `navbar.usuario.cerrarSesion`, `idioma.codigos.es/en` y `cookies.preferencias.titulo`. Se actualizaron Navbar, SelectorIdioma (a través de Navbar) y Footer. La antigua lectura de `cookies.preferencias` como cadena era incorrecta porque es un objeto.
+- **SEO álbum**: la API utiliza `paginas.album.seo.titulo` y `paginas.album.seo.descripcion` (no `metadatos`). El hook y la utilidad para metadatos fueron corregidos.
+- **Accesibilidad**: `GET /textos?idioma=es&seccion=accesibilidad` responde con `textos.accesibilidad`, que coincide con `useTextosAccesibilidad`.
+- **Álbumes**: `GET /albumes?orden=populares&limite=6` devolvió `{datos:[...]}` con seis álbumes. Queda confirmado que ambos parámetros se aceptan, pese a lo indicado anteriormente en otras entradas del proyecto.
+- El respaldo hardcodeado permanece centralizado en `textosRespaldo()` y solo se activa ante fallo o JSON inválido de `useTextos`. Respuestas válidas que omiten textos no se rellenan con frases fijas.
+
+Se añadió una prueba de regresión con un recorte fiel de los campos y valores obtenidos en vivo, sin integrar el contenido completo de 120 KB a los archivos fuente. **Los JSON completos siguen disponibles mediante el artefacto de GitHub Actions**.

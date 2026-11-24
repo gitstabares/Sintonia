@@ -27,7 +27,7 @@ export default function Footer({ textos, cargando, enlaces, en, cambiarCookies }
             <div>{footer?.legal?.derechos?.replace('{anio}', anio)}</div>
             <button type="button" className="footer-cookies" onClick={cambiarCookies}>
               {footer?.botones?.preferenciasCookies ?? footer?.cookies?.preferencias
-                ?? textos?.cookies?.preferencias ?? textos?.cookies?.botones?.preferencias}
+                ?? textos?.cookies?.preferencias?.titulo ?? textos?.cookies?.botones?.preferencias}
             </button>
             <div>{footer?.legal?.nota}</div>
           </div>

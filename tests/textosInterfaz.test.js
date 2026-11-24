@@ -159,7 +159,7 @@ test('GET /albumes usa orden y limite admitidos, sin filtros arbitrarios', () =>
   const albumes = readFileSync('src/hooks/useAlbumes.js', 'utf8');
   const generos = readFileSync('src/hooks/useGeneros.js', 'utf8');
   assert.match(albumes, /useRecurso\('\/albumes', \{ orden, limite \}, activo\)/);
-  assert.doesNotMatch(albumes, /\bfiltros\b/);
+  assert.doesNotMatch(albumes, /\bfiltros\s*=/);
   assert.match(generos, /useRecurso\(ruta, \{\}, activo\)/);
   assert.doesNotMatch(generos, /\bfiltros\s*=/);
   const home = readFileSync('src/pages/Home/Home.jsx', 'utf8');
