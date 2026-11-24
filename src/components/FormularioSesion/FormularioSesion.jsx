@@ -1,10 +1,11 @@
 import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { validarCredenciales } from '../../utils/sesion.js';
+import { obtenerTextoErrorCodigo } from '../../utils/textosInterfaz.js';
 import './FormularioSesion.css';
 
 export default function FormularioSesion({
-  textos, enviando, error, alEnviar, enlaceCrearCuenta, enlaceRecuperar,
+  textos, textosApi, enviando, error, alEnviar, enlaceCrearCuenta, enlaceRecuperar,
 }) {
   const [correo, setCorreo] = useState('');
   const [contrasena, setContrasena] = useState('');
@@ -121,7 +122,8 @@ export default function FormularioSesion({
 
       {error && (
         <p className="formulario-sesion__servidor cuerpo-p" role="alert">
-          {error.status === 401 || error.status === 403 ? textos.credenciales : textos.servidor}
+          {obtenerTextoErrorCodigo(textosApi, error.codigo)
+            || (error.status === 401 || error.status === 403 ? textos.credenciales : textos.servidor)}
         </p>
       )}
 

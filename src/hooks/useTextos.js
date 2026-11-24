@@ -1,12 +1,5 @@
 import useRecurso from './useRecurso.js';
-
-function validarTextos(respuesta) {
-  const textos = respuesta?.textos ?? respuesta;
-  if (!textos?.navbar || !textos?.paginas || !textos?.cookies?.banner) {
-    throw new Error('La API no devolvió los textos esperados.');
-  }
-  return textos;
-}
+import { validarTextos } from '../utils/validarTextos.js';
 
 export default function useTextos(idioma = 'es') {
   const { datos, cargando, error, recargar, statusCode } = useRecurso('/textos', { idioma });

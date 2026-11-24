@@ -9,6 +9,8 @@ import {
   textosRespaldo,
 } from '../src/utils/textosInterfaz.js';
 import { textosInicioSesion } from '../src/utils/textosInicioSesion.js';
+import { validarTextos } from '../src/utils/validarTextos.js';
+import { obtenerTextoErrorCodigo } from '../src/utils/textosInterfaz.js';
 
 const textos = {
   estados: {
@@ -153,17 +155,17 @@ test('el respaldo de inicio de sesión funciona solo cuando App elige textosResp
   assert.equal(ingreso.ingresar, 'Ingresar');
 });
 
-test('GET /albumes y /generos no agregan filtros ni parámetros no admitidos', () => {
+test('GET /albumes usa orden y limite admitidos, sin filtros arbitrarios', () => {
   const albumes = readFileSync('src/hooks/useAlbumes.js', 'utf8');
   const generos = readFileSync('src/hooks/useGeneros.js', 'utf8');
-  assert.match(albumes, /useRecurso\('\/albumes', \{\}, activo\)/);
-  assert.doesNotMatch(albumes, /\b(limite|orden|filtros)\b(?=\s*[,=}])/);
+  assert.match(albumes, /useRecurso\('\/albumes', \{ orden, limite \}, activo\)/);
+  assert.doesNotMatch(albumes, /\bfiltros\s*=/);
   assert.match(generos, /useRecurso\(ruta, \{\}, activo\)/);
   assert.doesNotMatch(generos, /\bfiltros\s*=/);
   const home = readFileSync('src/pages/Home/Home.jsx', 'utf8');
   const catalogo = readFileSync('src/pages/Catalogo/Catalogo.jsx', 'utf8');
-  assert.match(home, /useAlbumes\(\)/);
-  assert.match(catalogo, /useAlbumes\(!gen_id\)/);
+  assert.match(home, /useAlbumes\(6, 'populares'\)/);
+  assert.match(catalogo, /useAlbumes\(6, 'populares', !gen_id\)/);
   assert.match(catalogo, /useGeneros\(gen_id, Boolean\(gen_id\)\)/);
 });
 
@@ -184,4 +186,69 @@ test('las etiquetas ES/EN del selector no son cadenas locales al recibir textos 
   assert.match(fuente, /etiquetaIdioma\(idiomas\?\.en\)/);
   const respaldo = textosRespaldo('es');
   assert.deepEqual(respaldo.navbar.idiomas, { es: 'ES', en: 'EN' });
+});
+
+
+test('acepta JSON parcial de GET /textos guardado en Postman sin activar textos de respaldo', () => {
+  const ejemplo = JSON.parse(readFileSync('tests/fixtures/postman-textos-parcial.json', 'utf8'));
+  assert.equal(ejemplo.idioma, 'en');
+  assert.equal(ejemplo.textos.navbar.botones.invitado.ingresar, 'Log in');
+  assert.equal(ejemplo.textos.navbar.enlaces.conSesion.inicio, 'Home');
+  assert.ok(ejemplo.textos.paginas.inicio.seo.titulo);
+  const resultado = validarTextos(ejemplo);
+  assert.equal(resultado, ejemplo.textos);
+  assert.equal(resultado.cookies, undefined);
+});
+
+test('rechaza JSON no válido sin completar secciones faltantes', () => {
+  assert.throws(() => validarTextos({ textos: {} }));
+  assert.throws(() => validarTextos({ textos: [] }));
+  assert.deepEqual(validarTextos({ textos: { errores: { no_encontrado: 'Sin resultado' } } }),
+    { errores: { no_encontrado: 'Sin resultado' } });
+});
+
+test('prioriza textos.errores[codigo] sobre códigos de estado HTTP', () => {
+  const apiTextos = {
+    errores: {
+      credenciales_invalidas: 'API: revisa el correo y la contraseña',
+      no_autenticado: { mensaje: 'API: inicia tu sesión' },
+      no_encontrado: { titulo: 'API: no encontrado', texto: 'API: el recurso no existe' },
+    },
+    estados: {
+      error: { titulo: 'API: fallo general' },
+      errores: { 401: { titulo: 'API: error HTTP 401' } },
+    },
+  };
+  assert.equal(obtenerTextoErrorCodigo(apiTextos, 'credenciales_invalidas'),
+    'API: revisa el correo y la contraseña');
+  const err = obtenerTextoPeticion(apiTextos, {
+    error: { status: 401, codigo: 'no_autenticado' },
+  });
+  assert.equal(err.texto, 'API: inicia tu sesión');
+  assert.equal(err.titulo, '');
+  assert.equal(obtenerTextoPeticion(apiTextos, {
+    error: { status: 404, codigo: 'no_encontrado' },
+  }).titulo, 'API: no encontrado');
+});
+
+test('la respuesta 404 guardada en Postman contiene el código del backend', () => {
+  const ejemplo = JSON.parse(readFileSync('tests/fixtures/postman-textos-error-404.json', 'utf8'));
+  assert.equal(ejemplo.error.codigo, 'seccion_no_encontrada');
+  assert.ok(Array.isArray(ejemplo.error.detalles.disponibles));
+  assert.ok(ejemplo.error.detalles.disponibles.includes('errores'));
+  assert.ok(ejemplo.error.detalles.disponibles.includes('formularios'));
+});
+
+test('los textos del formulario también se leen de la sección global formularios', () => {
+  const data = textosInicioSesion({ formularios: {
+    iniciarSesion: {
+      titulo: 'API: acceder',
+      correo: { etiqueta: 'API: dirección de correo' },
+      contrasena: { etiqueta: 'API: clave' },
+    },
+  }});
+  assert.equal(data.titulo, 'API: acceder');
+  assert.equal(data.correo, 'API: dirección de correo');
+  assert.equal(data.contrasena, 'API: clave');
+  assert.equal(data.recuperar, undefined);
 });

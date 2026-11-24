@@ -47,7 +47,7 @@ export default function Navbar({
         {cargando ? <EstadoPeticion cargando textos={textos} recurso="navegacion" /> : (
           <div id={menuId} className={'header-contenido' + (isOpen ? ' open' : '')}>
             <div className="cuerpo-p-fuerte header-enlaces">
-              <Link className="header-enlace" to={enlaces.inicio}>{nav?.enlaces?.inicio}</Link>
+              <Link className="header-enlace" to={enlaces.inicio}>{nav?.enlaces?.inicio ?? (sesion ? nav?.enlaces?.conSesion?.inicio : undefined)}</Link>
               <Link className="header-enlace" to={enlaces.catalogo}>{nav?.enlaces?.catalogo}</Link>
             </div>
             <span style={{ flexGrow: 1 }} />

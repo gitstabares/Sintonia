@@ -1,0 +1,44 @@
+{
+  "idioma": "en",
+  "version": "2026-10-10",
+  "textos": {
+    "navbar": {
+      "enlaces": {
+        "invitado": {
+          "descubrir": "Discover",
+          "planes": "Plans",
+          "paraArtistas": "For artists",
+          "ayuda": "Help"
+        },
+        "conSesion": {
+          "inicio": "Home",
+          "buscar": "Search",
+          "sesiones": "Sessions",
+          "tuBiblioteca": "Your library",
+          "descargas": "Downloads"
+        }
+      },
+      "botones": {
+        "invitado": {
+          "ingresar": "Log in",
+          "crearCuenta": "Sign up"
+        }
+      }
+    },
+    "paginas": {
+      "inicio": {
+        "seo": {
+          "titulo": "Home · Sintonía",
+          "descripcion": "Your mixes, what you played recently and episodes picked for you."
+        },
+        "filtros": {
+          "etiquetas": {
+            "todo": "All",
+            "musica": "Music",
+            "podcast": "Podcasts"
+          }
+        }
+      }
+    }
+  }
+}

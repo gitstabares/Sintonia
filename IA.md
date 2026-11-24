@@ -467,3 +467,31 @@ La API en `https://yanethm-sintonia-api.fly.dev/api/v1/textos` no pudo consultar
 
 
 **Corrección final de metadatos:** los títulos y descripciones del detalle del álbum ya no contienen prosa literal. Cuando la API ofrece `paginas.album.metadatos.titulo` y `paginas.album.metadatos.descripcion`, se interpolan `{titulo}` y `{artista}`. Si la respuesta global de textos es válida, pero falta esa sección, el navegador recibe únicamente los datos dinámicos del álbum unidos sin frase de sustitución. También se actualizaron las pruebas de metadata y se mantuvo la documentación original de la historia.
+
+
+---
+
+## 15. Verificación con Postman conectado
+
+**Fecha:** 24 de noviembre de 2026. **Rama:** `refactor/textos-unificados-S2-03`.
+
+### Solicitud literal
+
+> Te he conectado con Postman y allí hay entradas para cada endpoint, puedes acceder a ellos ahora y recuperar las respuestas JSON reales para verificar las rutas de los textos en el proyecto real?
+
+### Hallazgos y correcciones
+
+Se accedió mediante el conector Postman a la colección «Sintonía API», UID `58842877-a5dad643-4a2e-43d9-ba42-b73b66dae76b`, workspace «Sintonia» (`57bf3e09-9328-404d-b74b-60e4164d1265`). Se consultaron los requests y **ejemplos JSON guardados** de `GET /textos`, `GET /albumes`, `GET /albumes/:id`, `GET /generos`, `GET /generos/:id` y `POST /sesion`.
+
+**Distinción de evidencia:** las respuestas guardadas en Postman son ejemplos de contrato, **no son nuevas respuestas de una ejecución HTTP en vivo**. La red de este entorno siguió sin resolver el servidor Fly.io y el conector de Postman disponible es para consultar colecciones, solicitudes y respuestas guardadas, no para ejecutar esos requests. Se almacenaron copias de los dos ejemplos de `GET /textos` bajo `tests/fixtures/` y se agregaron pruebas.
+
+Hallazgos verificados en la colección:
+- `GET /textos?idioma=en&seccion=navbar,footer` responde con la envoltura `{idioma,version,textos}`. La API soporta secciones parciales; la lista documentada de claves raíz comprende `sitio,navbar,menuMovil,footer,panel,paginas,componentes,formularios,estados,errores,cookies,accesibilidad,idioma,general`. `errores` se indexa por código de error, no necesariamente por estado HTTP.
+- El ejemplo guardado de textos muestra `textos.navbar.botones.invitado.ingresar`, `textos.navbar.enlaces.conSesion.inicio` y `textos.paginas.inicio.seo.titulo`. **No demuestra que existan** `paginas.inicioPublico` u otras claves de vistas no incluidas en el ejemplo. Por eso esas rutas no se presentan como verificadas.
+- `GET /albumes` **sí admite** `orden=populares|recientes` y `limite` de 1 a 24. Esto corrige expresamente la conclusión de la sección 14: se restauraron únicamente esos dos parámetros soportados en `useAlbumes` y se ajustaron Home y Catalogo; no se reintrodujo ningún objeto genérico `filtros`.
+- `GET /albumes/:id` devuelve el álbum sin envoltura de `datos`, con `pistas`, `masDelArtista` y fecha `YYYY-MM-DD`; `GET /generos` devuelve `{datos:[...]}`, mientras que el detalle es objeto plano. El código actual ya cubre esas formas.
+- `POST /sesion` requiere `{correo,clave}`, responde con `{usuario,token,...}` y devuelve errores `{error:{codigo,mensaje,campos}}`. La solicitud y el parseo existentes son compatibles; el formulario ahora puede buscar el mensaje traducido por `textos.errores[error.codigo]`.
+- `GET /textos` no debe activar respaldo local simplemente porque falta `cookies.banner` en una respuesta válida parcial. Se reemplazó la validación rígida por una que valida la estructura y las secciones documentadas, manteniendo el respaldo únicamente para una solicitud fallida o respuesta inválida.
+- Se amplió la búsqueda de títulos del formulario a la sección raíz `formularios`, sin añadir cadenas cuando falta una clave. El menú puede usar el texto documentado `navbar.enlaces.conSesion.inicio` para la sesión activa.
+
+**Limitación:** como el ejemplo de `GET /textos` es parcial y la API no pudo ejecutarse en vivo, **no se verificaron los valores completos de las vistas** `inicioPublico`, `catalogo`, `album` e `iniciarSesion`. No se agregan frases inventadas si esos textos faltan en una respuesta válida.

@@ -223,3 +223,16 @@ filtros inventados.
 **Verificación pendiente:** la documentación web [Contrato completo](https://yanethm-sintonia-api.fly.dev/docs/contrato)
 enlaza a un Markdown que no pudo recuperarse desde el entorno de consulta; se requiere
 validar contra ese contrato las estructuras JSON de sesión y mensajes HTTP.
+
+
+### Contrato comprobado en Postman (24 de noviembre de 2026)
+
+La colección [Sintonía API](https://go.postman.co/collection/58842877-a5dad643-4a2e-43d9-ba42-b73b66dae76b)
+documenta que **GET /albumes** sí admite `?orden=populares&limite=6` y
+que **GET /textos** permite `?idioma=es|en&seccion=...`. Esta fuente
+corrige la nota anterior sobre la ausencia de parámetros en `/albumes`.
+El proyecto conserva los textos existentes si la API responde con una sección
+parcial válida; el respaldo local solo se activa ante error de solicitud o JSON inválido.
+
+Los JSON almacenados en `tests/fixtures/postman-textos-*.json` son
+**ejemplos guardados en la colección**, no respuestas nuevas de una ejecución live.

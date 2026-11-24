@@ -49,6 +49,7 @@ export default function IniciarSesion({ configuracion }) {
           </header>
           <FormularioSesion
             textos={t}
+            textosApi={textosApi}
             enviando={cargando}
             error={error}
             alEnviar={enviarCredenciales}

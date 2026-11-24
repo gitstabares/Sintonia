@@ -34,18 +34,29 @@ function estadoGlobal(textos) {
 
 function nodoError(textos, statusCode, codigo) {
   const estados = estadoGlobal(textos);
-  const errores = primerObjeto(estados?.errores, textos?.errores, textos?.mensajes?.errores);
-  const buscar = fuente => {
-    if (!fuente || typeof fuente !== 'object') return null;
-    const codigos = [codigo, statusCode && String(statusCode),
-      statusCode && 'http' + statusCode, statusCode && 'error' + statusCode,
-      statusCode && 'HTTP_' + statusCode].filter(Boolean);
-    for (const clave of codigos) {
-      if (Object.hasOwn(fuente, clave)) return fuente[clave];
-    }
-    return null;
+  const fuentes = [textos?.errores, estados?.errores, textos?.mensajes?.errores];
+  const buscar = clave => {
+    if (clave === undefined || clave === null || typeof clave === 'object') return null;
+    return fuentes.find(fuente =>
+      fuente && typeof fuente === 'object' && Object.hasOwn(fuente, clave))?.[clave] ?? null;
   };
-  return buscar(errores) ?? buscar(estados) ?? buscar(textos?.mensajes);
+  // La API documenta errores[error.codigo]. El HTTP queda como alternativa.
+  const codigoExacto = buscar(codigo);
+  if (codigoExacto) return codigoExacto;
+  const http = Number(statusCode);
+  if (!Number.isInteger(http) || http <= 0) return null;
+  for (const clave of [String(http), 'http' + http, 'error' + http, 'HTTP_' + http]) {
+    const encontrado = buscar(clave);
+    if (encontrado) return encontrado;
+  }
+  return null;
+}
+
+/** Mensaje para errores del backend: {error:{codigo,mensaje,campos}}. */
+export function obtenerTextoErrorCodigo(textos, codigo) {
+  const nodo = nodoError(textos, 0, codigo);
+  const normalizado = mensaje(nodo);
+  return normalizado.texto || normalizado.titulo;
 }
 
 export function obtenerTextoNoEncontrada(textos, { recurso = '' } = {}) {

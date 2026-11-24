@@ -6,11 +6,13 @@
 export function textosInicioSesion(textos) {
   const p = textos?.paginas?.iniciarSesion ?? textos?.paginas?.inicioSesion
     ?? textos?.paginas?.sesion ?? textos?.paginas?.ingreso;
+  const f = textos?.formularios?.iniciarSesion ?? textos?.formularios?.inicioSesion
+    ?? textos?.formularios?.sesion ?? p?.formulario;
 
   return {
-    titulo: p?.titulo ?? p?.encabezado?.titulo,
-    descripcion: p?.descripcion ?? p?.encabezado?.descripcion,
-    correo: p?.formulario?.correo?.etiqueta ?? p?.campos?.correo?.etiqueta,
+    titulo: p?.titulo ?? p?.encabezado?.titulo ?? f?.titulo,
+    descripcion: p?.descripcion ?? p?.encabezado?.descripcion ?? f?.descripcion,
+    correo: f?.correo?.etiqueta ?? p?.campos?.correo?.etiqueta,
     correoPlaceholder: p?.formulario?.correo?.placeholder ?? p?.campos?.correo?.placeholder,
     contrasenaPlaceholder: p?.formulario?.contrasena?.placeholder ?? p?.campos?.contrasena?.placeholder,
     contrasena: p?.formulario?.contrasena?.etiqueta ?? p?.campos?.contrasena?.etiqueta,

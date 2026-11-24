@@ -1,10 +1,11 @@
 import useRecurso from './useRecurso.js';
 
 /**
- * GET /albumes no acepta parámetros de filtro/orden/paginación.
- * El recorte de la lista se realiza en la página, no en el request.
+ * GET /albumes admite "orden" (populares/recientes) y "limite" (1 a 24).
+ * No admite el parámetro arbitrario "filtros".
+ * Contrato: colección Postman "Sintonía API", GET /albumes.
  */
-export default function useAlbumes(activo = true) {
-  const { datos, ...estado } = useRecurso('/albumes', {}, activo);
+export default function useAlbumes(limite = 6, orden = 'populares', activo = true) {
+  const { datos, ...estado } = useRecurso('/albumes', { orden, limite }, activo);
   return { albumes: datos, ...estado };
 }
