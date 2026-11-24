@@ -213,7 +213,6 @@
 .header-cuenta-movil { display: none; }
 @media (max-width: 1023px) {
   .header-cuenta { display: none; }
-  .header-flexible { display: none; }
   .header-botones:has(.header-cuenta-movil) {
     margin-top: auto; padding: 16px; background: var(--fondo-superficie);
   }
