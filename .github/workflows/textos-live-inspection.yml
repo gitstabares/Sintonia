@@ -1,0 +1,63 @@
+name: Inspección puntual de respuestas públicas
+
+on:
+  push:
+    branches: [refactor/textos-unificados-S2-03]
+    paths: [.github/workflows/textos-live-inspection.yml]
+
+jobs:
+  inspeccionar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Consultar API pública en directo
+        shell: bash
+        run: |
+          mkdir -p respuestas
+          node --input-type=module <<'JS'
+          import {writeFileSync} from 'node:fs';
+          const base = 'https://yanethm-sintonia-api.fly.dev/api/v1';
+          const rutas = [
+            ['textos-es', '/textos?idioma=es'],
+            ['textos-en', '/textos?idioma=en'],
+            ['textos-accesibilidad', '/textos?idioma=es&seccion=accesibilidad'],
+            ['albumes', '/albumes?orden=populares&limite=6'],
+          ];
+          function explorar(obj, prefix = '', keys = []) {
+            if (!obj || typeof obj !== 'object' || keys.length > 800) return keys;
+            for (const [key, value] of Object.entries(obj)) {
+              const p = prefix ? prefix + '.' + key : key;
+              keys.push(p);
+              if (value && typeof value === 'object' && !Array.isArray(value)) explorar(value, p, keys);
+            }
+            return keys;
+          }
+          for (const [nombre, ruta] of rutas) {
+            try {
+              const respuesta = await fetch(base + ruta, {
+                signal: AbortSignal.timeout(15000),
+                headers: { Accept: 'application/json' },
+              });
+              const cuerpo = await respuesta.text();
+              console.log(nombre + ': HTTP ' + respuesta.status + '; bytes=' + cuerpo.length);
+              if (!respuesta.ok) {
+                console.log('ERROR ' + nombre + ': ' + cuerpo.slice(0, 250));
+                continue;
+              }
+              const datos = JSON.parse(cuerpo);
+              writeFileSync('respuestas/' + nombre + '.json', JSON.stringify(datos, null, 2));
+              console.log('ROOT ' + nombre + ': ' + Object.keys(datos).join(', '));
+              console.log('KEYS ' + nombre + ': ' + explorar(datos.textos ?? datos).slice(0, 420).join(' | '));
+            } catch (error) {
+              console.log('NO_ACCESIBLE ' + nombre + ': ' + error.message);
+            }
+          }
+          JS
+      - name: Guardar respuestas JSON de peticiones GET públicas
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: respuestas-publicas-api
+          path: respuestas/
+          retention-days: 1
+          if-no-files-found: warn
