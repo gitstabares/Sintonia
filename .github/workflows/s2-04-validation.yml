@@ -1,0 +1,23 @@
+name: Validación Sintonía S2-04
+
+on:
+  push:
+    branches: [S2-04]
+  workflow_dispatch:
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Obtener código
+        uses: actions/checkout@v4
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Instalar dependencias
+        run: npm install --no-audit --no-fund
+      - name: Ejecutar pruebas
+        run: npm test
+      - name: Compilar con Vite
+        run: npm run build

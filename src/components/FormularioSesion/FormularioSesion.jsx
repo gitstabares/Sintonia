@@ -1,11 +1,13 @@
 import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { validarCredenciales } from '../../utils/sesion.js';
-import { obtenerTextoErrorCodigo } from '../../utils/textosInterfaz.js';
+import { obtenerAvisoIngreso } from '../../utils/erroresIngreso.js';
+import Icono from '../Icono.jsx';
 import './FormularioSesion.css';
 
 export default function FormularioSesion({
-  textos, textosApi, enviando, error, alEnviar, enlaceCrearCuenta, enlaceRecuperar,
+  textos, textosApi, enviando, error, bloqueado, segundosRestantes,
+  alEnviar, enlaceCrearCuenta, enlaceRecuperar,
 }) {
   const [correo, setCorreo] = useState('');
   const [contrasena, setContrasena] = useState('');
@@ -14,10 +16,13 @@ export default function FormularioSesion({
   const [errores, setErrores] = useState({});
   const correoRef = useRef(null);
   const contrasenaRef = useRef(null);
+  const envioPendiente = useRef(false);
+  const deshabilitado = enviando || bloqueado;
+  const aviso = obtenerAvisoIngreso(textosApi, error, segundosRestantes);
 
-  const enviar = evento => {
+  const enviar = async evento => {
     evento.preventDefault();
-    if (enviando) return;
+    if (envioPendiente.current || deshabilitado) return;
     const campos = { correo, contrasena };
     const erroresValidacion = validarCredenciales(campos);
     setErrores(erroresValidacion);
@@ -29,7 +34,12 @@ export default function FormularioSesion({
       contrasenaRef.current?.focus();
       return;
     }
-    alEnviar(campos, recordar);
+    envioPendiente.current = true;
+    try {
+      await alEnviar(campos, recordar);
+    } finally {
+      envioPendiente.current = false;
+    }
   };
 
   const alCambiarCorreo = evento => {
@@ -42,7 +52,19 @@ export default function FormularioSesion({
   };
 
   return (
-    <form className="formulario-sesion" onSubmit={enviar} noValidate>
+    <form className="formulario-sesion" onSubmit={enviar} noValidate aria-busy={enviando}>
+      {error && aviso && (aviso.titulo || aviso.texto) && (
+        <div className="formulario-sesion__aviso"
+          role={aviso.tipo === 'limite' ? 'status' : 'alert'}
+          aria-live={aviso.tipo === 'limite' ? 'polite' : 'assertive'}>
+          <Icono nombre="alert" aria-hidden="true" className="formulario-sesion__icono-alerta" />
+          <div className="formulario-sesion__aviso-contenido">
+            {aviso.titulo && <strong className="cuerpo-p-fuerte">{aviso.titulo}</strong>}
+            {aviso.texto && <p className="cuerpo-p">{aviso.texto}</p>}
+          </div>
+        </div>
+      )}
+
       <div className="formulario-sesion__campo">
         <label className="cuerpo-p-fuerte" htmlFor="inicio-sesion-correo">{textos.correo}</label>
         <input
@@ -61,7 +83,7 @@ export default function FormularioSesion({
           aria-required="true"
           aria-invalid={Boolean(errores.correo)}
           aria-describedby={errores.correo ? 'inicio-sesion-correo-error' : undefined}
-          disabled={enviando}
+          disabled={deshabilitado}
         />
         {errores.correo && (
           <p className="formulario-sesion__error detalle-nota" id="inicio-sesion-correo-error" role="alert">
@@ -86,7 +108,7 @@ export default function FormularioSesion({
             aria-required="true"
             aria-invalid={Boolean(errores.contrasena)}
             aria-describedby={errores.contrasena ? 'inicio-sesion-contrasena-error' : undefined}
-            disabled={enviando}
+            disabled={deshabilitado}
           />
           <button
             type="button"
@@ -94,7 +116,7 @@ export default function FormularioSesion({
             onClick={() => setMostrarContrasena(actual => !actual)}
             aria-label={mostrarContrasena ? textos.ocultar : textos.mostrar}
             aria-pressed={mostrarContrasena}
-            disabled={enviando}
+            disabled={deshabilitado}
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/>
@@ -112,7 +134,7 @@ export default function FormularioSesion({
 
       <div className="formulario-sesion__opciones">
         <label className="formulario-sesion__recordar cuerpo-p">
-          <input type="checkbox" checked={recordar} onChange={e => setRecordar(e.target.checked)} disabled={enviando}/>
+          <input type="checkbox" checked={recordar} onChange={e => setRecordar(e.target.checked)} disabled={deshabilitado}/>
           <span>{textos.recordar}</span>
         </label>
         <Link className="formulario-sesion__enlace cuerpo-p-fuerte" to={enlaceRecuperar}>
@@ -120,15 +142,13 @@ export default function FormularioSesion({
         </Link>
       </div>
 
-      {error && (
-        <p className="formulario-sesion__servidor cuerpo-p" role="alert">
-          {obtenerTextoErrorCodigo(textosApi, error.codigo)
-            || (error.status === 401 || error.status === 403 ? textos.credenciales : textos.servidor)}
-        </p>
-      )}
-
-      <button className="formulario-sesion__submit cuerpo-m-fuerte" type="submit" disabled={enviando}>
-        {enviando ? textos.ingresando : textos.ingresar}
+      <button className="formulario-sesion__submit cuerpo-m-fuerte" type="submit" disabled={deshabilitado}>
+        {enviando && <span className="formulario-sesion__indicador" aria-hidden="true" />}
+        <span aria-live="polite">
+          {enviando ? textos.ingresando
+            : aviso?.tipo === 'conexion' ? (aviso.reintentar ?? textos.ingresar)
+            : textos.ingresar}
+        </span>
       </button>
 
       <p className="formulario-sesion__crear cuerpo-p">

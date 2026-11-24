@@ -104,3 +104,32 @@
   .formulario-sesion__opciones { flex-direction: column; gap: 12px; align-items: flex-start; }
   .formulario-sesion__campo input { height: 50px; font-size: 16px; }
 }
+
+
+/* Estados de Figma Sprint 2, reutilizando los tokens de la app. */
+.formulario-sesion__aviso {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid var(--estado-error);
+  border-radius: var(--radio-ml);
+  background: var(--estado-error-suave);
+}
+.formulario-sesion__icono-alerta { width: 20px; height: 20px; flex-shrink: 0; color: var(--estado-error); }
+.formulario-sesion__aviso-contenido { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.formulario-sesion__aviso-contenido strong { color: var(--texto-principal); font-weight: 600; line-height: 20px; }
+.formulario-sesion__aviso-contenido p { margin: 0; color: var(--texto-secundario); line-height: 20px; }
+.formulario-sesion__submit { display: flex; align-items: center; justify-content: center; gap: 10px; }
+.formulario-sesion__indicador {
+  width: 18px; height: 18px;
+  border: 2px solid currentColor; border-top-color: transparent;
+  border-radius: 50%; animation: formulario-sesion-giro 800ms linear infinite;
+}
+@keyframes formulario-sesion-giro { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .formulario-sesion__indicador { animation: none; }
+}
+.formulario-sesion__campo input:disabled,
+.formulario-sesion__recordar input:disabled { cursor: not-allowed; opacity: .72; }
