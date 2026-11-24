@@ -1,10 +1,10 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Marca from '../../assets/logos/logo.svg?react';
 import ArteSesion from '../../components/ArteSesion/ArteSesion.jsx';
 import FormularioSesion from '../../components/FormularioSesion/FormularioSesion.jsx';
 import useMutacion from '../../hooks/useMutacion.js';
-import { cuerpoInicioSesion, identidadDeSesion } from '../../utils/sesion.js';
+import { cuerpoInicioSesion } from '../../utils/sesion.js';
 import { textosInicioSesion } from '../../utils/textosInicioSesion.js';
 import './IniciarSesion.css';
 
@@ -14,6 +14,7 @@ export default function IniciarSesion({ configuracion }) {
   const t = textosInicioSesion(textosApi);
   const { ejecutar, cargando, error, bloqueado, segundosRestantes } = useMutacion('/sesion');
   const navegar = useNavigate();
+  const [errorConfirmacion, setErrorConfirmacion] = useState(null);
 
   useEffect(() => {
     const anterior = document.title;
@@ -23,15 +24,19 @@ export default function IniciarSesion({ configuracion }) {
     return () => { document.title = anterior; };
   }, [t.titulo, textosApi?.paginas?.ingresar?.seo?.titulo]);
 
-  const enviarCredenciales = async (credenciales, recordar) => {
+  const enviarCredenciales = async credenciales => {
+    setErrorConfirmacion(null);
+    let postExitoso = false;
     try {
-      // Nunca se concede acceso por comparar datos locales: solo por respuesta 2xx.
-      const respuesta = await ejecutar(cuerpoInicioSesion(credenciales));
-      const identidad = identidadDeSesion(respuesta, credenciales.correo);
-      iniciarSesion(identidad, recordar);
+      // POST establece la cookie HttpOnly. GET confirma que sigue siendo válida.
+      await ejecutar(cuerpoInicioSesion(credenciales));
+      postExitoso = true;
+      await iniciarSesion(); // GET /sesion, nunca el token del POST.
       navegar(enlaces.inicio, { replace: true });
-    } catch {
-      // useMutacion ya expone el fallo; el formulario lo presenta con role="alert".
+    } catch (fallo) {
+      // Los errores de POST ya están en useMutacion. Si falló GET, se presenta
+      // el mensaje correspondiente desde la API sin registrar identidad falsa.
+      if (postExitoso) setErrorConfirmacion(fallo);
     }
   };
 
@@ -53,7 +58,7 @@ export default function IniciarSesion({ configuracion }) {
             textos={t}
             textosApi={textosApi}
             enviando={cargando}
-            error={error}
+            error={errorConfirmacion ?? error}
             bloqueado={bloqueado}
             segundosRestantes={segundosRestantes}
             alEnviar={enviarCredenciales}

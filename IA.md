@@ -582,3 +582,40 @@ Se añadió una prueba de regresión con un recorte fiel de los campos y valores
 ### Límites y evidencia
 
 Los JSON de 401 y 429 se verificaron en las **respuestas guardadas de Postman** (contrato, no petición de inicio de sesión en vivo). Los textos visibles de la sección de ingreso se cotejaron con los JSON públicos de `/textos` obtenidos previamente en una ejecución HTTP real de GitHub Actions, sin utilizar credenciales reales para probar errores en producción.
+
+
+---
+
+## 19. Sprint 2 · Historia S2-05 — Persistencia de sesión y cierre real
+
+**Fecha:** 24 de noviembre de 2026. **Rama:** `S2-05`, creada directamente desde `main` (`94dad58fcbfa6845ba2ceea80292c3a83fb53b5b`). **Stack:** React 19, Vite, React Router.
+
+### Prompt del usuario (literal)
+
+> Perfecto, ahora la siguiente historia de usuario (S2-05) siguiendo las instrucciones analogas, tengo entendido que ya habias realizado algo básico para cerrar sesión, siendo así, modifica lo que ya tienes para cumplir con los requisitos:
+>
+> Como persona con una cuenta en Sintonía, quiero que el sitio recuerde que ingresé y poder cerrar sesión para no tener que ingresar cada vez y proteger mi cuenta. Alcance: sesión con la cookie `sesion`, menú de cuenta y cierre de sesión.
+>
+> 1. La sesión se conserva al recargar la página (cookie `sesion` o token guardado en una cookie httpOnly del frontend). El token nunca va en `localStorage`.
+> 2. Con sesión, la navegación muestra el nombre de la persona y el menú de cuenta; sin sesión, los botones «Ingresar» y «Crear cuenta». Se consulta con `GET /sesion`.
+> 3. «Cerrar sesión» llama a `DELETE /sesion` y vuelve al inicio como visitante.
+> 4. Si la sesión vence (401 `no_autenticado`), se lleva a la persona a ingresar.
+> 5. Referencia de diseño: Figma, bloque «Sprint 2», columna «1 · Inicio público con sesión iniciada» y «Menú móvil».
+
+### Respuesta y cambios realizados
+
+- Se revisó la historia S2-03 existente en `main`: la sesión antes dependía de guardar nombre y correo en `sessionStorage`/`localStorage`, sin comprobar vigencia real. Se eliminaron del flujo de autenticación las funciones y los datos de sesión heredados. Al cargar la aplicación se borran los registros antiguos bajo `sintonia-sesion`.
+- **Postman (colección «Sintonía API», UID `58842877-a5dad643-4a2e-43d9-ba42-b73b66dae76b`):** `POST /sesion` devuelve `{usuario,token,...}` y el backend emite `Set-Cookie: sesion=<token>; Path=/; HttpOnly; Max-Age=43200; SameSite=Lax`. `GET /sesion` devuelve un **objeto plano** de cuenta sin token; 401 `{error:{codigo:'no_autenticado'}}` indica cookie ausente o caducada. `DELETE /sesion` devuelve 204 sin cuerpo y elimina la cookie.
+- Se creó `src/utils/peticionesSesion.js` para `GET /sesion` y `DELETE /sesion` con `credentials: 'include'`. Un 401 conserva `status` y `error.codigo`; solo se exponen en el estado React los atributos públicos `id,nombre,correo,iniciales,colorHex`. **El token y la contraseña no se guardan ni se leen por JavaScript**.
+- Se creó `src/hooks/useSesion.js`: verifica la cuenta al montar/recargar, al recuperar foco/visibilidad y tras cambios de ruta autenticados; conserva estado de carga/error; solo marca sesión autenticada tras un GET exitoso. Tras POST exitoso, la página de ingreso llama a `confirmarIngreso()` (GET) antes de navegar al inicio, sin aceptar la identidad ni token incluidos en POST. Un GET fallido posterior a POST presenta error sin abandonar el formulario. Un 401 `no_autenticado` revoca el estado y redirige a `/iniciarSesion` **cuando existía una sesión verificada**, sin redirigir a los visitantes nuevos.
+- **Persistencia:** la cookie `HttpOnly` se administra en el servidor. En `sessionStorage` solo se permite la marca `sintonia-sesion-confirmada=1` para reconocer expiración tras un refresco (no es un token ni contiene identidad y no concede acceso). La sesión siempre se vuelve a validar con `GET /sesion`. El frontend no usa `localStorage` para guardar sesiones.
+- Se implementó cierre real: `DELETE /sesion` se llama al seleccionar la opción de la cuenta. Solo tras 204 se elimina el estado React, se limpia la marca y se regresa a `/` como visitante. Ante error HTTP/red, se mantiene la cuenta visible y se muestra un error desde `/textos`; no se afirma que se cerró la sesión.
+- **Figma:** web `676:5749` (inicio con sesión), `676:6097` (menú abierto), móvil `678:4357` (inicio autenticado) y `678:4506` (menú abierto). Se reutiliza `Navbar` y los tokens CSS existentes: disparador circular accesible en escritorio con menú `aria-haspopup/expanded/controls`, nombre, correo y salida; móvil con avatar, nombre, estado (solo si está en `/textos`) y botón de salida al pie del menú. Los botones «Ingresar» y «Crear cuenta» siguen disponibles exclusivamente sin sesión.
+- **Textos:** ningún texto visible nuevo está hardcodeado: «Cerrar sesión» se obtiene de `textos.navbar.usuario.cerrarSesion`; los errores de logout se obtienen de `textos.errores[codigo]` o `textos.estados.error`. El nombre, correo, avatar e iniciales vienen de `GET /sesion`. `useTextos` continúa invocándose una sola vez en `App.jsx`.
+- Se reemplazaron las pruebas de almacenamiento obsoleto por verificaciones del contrato de cookies, GET/DELETE, 401, limpieza del estado, identidad pública, marca no sensible, estructura de navegación y flujos de inicio/cierre. Se añadió `.github/workflows/s2-05-validation.yml` para ejecutar `npm test` y `npm run build`.
+
+### Limitaciones de integración
+
+- El contrato de sesión se comprobó contra **respuestas guardadas en Postman**, no mediante un inicio/cierre real con credenciales de producción. Las pruebas automatizadas del cliente usan respuestas HTTP simuladas que corresponden al contrato.
+- La cookie documentada es `SameSite=Lax`. Si el frontend se aloja en un dominio **cross-site** respecto al servidor Fly.io, un `fetch` entre sitios con `credentials:'include'` no garantiza el envío de esa cookie: se necesita alojamiento **same-site**/proxy o una configuración de cookie `SameSite=None; Secure` y CORS con credenciales desde el backend. El frontend no puede crear por sí solo una cookie `HttpOnly` para el dominio de la API.
+- La casilla existente «Mantener la sesión iniciada» de S2-03 se conserva por fidelidad a Figma, pero la duración de la cookie (`Max-Age`) la determina el backend; no hay un parámetro documentado en `POST /sesion` que permita cambiarla desde el checkbox. Este ajuste del backend queda fuera de S2-05.

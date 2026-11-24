@@ -158,3 +158,84 @@
   .header-sesion { width: 100%; justify-content: space-between; }
   .header-sesion__usuario { max-width: 60%; }
 }
+
+
+/* S2-05: menú de cuenta de Figma Sprint 2, web y móvil. */
+.header-flexible { flex-grow: 1; }
+.header-cuenta { position: relative; }
+.header-cuenta__disparador {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 0; border: 0; background: transparent;
+  border-radius: var(--radio-completo); cursor: pointer;
+}
+.header-cuenta__disparador:focus-visible,
+.header-cuenta__salir:focus-visible,
+.header-cuenta-movil__salir:focus-visible {
+  outline: 2px solid var(--marca-primario);
+  outline-offset: 3px;
+}
+.header-cuenta__avatar {
+  display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center;
+  width: 32px; height: 32px; border-radius: var(--radio-completo);
+  color: var(--texto-sobre-marca); font-family: var(--fuente-inter);
+  font-size: 12px; font-weight: 700;
+}
+.header-cuenta__menu {
+  position: absolute; top: calc(100% + 12px); right: 0;
+  display: flex; flex-direction: column; min-width: 272px;
+  z-index: 15; border: 1px solid var(--borde-sutil);
+  border-radius: var(--radio-md); background: var(--fondo-elevada);
+  box-shadow: var(--sombra-flotante); padding: 12px;
+}
+.header-cuenta__identidad {
+  display: flex; align-items: center; gap: 12px; padding: 0 0 12px;
+  border-bottom: 1px solid var(--borde-sutil);
+}
+.header-cuenta__datos {
+  min-width: 0; display: flex; flex-direction: column; gap: 1px;
+  color: var(--texto-principal);
+}
+.header-cuenta__datos strong, .header-cuenta__datos span {
+  overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+}
+.header-cuenta__datos .detalle-nota { color: var(--texto-secundario); }
+.header-cuenta__salir {
+  display: flex; align-items: center; width: 100%; min-height: 40px;
+  margin-top: 6px; padding: 9px 12px;
+  border: 0; background: transparent; color: var(--texto-principal);
+  border-radius: var(--radio-sm); cursor: pointer; text-align: left;
+}
+.header-cuenta__salir:hover { background: var(--fondo-sutil); }
+.header-cuenta__salir:disabled, .header-cuenta-movil__salir:disabled {
+  opacity: 0.65; cursor: wait;
+}
+.header-cuenta__error { color: var(--estado-error); margin: 6px 0 0; }
+.header-cuenta-movil { display: none; }
+@media (max-width: 1023px) {
+  .header-cuenta { display: none; }
+  .header-flexible { display: none; }
+  .header-botones:has(.header-cuenta-movil) {
+    margin-top: auto; padding: 16px; background: var(--fondo-superficie);
+  }
+  .header-cuenta-movil {
+    display: flex; align-items: center; gap: 12px; width: 100%;
+    flex-wrap: wrap; min-width: 0;
+  }
+  .header-cuenta-movil__datos {
+    flex: 1; min-width: 0; display: flex; flex-direction: column;
+    gap: 2px; color: var(--texto-principal);
+  }
+  .header-cuenta-movil__datos strong,
+  .header-cuenta-movil__datos span {
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .header-cuenta-movil__datos .detalle-nota { color: var(--texto-secundario); }
+  .header-cuenta-movil__salir {
+    border: 1px solid var(--borde-fuerte);
+    border-radius: var(--radio-completo);
+    background: transparent; color: var(--texto-principal);
+    padding: 12px 16px; cursor: pointer; white-space: nowrap;
+  }
+  .header-cuenta-movil__salir:hover { background: var(--fondo-elevada); }
+  .header-cuenta-movil .header-cuenta__error { flex-basis: 100%; }
+}

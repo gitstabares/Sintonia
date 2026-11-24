@@ -6,6 +6,7 @@ export default function LayoutPublico({
   datos, textosAccesibilidad, children, en, alternarIdioma,
   preferenciasAccesibilidad, alternarAccesibilidad, cambiarTamanoTexto, restablecerAccesibilidad,
   consentimiento, guardarConsentimiento, cambiarCookies, enlaces, sesion, cerrarSesion,
+  saliendo, errorCierre,
 }) {
   return (
     <div className="sitio">
@@ -21,6 +22,8 @@ export default function LayoutPublico({
         enlaces={enlaces}
         sesion={sesion}
         onCerrarSesion={cerrarSesion}
+        saliendo={saliendo}
+        errorCierre={errorCierre}
       />
       <main>{children}</main>
       <Footer {...datos} en={en} enlaces={enlaces} cambiarCookies={cambiarCookies} />
