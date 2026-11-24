@@ -1,4 +1,7 @@
 import './App.css';
+import useTextos from './hooks/useTextos.js';
+import useTextosAccesibilidad from './hooks/useTextosAccesibilidad.js';
+import { textosRespaldo } from './utils/textosInterfaz.js';
 import { useEffect, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import Home from './pages/Home/Home.jsx';
@@ -26,6 +29,15 @@ export default function App() {
     () => leerAccesibilidad(almacenamiento(), leerConsentimiento(almacenamiento())),
   );
   const en = idioma === 'en';
+  // Único punto de lectura de /textos: compartido entre todas las rutas.
+  const resultadoTextos = useTextos(idioma);
+  const accesibilidad = useTextosAccesibilidad(idioma);
+  const datos = {
+    ...resultadoTextos,
+    textos: resultadoTextos.error
+      ? textosRespaldo(idioma)
+      : resultadoTextos.textos,
+  };
   const enlaces = {
     inicio: '/', catalogo: '/catalogo', ingresar: '/iniciarSesion',
     crearCuenta: '/crearCuenta', terminos: '/terminos', accesibilidad: '/accesibilidad'
@@ -75,9 +87,10 @@ export default function App() {
     setSesion(null);
   };
 
-  // Las preferencias son globales; las peticiones a la API pertenecen a cada página.
+  // Los textos y las preferencias son globales; las demás consultas siguen en cada página.
   const configuracion = {
-    idioma, en, enlaces,
+    idioma, en, enlaces, datos,
+    textosAccesibilidad: accesibilidad.textos,
     alternarIdioma: () => setIdioma(actual => actual === 'en' ? 'es' : 'en'),
     preferenciasAccesibilidad,
     alternarAccesibilidad, cambiarTamanoTexto, restablecerAccesibilidad,

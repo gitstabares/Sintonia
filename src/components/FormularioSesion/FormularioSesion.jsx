@@ -53,7 +53,7 @@ export default function FormularioSesion({
           inputMode="email"
           autoCapitalize="none"
           spellCheck={false}
-          placeholder="sara.quintero@correo.co"
+          placeholder={textos.correoPlaceholder}
           value={correo}
           onChange={alCambiarCorreo}
           required
@@ -78,7 +78,7 @@ export default function FormularioSesion({
             type={mostrarContrasena ? 'text' : 'password'}
             name="contrasena"
             autoComplete="current-password"
-            placeholder="••••••••••"
+            placeholder={textos.contrasenaPlaceholder}
             value={contrasena}
             onChange={alCambiarContrasena}
             required

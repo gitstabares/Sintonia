@@ -10,20 +10,20 @@ import useDetalleAlbum from '../../hooks/useDetalleAlbum.js';
 import useMetadatosAlbum from '../../hooks/useMetadatosAlbum.js';
 import { duracionTotalMinutos } from '../../utils/detalleAlbum.js';
 import LayoutPublico from '../../layouts/LayoutPublico.jsx';
-import useTextos from '../../hooks/useTextos.js';
-import useTextosAccesibilidad from '../../hooks/useTextosAccesibilidad.js';
+import { obtenerTextoNoEncontrada } from '../../utils/textosInterfaz.js';
 import './DetalleAlbum.css';
 
 function ContenidoDetalleAlbum({ en, textos, album, cargando, error, statusCode, recargar }) {
   const textosAlbum = textos?.paginas?.album;
+  const noEncontrada = obtenerTextoNoEncontrada(textos, { recurso: 'album' });
 
   if (statusCode == 404) {
     return (
       <div className="detalle-album detalle-album--estado">
         <div className="estado-peticion cuerpo-m" role="alert">
-          <h2 className='titular-h2'>{textosAlbum?.noEncontrado?.titulo}</h2>
-          <p className='cuerpo-m'>{textosAlbum?.noEncontrado?.texto}</p>
-          <Boton className='cuerpo-p-fuerte' href='/catalogo'>{textosAlbum?.noEncontrado?.botones?.volver}</Boton>
+          {noEncontrada.titulo && <h2 className='titular-h2'>{noEncontrada.titulo}</h2>}
+          {noEncontrada.texto && <p className='cuerpo-m'>{noEncontrada.texto}</p>}
+          {noEncontrada.boton && <Boton className='cuerpo-p-fuerte' href='/catalogo'>{noEncontrada.boton}</Boton>}
         </div>
       </div>
     );
@@ -32,8 +32,8 @@ function ContenidoDetalleAlbum({ en, textos, album, cargando, error, statusCode,
   if (cargando || error) {
     return (
       <div className="detalle-album detalle-album--estado">
-        <EstadoPeticion cargando={cargando} error={error} recargar={recargar}
-          nombre={en ? 'album' : 'álbum'} en={en} />
+        <EstadoPeticion cargando={cargando} error={error} statusCode={statusCode}
+          recargar={recargar} textos={textos} recurso="album" />
       </div>
     );
   }
@@ -90,7 +90,7 @@ function ContenidoDetalleAlbum({ en, textos, album, cargando, error, statusCode,
             ))}
           </ol>
         ) : (
-          <EstadoPeticion vacio nombre={en ? 'tracks' : 'canciones'} en={en} />
+          <EstadoPeticion vacio textos={textos} recurso="canciones" />
         )}
       </section>
 
@@ -118,7 +118,7 @@ function ContenidoDetalleAlbum({ en, textos, album, cargando, error, statusCode,
             ))}
           </div>
         ) : (
-          <EstadoPeticion vacio nombre={en ? 'albums' : 'álbumes'} en={en} />
+          <EstadoPeticion vacio textos={textos} recurso="albumes" />
         )}
       </section>
     </article>
@@ -127,13 +127,12 @@ function ContenidoDetalleAlbum({ en, textos, album, cargando, error, statusCode,
 
 export default function DetalleAlbum({ configuracion }) {
   const { id } = useParams();
-  const datos = useTextos(configuracion.idioma);
-  const datosAccesibilidad = useTextosAccesibilidad(configuracion.idioma);
+  const { datos } = configuracion;
   const detalle = useDetalleAlbum(id);
   useMetadatosAlbum(detalle.album);
 
   return (
-    <LayoutPublico {...configuracion} datos={datos} textosAccesibilidad={datosAccesibilidad.textos}>
+    <LayoutPublico {...configuracion}>
       <ContenidoDetalleAlbum {...detalle} en={configuracion.en} textos={datos.textos} />
     </LayoutPublico>
   );

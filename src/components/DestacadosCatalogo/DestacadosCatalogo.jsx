@@ -10,7 +10,7 @@ export default function DestacadosCatalogo({ textos, enlaces, en, gen_id, genero
   const isMobile = useMediaQuery('(max-width: 1023px)');
   const estado = gen_id ? estadoGenero : estadoAlbumes;
   if (estado.cargando || estado.error) {
-    return <EstadoPeticion {...estado} en={en} nombre={en ? 'albums' : 'álbumes'} />;
+    return <EstadoPeticion {...estado} textos={textos} recurso="albumes" />;
   }
   const destacados = gen_id ? generoActual?.albumes : albumes;
   const titulo = gen_id
@@ -26,7 +26,7 @@ export default function DestacadosCatalogo({ textos, enlaces, en, gen_id, genero
         </Link>}
       </div>
       <div className="albumes-destacados">
-        {destacados?.length ? destacados.map(album => <Tarjeta key={album.id} album={album} />) : <EstadoPeticion vacio en={en} nombre={en ? 'albums' : 'álbumes'} />}
+        {destacados?.length ? destacados.map(album => <Tarjeta key={album.id} album={album} />) : <EstadoPeticion vacio textos={textos} recurso="albumes" />}
       </div>
     </section>
   );

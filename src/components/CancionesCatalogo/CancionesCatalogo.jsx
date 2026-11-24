@@ -6,7 +6,7 @@ export default function CancionesCatalogo({ textos, en, generoActual, estadoGene
   const cancionesTextos = textos?.paginas?.catalogo?.genero?.canciones;
   const isMobile = useMediaQuery('(max-width: 1023px)');
   if (estadoGenero.cargando || estadoGenero.error) {
-    return <EstadoPeticion {...estadoGenero} en={en} nombre={en ? 'songs' : 'canciones'} />;
+    return <EstadoPeticion {...estadoGenero} textos={textos} recurso="canciones" />;
   }
 
   return (
@@ -22,7 +22,7 @@ export default function CancionesCatalogo({ textos, en, generoActual, estadoGene
             </div>
             <div className="cuerpo-p">{`${Math.floor((cancion.duracionSeg || 0) / 60)}:${String((cancion.duracionSeg || 0) % 60).padStart(2, '0')}`}</div>
           </div>
-        )) : <EstadoPeticion vacio en={en} nombre={en ? 'songs' : 'canciones'} />}
+        )) : <EstadoPeticion vacio textos={textos} recurso="canciones" />}
       </div>
     </section>
   );

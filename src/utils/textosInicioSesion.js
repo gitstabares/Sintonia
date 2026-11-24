@@ -1,11 +1,15 @@
 /**
  * Las claves de /textos se consultan primero. Los valores alternativos son el
- * texto visible de la vista 4 de Figma, no contenido de cuentas de prueba.
+ * texto visible de la vista 4 de Figma, únicamente ante una sección incompleta.
  */
 export function textosInicioSesion(textos, en = false) {
   const p = textos?.paginas?.iniciarSesion ?? textos?.paginas?.inicioSesion
     ?? textos?.paginas?.sesion ?? textos?.paginas?.ingreso;
-  const defecto = en ? {
+  // Respaldo textual solamente cuando la sección de login falta o es inválida.
+  const seccionIncompleta = !p ||
+    !(p.titulo ?? p.encabezado?.titulo) ||
+    !(p.formulario?.correo?.etiqueta ?? p.campos?.correo?.etiqueta);
+  const defecto = !seccionIncompleta ? {} : (en ? {
     titulo: 'Sign in to your account',
     descripcion: 'Sign in with the email and password for your account.',
     correo: 'Email address',
@@ -43,12 +47,16 @@ export function textosInicioSesion(textos, en = false) {
     servidor: 'No pudimos iniciar sesión. Inténtalo de nuevo.',
     marcaTitulo: 'Tu música, siempre a mano',
     marcaDescripcion: 'Explora álbumes y artistas de todos los géneros.',
-  };
+  });
 
   return {
     titulo: p?.titulo ?? p?.encabezado?.titulo ?? defecto.titulo,
     descripcion: p?.descripcion ?? p?.encabezado?.descripcion ?? defecto.descripcion,
     correo: p?.formulario?.correo?.etiqueta ?? p?.campos?.correo?.etiqueta ?? defecto.correo,
+    correoPlaceholder: p?.formulario?.correo?.placeholder ?? p?.campos?.correo?.placeholder
+      ?? (seccionIncompleta ? 'sara.quintero@correo.co' : undefined),
+    contrasenaPlaceholder: p?.formulario?.contrasena?.placeholder ?? p?.campos?.contrasena?.placeholder
+      ?? (seccionIncompleta ? '••••••••••' : undefined),
     contrasena: p?.formulario?.contrasena?.etiqueta ?? p?.campos?.contrasena?.etiqueta ?? defecto.contrasena,
     mostrar: p?.formulario?.contrasena?.mostrar ?? p?.botones?.mostrarContrasena ?? defecto.mostrar,
     ocultar: p?.formulario?.contrasena?.ocultar ?? p?.botones?.ocultarContrasena ?? defecto.ocultar,

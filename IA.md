@@ -403,3 +403,35 @@ Se añadieron pruebas de las funciones de duración, fechas, normalización de �
 2. Las demás entradas registran prompts literales y las respuestas finales recuperables; las respuestas de mayor extensión se presentan como extractos o síntesis identificadas para facilitar su lectura.
 3. No se incluyen llamadas internas a herramientas, razonamientos privados ni archivos adjuntos como contenido transcrito; solo las solicitudes del usuario y los resultados comunicados por el asistente.
 4. Para convertir este registro en una transcripción **íntegra palabra por palabra de todas las conversaciones**, sería necesario disponer de una exportación del historial que contenga los mensajes ausentes.
+
+
+---
+
+## 13. Refactor desde S2-03 — Textos globales y estados HTTP
+
+**Fecha:** 24 de noviembre de 2026.  
+**Rama:** `refactor/textos-unificados-S2-03`, creada directamente desde `S2-03` sin modificar la rama original ni fusionar el PR de la historia.
+
+### Prompt del usuario [literal]
+
+> Listo, los cambios están perfectos, a partir de S2-03 crea una rama nueva para hacer un refactor:
+>
+> - El hook useTextos debe usarse unicamente una vez en el archivo App y pasarse como prop a sus componentes hijos.
+> - El componente EstadoPeticion debe tomar los textos de cargando y error que pases por el useTextos de App, para ello sería bueno que EstadoPeticion accederia al statuscode del fetch que lo ocasionó, para de esta manera mostrar en pantalla el error correspondiente desde los textos de la API. Lo mismo para la pagina No Encontrado la cual debería mostrar sus textos según la API. Los unicos textos que deberian estar hardcodeados es si el fetch de useTextos no devuelve los textos correctamente.
+> - Recuerda que la API de textos es la siguiente: [https://yanethm-sintonia-api.fly.dev/api/v1/textos](https://yanethm-sintonia-api.fly.dev/api/v1/textos)
+> - Finalmente, no olvides adicionar prompt y respuesta/resumen al documento IA.md
+
+### Respuesta y resumen técnico
+
+- `App.jsx` es el **único componente que ejecuta `useTextos(idioma)`**. Asimismo se centralizó `useTextosAccesibilidad(idioma)`, para evitar repetir la consulta accesible en cada ruta.
+- `App` envía `datos` (textos, carga, error, recarga y estado HTTP) y `textosAccesibilidad` a las páginas a través de `configuracion`. Las páginas propagan el objeto de textos a las secciones, layout, navbar, footer y a todos los `EstadoPeticion`.
+- `useRecurso` restablece `statusCode` al cambiar el recurso o reintentar, conserva el valor del HTTP exitoso y añade `error.status` en respuestas fallidas; conserva si existe el código de error del backend (`error.codigo`). Esto impide reutilizar accidentalmente un estado 404 anterior.
+- `EstadoPeticion` utiliza exclusivamente los mensajes de `/textos` provistos por props. La utilidad pura `textosInterfaz.js` selecciona los textos de cargando, sin resultados, error general o error asociado al código HTTP/código del backend. El botón de reintento usa la traducción de la API.
+- Tanto la ruta desconocida (`NoEncontrada.jsx`) como la situación 404 del detalle del álbum se presentan utilizando los mensajes de la API (priorizando la sección de álbum cuando exista).
+- Se retiraron frases de carga, idioma, preferencias de cookies y salida que estaban hardcodeadas en navbar/footer/selector de idioma, y se eliminaron textos fijos del formulario cuando la API proporciona la sección de inicio de sesión.
+- Solo si `GET /textos` falla o su contenido no cumple la validación de `useTextos` se usa `textosRespaldo(idioma)`; el formulario conserva un respaldo propio cuando la sección de login venga incompleta o no exista.
+- No se crearon páginas nuevas ni se modificaron las consultas de álbumes, géneros o el POST de sesión; no se fusionaron ramas ni se abrió un PR nuevo.
+
+### Límites de validación
+
+La API en `https://yanethm-sintonia-api.fly.dev/api/v1/textos` no pudo consultarse desde este entorno (error de conectividad/resolución DNS). **No se confirmó el esquema exacto de los mensajes de errores del endpoint.** Los adaptadores admiten los contenedores `estados`, `mensajes.estados`, `errores` y claves de páginas habituales; queda pendiente verificar que coincidan con el JSON real. En caso de una sección ausente dentro de una respuesta global válida, no se inventa un mensaje de error: se mostrará únicamente el contenido disponible. Se incorporaron pruebas unitarias y validación de build para esta rama.
