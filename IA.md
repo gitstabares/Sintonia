@@ -540,3 +540,45 @@ Se añadió una prueba de regresión con un recorte fiel de los campos y valores
 - Se retiran el título y la descripción SEO literales de index.html. Los metadatos de navegación utilizan las secciones de texto de la API; el álbum conserva sus metadatos dinámicos.
 - Se reemplazaron las pruebas que validaban el fallback y se añadieron pruebas de regresión que comprueban la ausencia de dicho mecanismo, la condición de bloqueo y el mensaje especial.
 - La rama S2-03 no se modifica directamente. Se abre un pull request hacia S2-03 y se deja pendiente de revisión.
+
+---
+
+## 18. Sprint 2 · Historia S2-04 — Errores y carga del inicio de sesión
+
+**Fecha:** 24 de noviembre de 2026. **Rama:** `S2-04` creada directamente desde `main` (`51daa45234ad470d2337acc76a0db5b1b38ef060`).
+**Arquitectura:** React 19 + Vite + React Router; se mantiene el formulario existente de la historia S2-03.
+
+### Prompt del usuario (literal)
+
+> Perfecto, continuamos con la historia de usuario 4 que construiras en una rama creada desde main llamada S2-04. La HU contiene lo siguiente:
+>
+> Como persona con una cuenta en Sintonía, quiero entender qué falló al ingresar para saber cómo corregirlo. Alcance: estados de error y de carga del formulario de ingreso.
+>
+> 1. Mientras se envía el formulario, el botón muestra «Ingresando…» y no se puede enviar dos veces.
+> 2. 401 `credenciales_invalidas` muestra un solo mensaje, sin decir si falló el correo o la contraseña.
+> 3. 429 `demasiadas_peticiones` bloquea el formulario durante los segundos de la cabecera `Retry-After`.
+> 4. Si no hay red, se muestra el error de conexión con botón para reintentar.
+> 5. Referencia de diseño: Figma, bloque «Sprint 2», «Errores, carga y contraseña visible» (web y móvil).
+>
+> Recuerda:
+>
+> - No hardcodees el contenido agregado, todo debe venir de la API
+> - Agrega la entrada con prompts y cambios a IA.md
+> - Si el mensaje de error que se debe agregar está relacionado con problemas de conexión con la API (Bad Response, No network, etc), evidentemente no se puede acceder a la API, por tanto puedes hardcodear ese mensaje de error
+> - La estructura de la API está en la colección de Postman, la estructura visual de la Pagina en Figma y el proyecto en Github
+
+### Respuesta y resumen de cambios
+
+- Se confirmó en `main` la existencia de `IniciarSesion`, `FormularioSesion`, `useMutacion`, `solicitarPost` y textos recibidos desde `useTextos` en `App`. Se modificaron únicamente los módulos necesarios para esta historia.
+- **Postman:** colección «Sintonía API» (UID `58842877-a5dad643-4a2e-43d9-ba42-b73b66dae76b`), solicitud `POST /sesion`. Un 401 responde con `error.codigo=credenciales_invalidas`, idéntico si falló correo o clave. Un 429 devuelve `error.codigo=demasiadas_peticiones` y `Retry-After`. El ejemplo guardado muestra 1447 segundos en la cabecera y 287 en `error.detalles.reintentarEnSegundos`: **la cabecera tiene prioridad**. Se admite fecha HTTP en la cabecera y, solo cuando falta, segundos del cuerpo.
+- **Figma:** Sprint 2, «Errores, carga y contraseña visible». Referencias web: `676:1931` (cargando), `676:2190` (credenciales incorrectas), `676:2452` (error de conexión). Móvil: `678:2626`, `678:2770`, `678:2918`, respectivamente. Se respetan panel, aviso de error antes de los campos, spinner del botón y composición responsive.
+- **Textos de API:** se consultan únicamente las props recibidas desde `App/useTextos`: `paginas.ingresar.formulario.mensajes.ingresando`, `paginas.ingresar.errores.credenciales`, `paginas.ingresar.errores.demasiadosIntentos`, `paginas.ingresar.errores.conexion` y su `botones.reintentar`. El contador interpolado usa `{segundos}`. La utilidad pura `src/utils/erroresIngreso.js` no inventa textos.
+- **Transporte:** `src/utils/peticionPost.js` adjunta `status`, `codigo`, `retryAfterSegundos` a los errores HTTP. Los fallos de conexión tienen `tipo='conexion'`. Se conserva la petición JSON `{correo,clave}` y las cookies `credentials:include`.
+- **Hook:** `useMutacion` impide solicitudes POST simultáneas, activa contador basado en `Date.now()` tras un 429 y desbloquea automáticamente al finalizar los segundos de espera. El bloqueo se aplica también a campos, ojo, casilla y botón; las credenciales no se borran.
+- **Formulario:** el botón muestra el texto API «Ingresando…» y spinner mientras se envía. En 401 se presenta un único bloque `role=alert` general, sin identificar correo o clave. En 429 el bloque utiliza `role=status` para anunciar la cuenta regresiva. Si falla la red se presenta el aviso de conexión API y el botón de envío se convierte en «Reintentar», conservando correo y clave.
+- Las validaciones de campos obligatorios y el retorno al inicio tras una respuesta exitosa de sesión se mantienen. No se agregaron rutas ni textos de registro/recuperación de contraseña.
+- **Verificación:** `tests/erroresIngreso.test.js` cubre parsing de cabecera, HTTP 401/429, prioridad sobre el cuerpo, fecha HTTP, sin red, mensajes de API, interacción de envío y estilos. `.github/workflows/s2-04-validation.yml` ejecuta `npm test` y `npm run build` sobre `S2-04`.
+
+### Límites y evidencia
+
+Los JSON de 401 y 429 se verificaron en las **respuestas guardadas de Postman** (contrato, no petición de inicio de sesión en vivo). Los textos visibles de la sección de ingreso se cotejaron con los JSON públicos de `/textos` obtenidos previamente en una ejecución HTTP real de GitHub Actions, sin utilizar credenciales reales para probar errores en producción.

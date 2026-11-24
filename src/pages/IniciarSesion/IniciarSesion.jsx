@@ -12,7 +12,7 @@ export default function IniciarSesion({ configuracion }) {
   const { enlaces, iniciarSesion, datos } = configuracion;
   const textosApi = datos.textos;
   const t = textosInicioSesion(textosApi);
-  const { ejecutar, cargando, error } = useMutacion('/sesion');
+  const { ejecutar, cargando, error, bloqueado, segundosRestantes } = useMutacion('/sesion');
   const navegar = useNavigate();
 
   useEffect(() => {
@@ -54,6 +54,8 @@ export default function IniciarSesion({ configuracion }) {
             textosApi={textosApi}
             enviando={cargando}
             error={error}
+            bloqueado={bloqueado}
+            segundosRestantes={segundosRestantes}
             alEnviar={enviarCredenciales}
             enlaceCrearCuenta={enlaces.crearCuenta}
             enlaceRecuperar="/recuperarContrasena"
