@@ -63,8 +63,24 @@ test('título y descripción son propios del álbum y de su artista', () => {
     titulo: 'Luz de páramo',
     artista: { nombre: 'Marea Baja' },
   });
-  assert.equal(resultado.title, 'Luz de páramo — Marea Baja | Sintonía');
+  assert.equal(resultado.title, 'Luz de páramo — Marea Baja');
   assert.match(resultado.description, /Luz de páramo/);
   assert.match(resultado.description, /Marea Baja/);
   assert.equal(obtenerMetadatosAlbum({}), null);
+});
+
+
+test('los metadatos lingüísticos utilizan /textos sin frases predeterminadas', () => {
+  const album = { titulo: 'Luz', artista: { nombre: 'Marea Baja' } };
+  const desdeApi = obtenerMetadatosAlbum(album, {
+    paginas: { album: { metadatos: {
+      titulo: 'API: {titulo} por {artista}',
+      descripcion: 'API: descubre {titulo} de {artista}',
+    } } },
+  });
+  assert.equal(desdeApi.title, 'API: Luz por Marea Baja');
+  assert.equal(desdeApi.description, 'API: descubre Luz de Marea Baja');
+  const apiSinMetadatos = obtenerMetadatosAlbum(album, { paginas: { album: {} } });
+  assert.equal(apiSinMetadatos.title, 'Luz — Marea Baja');
+  assert.equal(apiSinMetadatos.description, 'Luz — Marea Baja');
 });

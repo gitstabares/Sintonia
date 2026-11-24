@@ -435,3 +435,35 @@ Se añadieron pruebas de las funciones de duración, fechas, normalización de �
 ### Límites de validación
 
 La API en `https://yanethm-sintonia-api.fly.dev/api/v1/textos` no pudo consultarse desde este entorno (error de conectividad/resolución DNS). **No se confirmó el esquema exacto de los mensajes de errores del endpoint.** Los adaptadores admiten los contenedores `estados`, `mensajes.estados`, `errores` y claves de páginas habituales; queda pendiente verificar que coincidan con el JSON real. En caso de una sección ausente dentro de una respuesta global válida, no se inventa un mensaje de error: se mostrará únicamente el contenido disponible. Se incorporaron pruebas unitarias y validación de build para esta rama.
+
+
+---
+
+## 14. Corrección de endpoints y de textos de respaldo
+
+**Fecha:** 24 de noviembre de 2026.  
+**Rama:** `refactor/textos-unificados-S2-03` (continúa la rama del refactor anterior).
+
+### Prompt del usuario [literal]
+
+> Esta es la documentación de la API, mira los endpoints y compara con los cambios que hiciste, si alguna endpoint no coincide corrigela: [https://yanethm-sintonia-api.fly.dev/docs](https://yanethm-sintonia-api.fly.dev/docs)
+> No deberian haber textos hardcodeados ni siquiera en caso de que los textos no existan. Los unicos textos hardcodeados deberian estar en caso de que useTextos no responda adecuadamente
+
+### Respuesta y cambios realizados
+
+- Se visitó el portal público de documentación y se identificó la ruta «Contrato completo» (`/docs/contrato`) y el archivo descargable (`/docs/contrato.md`). **El navegador de consulta solo pudo leer el contenedor HTML**: el contenido Markdown no pudo descargarse ni se pudo consultar el JSON de los endpoints. Por ello, **no se declara verificado el contrato completo**; las comprobaciones se basan en el código y en las restricciones ya especificadas por el usuario.
+- Se revisaron los hooks HTTP existentes: `GET /textos` (idioma), `GET /textos?seccion=accesibilidad`, `GET /idiomas`, `GET /generos`, `GET /generos/:id`, `GET /albumes`, `GET /albumes/:id` y `POST /sesion`.
+- **Corrección confirmada por el requisito anterior del usuario:** `GET /albumes` no admite filtros. `useAlbumes` dejó de enviar `orden`, `limite` y cualquier propiedad de `filtros`. En la página principal, la cantidad de álbumes se limita sobre los datos ya recibidos; el catálogo sigue solicitando todos sin parámetros de consulta.
+- Se simplificó `useGeneros` para enviar únicamente el path de lista o detalle, sin filtros ni parámetros de consulta arbitrarios. Se actualizaron las llamadas de `Home` y `Catalogo` de acuerdo con las nuevas firmas.
+- **Regla de respaldo estricto:** `src/utils/textosInicioSesion.js` ya no contiene cadenas predeterminadas ni crea textos cuando la API responde satisfactoriamente pero omite la sección `iniciarSesion` o alguna clave. En esos casos la etiqueta se deja sin contenido, en lugar de inventar una frase.
+- El respaldo en español e inglés del formulario se trasladó a `textosRespaldo()` en `src/utils/textosInterfaz.js`. `App.jsx` es el único lugar que lo activa y **solo cuando `useTextos` devuelve un error de petición o de validación**. No se mezclan textos de fallback en respuestas válidas pero incompletas.
+- Se eliminó el texto fijo del título de la pestaña y del nombre accesible del enlace del logo en la página de ingreso: provienen de los textos recibidos.
+- Se incorporaron pruebas para documentar y verificar esta restricción y las rutas de catálogo, preservando la arquitectura React/Vite y el PR original de `S2-03`.
+
+**Pendiente técnico:** revisar el cuerpo real de `/docs/contrato.md` o el JSON real de los endpoints cuando el servidor sea accesible para confirmar los nombres de los campos de POST y la estructura de las claves de mensajes HTTP. Ningún esquema que no estuviese accesible se trató como hecho verificado.
+
+
+**Revisión adicional de etiquetas de idioma:** se eliminaron los literales visuales `ES` y `EN` de `SelectorIdioma.jsx`; el selector recibe etiquetas desde la sección de textos vía `Navbar`. Únicamente `textosRespaldo()` define estos códigos para el caso de error de `useTextos`.
+
+
+**Corrección final de metadatos:** los títulos y descripciones del detalle del álbum ya no contienen prosa literal. Cuando la API ofrece `paginas.album.metadatos.titulo` y `paginas.album.metadatos.descripcion`, se interpolan `{titulo}` y `{artista}`. Si la respuesta global de textos es válida, pero falta esa sección, el navegador recibe únicamente los datos dinámicos del álbum unidos sin frase de sustitución. También se actualizaron las pruebas de metadata y se mantuvo la documentación original de la historia.

@@ -205,3 +205,21 @@ no contraseñas ni tokens. El almacenamiento por sí solo no autentica al usuari
 ante la API. Revisar el PR antes de integrar en producción.
 
 Validación: `npm test` y `npm run build`.
+
+
+### Actualización del refactor de textos y API
+
+En `refactor/textos-unificados-S2-03`, los componentes utilizan solo textos procedentes
+de `GET /textos` cuando este responde correctamente. Las cadenas locales de respaldo se
+agrupan en `textosRespaldo()` y únicamente se usan cuando el hook `useTextos`
+reporta un error HTTP o una respuesta global inválida. Una sección parcial en una respuesta
+global válida no activa respaldo.
+
+`GET /albumes` se consume sin parámetros `orden` ni `limite` (no admitidos
+por el endpoint, según la restricción indicada para el proyecto); el recorte de resultados
+se realiza en la página. `GET /generos` y `GET /generos/:id` se invocan sin
+filtros inventados.
+
+**Verificación pendiente:** la documentación web [Contrato completo](https://yanethm-sintonia-api.fly.dev/docs/contrato)
+enlaza a un Markdown que no pudo recuperarse desde el entorno de consulta; se requiere
+validar contra ese contrato las estructuras JSON de sesión y mensajes HTTP.

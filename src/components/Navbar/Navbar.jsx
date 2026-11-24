@@ -66,6 +66,7 @@ export default function Navbar({
               <div className="seccion-utilidades">
                 {isMobile && menuMovil?.secciones?.idioma}
                 <SelectorIdioma en={en} alternarIdioma={alternarIdioma}
+                  idiomas={nav?.idiomas ?? textos?.idiomas ?? textos?.selectorIdioma}
                   aria-label={nav?.aria?.idioma} />
               </div>
             </div>

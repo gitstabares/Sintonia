@@ -13,8 +13,8 @@ export default function Catalogo({ configuracion }) {
   const { en, enlaces, datos } = configuracion;
   const { gen_id = '' } = useParams();
   const { generos: listaGeneros, ...estadoLista } = useGeneros();
-  const { generos: generoActual, ...estadoGenero } = useGeneros(gen_id, {}, Boolean(gen_id));
-  const { albumes, ...estadoAlbumes } = useAlbumes(6, 'populares', {}, !gen_id);
+  const { generos: generoActual, ...estadoGenero } = useGeneros(gen_id, Boolean(gen_id));
+  const { albumes, ...estadoAlbumes } = useAlbumes(!gen_id);
 
   return (
     <LayoutPublico {...configuracion}>

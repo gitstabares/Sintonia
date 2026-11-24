@@ -10,7 +10,8 @@ import useGeneros from '../../hooks/useGeneros.js';
 
 export default function Home({ configuracion }) {
   const { en, enlaces, datos } = configuracion;
-  const { albumes: populares, ...estadoAlbumes } = useAlbumes(6, 'populares');
+  const { albumes, ...estadoAlbumes } = useAlbumes();
+  const populares = Array.isArray(albumes) ? albumes.slice(0, 6) : albumes;
   const { generos, ...estadoGeneros } = useGeneros();
 
   return (

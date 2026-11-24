@@ -5,12 +5,21 @@ import { obtenerMetadatosAlbum } from '../utils/detalleAlbum.js';
  * Equivalente SPA a generateMetadata: en Vite se actualiza el <head> al
  * obtener el álbum. Se restaura al salir para no contaminar otras rutas.
  */
-export default function useMetadatosAlbum(album) {
+export default function useMetadatosAlbum(album, textos) {
   const titulo = album?.titulo;
   const artista = album?.artista?.nombre;
+  const plantillaTitulo = textos?.paginas?.album?.metadatos?.titulo
+    ?? textos?.paginas?.detalleAlbum?.metadatos?.titulo;
+  const plantillaDescripcion = textos?.paginas?.album?.metadatos?.descripcion
+    ?? textos?.paginas?.detalleAlbum?.metadatos?.descripcion;
 
   useEffect(() => {
-    const metadatos = obtenerMetadatosAlbum({ titulo, artista: { nombre: artista } });
+    const metadatos = obtenerMetadatosAlbum(
+      { titulo, artista: { nombre: artista } },
+      { paginas: { album: { metadatos: {
+        titulo: plantillaTitulo, descripcion: plantillaDescripcion,
+      } } } },
+    );
     if (!metadatos) return undefined;
 
     const tituloAnterior = document.title;
@@ -32,5 +41,5 @@ export default function useMetadatosAlbum(album) {
       else if (descripcionAnterior === null) descripcion.removeAttribute('content');
       else descripcion.setAttribute('content', descripcionAnterior);
     };
-  }, [titulo, artista]);
+  }, [titulo, artista, plantillaTitulo, plantillaDescripcion]);
 }

@@ -117,11 +117,67 @@ export function textosRespaldo(idioma = 'es') {
     ? {
       noEncontrada: { titulo: 'Page not found', texto: 'The requested page is not available.', botones: { volver: 'Back to home' } },
       album: { noEncontrado: { titulo: 'Album not found', texto: 'The album is unavailable.', botones: { volver: 'Back to catalog' } } },
-      iniciarSesion: {},
+      iniciarSesion: {
+        titulo: 'Sign in to your account',
+        descripcion: 'Sign in with the email and password for your account.',
+        formulario: {
+          correo: { etiqueta: 'Email address', placeholder: 'sara.quintero@correo.co' },
+          contrasena: {
+            etiqueta: 'Password', placeholder: '••••••••••',
+            mostrar: 'Show password', ocultar: 'Hide password',
+          },
+          recordar: 'Keep me signed in',
+        },
+        enlaces: {
+          recuperarContrasena: 'Forgot your password?',
+          sinCuenta: "Don't have an account?",
+          crearCuenta: 'Create an account',
+        },
+        botones: { ingresar: 'Sign in' },
+        mensajes: { ingresando: 'Signing in...' },
+        errores: {
+          obligatorio: 'This field is required.',
+          correoInvalido: 'Enter a valid email address.',
+          credenciales: 'Incorrect email or password.',
+          servidor: 'We could not sign you in. Please try again.',
+        },
+        marca: {
+          titulo: 'Your music, always within reach',
+          descripcion: 'Explore albums and artists from every genre.',
+        },
+      },
     } : {
       noEncontrada: { titulo: 'Página no encontrada', texto: 'No encontramos la página solicitada.', botones: { volver: 'Volver al inicio' } },
       album: { noEncontrado: { titulo: 'Álbum no encontrado', texto: 'No encontramos el álbum solicitado.', botones: { volver: 'Volver al catálogo' } } },
-      iniciarSesion: {},
+      iniciarSesion: {
+        titulo: 'Ingresa a tu cuenta',
+        descripcion: 'Ingresa con el correo y la contraseña de tu cuenta.',
+        formulario: {
+          correo: { etiqueta: 'Correo electrónico', placeholder: 'sara.quintero@correo.co' },
+          contrasena: {
+            etiqueta: 'Contraseña', placeholder: '••••••••••',
+            mostrar: 'Mostrar contraseña', ocultar: 'Ocultar contraseña',
+          },
+          recordar: 'Mantener la sesión iniciada',
+        },
+        enlaces: {
+          recuperarContrasena: '¿Olvidaste tu contraseña?',
+          sinCuenta: '¿No tienes cuenta?',
+          crearCuenta: 'Crea una cuenta',
+        },
+        botones: { ingresar: 'Ingresar' },
+        mensajes: { ingresando: 'Ingresando...' },
+        errores: {
+          obligatorio: 'Este campo es obligatorio.',
+          correoInvalido: 'Ingresa un correo electrónico válido.',
+          credenciales: 'Correo o contraseña incorrectos.',
+          servidor: 'No pudimos iniciar sesión. Inténtalo de nuevo.',
+        },
+        marca: {
+          titulo: 'Tu música, siempre a mano',
+          descripcion: 'Explora álbumes y artistas de todos los géneros.',
+        },
+      },
     };
   return {
     navbar: {
@@ -131,6 +187,7 @@ export function textosRespaldo(idioma = 'es') {
         accesibilidad: en ? 'Accessibility' : 'Accesibilidad',
       },
       logo: { aria: 'Sintonía' },
+      idiomas: { es: 'ES', en: 'EN' },
       enlaces: { inicio: en ? 'Home' : 'Inicio', catalogo: en ? 'Catalog' : 'Catálogo' },
       botones: { invitado: { ingresar: en ? 'Sign in' : 'Ingresar', crearCuenta: en ? 'Create account' : 'Crear cuenta' } },
       sesion: { cerrar: en ? 'Sign out' : 'Cerrar sesión' },

@@ -124,3 +124,64 @@ test('cada uso de EstadoPeticion recibe textos o el objeto datos completo', () =
       nombre + ' tiene EstadoPeticion sin textos');
   }
 });
+
+
+test('la sección ausente en una respuesta válida no genera textos predeterminados', () => {
+  const normal = { paginas: { iniciarSesion: {
+    titulo: 'API: entrar',
+    formulario: { correo: { etiqueta: 'API: correo' } },
+  } } };
+  const ingreso = textosInicioSesion(normal);
+  assert.equal(ingreso.titulo, 'API: entrar');
+  assert.equal(ingreso.correo, 'API: correo');
+  assert.equal(ingreso.contrasena, undefined);
+  assert.equal(ingreso.mostrar, undefined);
+  assert.equal(ingreso.recuperar, undefined);
+  assert.equal(ingreso.obligatorio, undefined);
+
+  const inexistente = textosInicioSesion({ paginas: {} });
+  assert.ok(Object.values(inexistente).every(valor => valor === undefined));
+});
+
+test('el respaldo de inicio de sesión funciona solo cuando App elige textosRespaldo', () => {
+  const textosFallback = textosRespaldo('es');
+  const ingreso = textosInicioSesion(textosFallback);
+  assert.equal(ingreso.titulo, 'Ingresa a tu cuenta');
+  assert.equal(ingreso.correo, 'Correo electrónico');
+  assert.equal(ingreso.contrasena, 'Contraseña');
+  assert.equal(ingreso.mostrar, 'Mostrar contraseña');
+  assert.equal(ingreso.ingresar, 'Ingresar');
+});
+
+test('GET /albumes y /generos no agregan filtros ni parámetros no admitidos', () => {
+  const albumes = readFileSync('src/hooks/useAlbumes.js', 'utf8');
+  const generos = readFileSync('src/hooks/useGeneros.js', 'utf8');
+  assert.match(albumes, /useRecurso\('\/albumes', \{\}, activo\)/);
+  assert.doesNotMatch(albumes, /\b(limite|orden|filtros)\b(?=\s*[,=}])/);
+  assert.match(generos, /useRecurso\(ruta, \{\}, activo\)/);
+  assert.doesNotMatch(generos, /\bfiltros\s*=/);
+  const home = readFileSync('src/pages/Home/Home.jsx', 'utf8');
+  const catalogo = readFileSync('src/pages/Catalogo/Catalogo.jsx', 'utf8');
+  assert.match(home, /useAlbumes\(\)/);
+  assert.match(catalogo, /useAlbumes\(!gen_id\)/);
+  assert.match(catalogo, /useGeneros\(gen_id, Boolean\(gen_id\)\)/);
+});
+
+test('el código de inicio de sesión no contiene textos de sustitución', () => {
+  const codigo = readFileSync('src/utils/textosInicioSesion.js', 'utf8');
+  assert.doesNotMatch(codigo, /const defecto\s*=/);
+  assert.doesNotMatch(codigo, /seccionIncompleta/);
+  assert.doesNotMatch(codigo, /'Ingresa a tu cuenta'|'Sign in to your account'/);
+  const app = readFileSync('src/App.jsx', 'utf8');
+  assert.match(app, /resultadoTextos\.error\s*\?\s*textosRespaldo\(idioma\)/);
+});
+
+
+test('las etiquetas ES/EN del selector no son cadenas locales al recibir textos válidos', () => {
+  const fuente = readFileSync('src/components/SelectorIdioma/SelectorIdioma.jsx', 'utf8');
+  assert.doesNotMatch(fuente, />ES<\/span>|>EN<\/span>/);
+  assert.match(fuente, /etiquetaIdioma\(idiomas\?\.es\)/);
+  assert.match(fuente, /etiquetaIdioma\(idiomas\?\.en\)/);
+  const respaldo = textosRespaldo('es');
+  assert.deepEqual(respaldo.navbar.idiomas, { es: 'ES', en: 'EN' });
+});

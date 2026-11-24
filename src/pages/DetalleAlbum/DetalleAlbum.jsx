@@ -129,7 +129,7 @@ export default function DetalleAlbum({ configuracion }) {
   const { id } = useParams();
   const { datos } = configuracion;
   const detalle = useDetalleAlbum(id);
-  useMetadatosAlbum(detalle.album);
+  useMetadatosAlbum(detalle.album, datos.textos);
 
   return (
     <LayoutPublico {...configuracion}>
